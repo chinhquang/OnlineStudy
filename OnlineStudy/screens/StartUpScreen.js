@@ -19,6 +19,7 @@ import {
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
+import CustomButton from '../components/CustomButton'
 import {
   Header,
   LearnMoreLinks,
@@ -41,9 +42,13 @@ export default class  StartUpScreen extends Component{
                 <Image style={styles.icon} source={require('../image/icon.png')}/>
                 <Text style={styles.iconTitle}>polygon runway</Text>
             </View>
-            
+            <View style={styles.buttonContainer}>
+                <CustomButton style={styles.button} ></CustomButton>
+                <CustomButton style={styles.borderButton} ></CustomButton>
+                <CustomButton style={styles.borderButton} ></CustomButton>
+            </View>
         </LinearGradient>
-        
+            
         </>
         );
     }
@@ -52,16 +57,16 @@ export default class  StartUpScreen extends Component{
 
 const styles = StyleSheet.create({
     container : {
-        width : '100%',
-        height : '100%'
-       
+        flex: 1,
+        flexDirection : 'column',
     },
     iconContainer : {
         // display: 'flex',
         // position : 'absolute',
         // flexDirection : 'row',
-        top : 0.26 * width,
+        marginTop : 0.26 * width,
         alignSelf : 'center',
+        justifyContent : 'center',
         width: 205/375 * width,
         aspectRatio: 205 / 125,
         // backgroundColor : '#000000'
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
         aspectRatio : 1,
         resizeMode : 'contain',
         alignSelf : 'center',
-        top : 0,
+        marginTop : 0,
     },
     iconTitle: {
         alignSelf : 'center',
@@ -80,7 +85,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Copperplate',
         width : '100%',
         bottom : 0,
-        top : 0,
+        // top : 0,
         textAlign : 'center',
         fontWeight: 'normal',
         fontStyle :'normal',
@@ -88,6 +93,28 @@ const styles = StyleSheet.create({
         // backgroundColor : '#FAABBB',
         fontSize: 24 * width/ 375
 
+    },
+    buttonContainer : {
+        // flex:1,
+        marginTop : 75 / 375 * width,
+        width : 325 / 375 * width,
+        aspectRatio : 375 / 191,
+        backgroundColor : '#FAABBB',
+        alignSelf : 'center',
+        alignContent : 'center',
+        justifyContent : 'center',
+    },
+    button: {
+        width : '100%',
+        aspectRatio : 325/47,
+        backgroundColor : '#FFB74D',
+    },
+    borderButton: {
+        width : '100%',
+        aspectRatio : 325/47,
+        borderColor : '#FFE97D', 
+        borderWidth : 1,
+        borderRadius  : 7 / 375 * width,
     }
 });
 
