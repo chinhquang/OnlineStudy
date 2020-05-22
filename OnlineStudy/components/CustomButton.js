@@ -25,12 +25,13 @@ export default class CustomButton extends Component {
     }
     render(){
         var title=this.props.text;
+        var textColor=this.props.textColor;
       return(  
         <TouchableOpacity
             onPress={this.props.onPress}
             style={this.props.style}
         >
-            <Text>{title}</Text>
+            <Text style={this.props.textStyle}>{title}</Text>
         </TouchableOpacity>
       )
     }

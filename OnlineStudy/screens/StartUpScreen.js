@@ -28,10 +28,11 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 const {width, height} = Dimensions.get('window');
-
+const widthRatio = width / 375
 export default class  StartUpScreen extends Component{
     
     render (){
+        
         return (
             <>
         <StatusBar barStyle="light-content" />
@@ -43,9 +44,9 @@ export default class  StartUpScreen extends Component{
                 <Text style={styles.iconTitle}>polygon runway</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton style={styles.button} ></CustomButton>
-                <CustomButton style={styles.borderButton} ></CustomButton>
-                <CustomButton style={styles.borderButton} ></CustomButton>
+                <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" ></CustomButton>
+                <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway" ></CustomButton>
+                <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Explore without subcription"></CustomButton>
             </View>
         </LinearGradient>
             
@@ -67,13 +68,13 @@ const styles = StyleSheet.create({
         marginTop : 0.26 * width,
         alignSelf : 'center',
         justifyContent : 'center',
-        width: 205/375 * width,
+        width: 205 * widthRatio,
         aspectRatio: 205 / 125,
         // backgroundColor : '#000000'
     },
     icon :{
         flex:1 ,
-        width: 100/375 * width,
+        width: 100 * widthRatio,
         aspectRatio : 1,
         resizeMode : 'contain',
         alignSelf : 'center',
@@ -89,32 +90,60 @@ const styles = StyleSheet.create({
         textAlign : 'center',
         fontWeight: 'normal',
         fontStyle :'normal',
-        lineHeight: 25,
+        lineHeight: 25 * widthRatio,
         // backgroundColor : '#FAABBB',
-        fontSize: 24 * width/ 375
+        fontSize: 24 * widthRatio
 
     },
     buttonContainer : {
-        // flex:1,
-        marginTop : 75 / 375 * width,
-        width : 325 / 375 * width,
-        aspectRatio : 375 / 191,
-        backgroundColor : '#FAABBB',
+        flex:1,
+        marginTop : 75 * widthRatio,
+        
+        // aspectRatio : 375 / 191,
+        // backgroundColor : '#FAABBB',
         alignSelf : 'center',
         alignContent : 'center',
-        justifyContent : 'center',
+        // justifyContent : 'center',
     },
     button: {
-        width : '100%',
+        // flex : 1,
+        //  margin : 100,
+        width : 325 * widthRatio,
         aspectRatio : 325/47,
         backgroundColor : '#FFB74D',
+        borderRadius  : 7* widthRatio,
+        // borderWidth : 1,
+        marginBottom : 35 * widthRatio,
+        alignItems : "center",
+        justifyContent : "center"
+    },
+    whiteText : {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 18 * widthRatio,
+        lineHeight: 21 * widthRatio,
+
+        color: '#FFFFFF',
+    },
+    yellowText : {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 18 * widthRatio,
+        lineHeight: 21 * widthRatio,
+
+        color: '#FFE97D',
     },
     borderButton: {
-        width : '100%',
+        width : 325 * widthRatio,
         aspectRatio : 325/47,
         borderColor : '#FFE97D', 
         borderWidth : 1,
-        borderRadius  : 7 / 375 * width,
+        borderRadius  : 7 * widthRatio,
+        marginBottom : 10 * widthRatio,
+        alignItems : "center",
+        justifyContent : "center"
     }
 });
 
