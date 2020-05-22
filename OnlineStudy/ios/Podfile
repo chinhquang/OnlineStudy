@@ -81,6 +81,8 @@ target 'OnlineStudy' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'ReactNativeKeyboardManager', :path => '../node_modules/react-native-keyboard-manager'
+
   target 'OnlineStudyTests' do
     inherit! :complete
     # Pods for testing

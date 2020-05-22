@@ -16,7 +16,7 @@ import {
   StatusBar, 
   Dimensions,
   TouchableOpacity,
-  Image
+  TextInput
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -32,30 +32,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-// export default class  SignInScreen extends Component{
-//     constructor(props) {
-//         super(props)
-//     }
-//     render (){
-        
-        
-//         return (
-//             <>
-//         <StatusBar barStyle="light-content" />
-        
-//         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
-//         </LinearGradient>
-            
-//         </>
-//         );
-//     }
-  
-// };
+
 export default function  SignInScreen ({ navigation }){
-    const [count, setCount] = React.useState(0);
+    // const [count, setCount] = React.useState(0);
     settingClick=()=>{
         alert('This button is not implemented yet')
     };
+    const [emailValue, onChangeEmailField] = React.useState('');
+    const [passwordValue, onChangePassword] = React.useState('');
+    
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
@@ -64,12 +49,26 @@ export default function  SignInScreen ({ navigation }){
                 </TouchableOpacity>
               ),
         });
-    }, [navigation, setCount]);
+    }, [navigation]);
     return (
             <>
         <StatusBar barStyle="light-content" />
         
         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+            <Text>Email or username</Text>
+            <TextInput
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                onChangeText={text => onChangeEmailField(text)}
+                value={emailValue}
+            />
+            <Text>Password</Text>
+            <TextInput
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                onChangeText={text => onChangePassword(text)}
+                secureTextEntry={true}
+                value={passwordValue}
+            />
+            
         </LinearGradient>
             
         </>
