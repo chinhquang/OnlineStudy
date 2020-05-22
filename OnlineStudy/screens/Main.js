@@ -37,11 +37,11 @@ return (
     > 
         <HomeStack.Screen options={{
             title:"Sign In",
-            // headerLeft: () => (
-            //     <TouchableOpacity onPress={settingClick} style={{left: 10}}>
-            //         <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
-            //     </TouchableOpacity>
-            //   ),
+            headerLeft: () => (
+                <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+                    <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+                </TouchableOpacity>
+              ),
         }}
          name="SignInScreen"
           component={SignInScreen} />          

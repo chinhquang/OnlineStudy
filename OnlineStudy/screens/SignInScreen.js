@@ -41,33 +41,40 @@ export default function  SignInScreen ({ navigation }){
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
     
-    React.useLayoutEffect(() => {
-        navigation.setOptions({
-            headerLeft: () => (
-                <TouchableOpacity onPress={settingClick} style={{left: 10}}>
-                    <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
-                </TouchableOpacity>
-              ),
-        });
-    }, [navigation]);
+    // React.useLayoutEffect(() => {
+    //     navigation.setOptions({
+    //         headerLeft: () => (
+    //             <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+    //                 <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+    //             </TouchableOpacity>
+    //           ),
+    //     });
+    // }, [navigation]);
     return (
             <>
         <StatusBar barStyle="light-content" />
         
         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
-            <Text>Email or username</Text>
+            <View style = { styles.itemsFrame }>
+            <Text style={styles.label}>Email or username</Text>
             <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                style={styles.textInput}
                 onChangeText={text => onChangeEmailField(text)}
                 value={emailValue}
             />
-            <Text>Password</Text>
+            <Text style={styles.label}>Password</Text>
             <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                style={styles.textInput}
                 onChangeText={text => onChangePassword(text)}
                 secureTextEntry={true}
                 value={passwordValue}
             />
+            <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" ></CustomButton>
+            <CustomButton style={styles.noneBorderButton} textStyle={styles.smallYellowText} text="Need help?" ></CustomButton>
+            <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Use Single Sign-On (SSO)"></CustomButton>
+            <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway"></CustomButton>
+            </View>
+            
             
         </LinearGradient>
             
@@ -77,39 +84,14 @@ export default function  SignInScreen ({ navigation }){
 const styles = StyleSheet.create({
     container : {
         flex: 1,
-        flexDirection : 'column',
-    },
-    iconContainer : {
         
-        marginTop : 0.26 * width,
-        alignSelf : 'center',
-        justifyContent : 'center',
-        width: 205 * widthRatio,
-        aspectRatio: 205 / 125,
-        // backgroundColor : '#000000'
     },
-    icon :{
-        flex:1 ,
-        width: 100 * widthRatio,
-        aspectRatio : 1,
-        resizeMode : 'contain',
-        alignSelf : 'center',
-        marginTop : 0,
-    },
-    iconTitle: {
-        alignSelf : 'center',
-        color : '#ffffff',
-        fontFamily: 'Copperplate',
-        width : '100%',
-        bottom : 0,
-        // top : 0,
-        textAlign : 'center',
-        fontWeight: 'normal',
-        fontStyle :'normal',
-        lineHeight: 25 * widthRatio,
-        // backgroundColor : '#FAABBB',
-        fontSize: 24 * widthRatio
-
+    itemsFrame :{
+        flex: 1,
+        marginTop : 60 * widthRatio,
+        width : 350 * widthRatio,
+        flexDirection : 'column',
+        alignSelf : 'center'
     },
     buttonContainer : {
         flex:1,
@@ -121,15 +103,22 @@ const styles = StyleSheet.create({
         alignContent : 'center',
         // justifyContent : 'center',
     },
+    textInput : {
+        width : 350 * widthRatio,
+        aspectRatio : 350/47,
+        borderColor : 'gray',
+        borderWidth: 1,
+        borderRadius  : 7 * widthRatio,
+    },
     button: {
         // flex : 1,
         //  margin : 100,
-        width : 325 * widthRatio,
-        aspectRatio : 325/47,
+        width : 350 * widthRatio,
+        aspectRatio : 350/47,
         backgroundColor : '#FFB74D',
         borderRadius  : 7* widthRatio,
-        // borderWidth : 1,
-        marginBottom : 35 * widthRatio,
+        marginBottom : 16 * widthRatio,
+        marginTop : 16 * widthRatio,
         alignItems : "center",
         justifyContent : "center"
     },
@@ -139,24 +128,49 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         fontSize: 18 * widthRatio,
         lineHeight: 21 * widthRatio,
-
-        color: '#FFFFFF',
+        color: '#ffffff',
     },
-    yellowText : {
+    label :{
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: 18 * widthRatio,
         lineHeight: 21 * widthRatio,
+        marginBottom : 8 * widthRatio,
+        marginTop: 16 * widthRatio,
+        color: '#ffffff',
+    },
+    yellowText : {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: '700',
+        fontSize: 18 * widthRatio,
+        lineHeight: 21 * widthRatio,
+
+        color: '#FFE97D',
+    },
+    smallYellowText : {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 15 * widthRatio,
+        lineHeight: 21 * widthRatio,
 
         color: '#FFE97D',
     },
     borderButton: {
-        width : 325 * widthRatio,
-        aspectRatio : 325/47,
+        width : 350 * widthRatio,
+        aspectRatio : 350/47,
         borderColor : '#FFE97D', 
         borderWidth : 1,
         borderRadius  : 7 * widthRatio,
+        marginBottom : 10 * widthRatio,
+        alignItems : "center",
+        justifyContent : "center"
+    },
+    noneBorderButton: {
+        width : 350 * widthRatio,
+        aspectRatio : 350/47,
         marginBottom : 10 * widthRatio,
         alignItems : "center",
         justifyContent : "center"

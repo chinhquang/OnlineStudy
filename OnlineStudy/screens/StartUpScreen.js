@@ -38,6 +38,10 @@ export default class  StartUpScreen extends Component{
     goToMain = () => {
         this.props.navigation.navigate('Main')
     }
+    
+    goToSignIn = () => {
+        this.props.navigation.navigate ('SignInStack')
+    }
     render (){
         
 
@@ -52,7 +56,7 @@ export default class  StartUpScreen extends Component{
                 <Text style={styles.iconTitle}>polygon runway</Text>
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" ></CustomButton>
+                <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" onPress={() => this.goToSignIn()}></CustomButton>
                 <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway" ></CustomButton>
                 <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
             </View>
@@ -117,13 +121,23 @@ const styles = StyleSheet.create({
         // flex : 1,
         //  margin : 100,
         width : 350 * widthRatio,
-        aspectRatio : 325/47,
+        aspectRatio : 350/47,
         backgroundColor : '#FFB74D',
         borderRadius  : 7* widthRatio,
         // borderWidth : 1,
         marginBottom : 35 * widthRatio,
         alignItems : "center",
         justifyContent : "center"
+    },
+   
+    yellowText : {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: '700',
+        fontSize: 18 * widthRatio,
+        lineHeight: 21 * widthRatio,
+
+        color: '#FFE97D',
     },
     whiteText : {
         fontFamily: "Helvetica Neue",
@@ -134,15 +148,15 @@ const styles = StyleSheet.create({
 
         color: '#FFFFFF',
     },
-    yellowText : {
-        fontFamily: "Helvetica Neue",
-        fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: 18 * widthRatio,
-        lineHeight: 21 * widthRatio,
+    // yellowText : {
+    //     fontFamily: "Helvetica Neue",
+    //     fontStyle: 'normal',
+    //     fontWeight: 'normal',
+    //     fontSize: 18 * widthRatio,
+    //     lineHeight: 21 * widthRatio,
 
-        color: '#FFE97D',
-    },
+    //     color: '#FFE97D',
+    // },
     borderButton: {
         width : 350 * widthRatio,
         aspectRatio : 350/47,
