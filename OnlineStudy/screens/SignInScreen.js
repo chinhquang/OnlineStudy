@@ -29,7 +29,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export default class  HomeScreen extends Component{
+export default class  SignInScreen extends Component{
     constructor(props) {
         super(props)
     }
