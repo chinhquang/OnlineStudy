@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     button: {
         // flex : 1,
         //  margin : 100,
-        width : 325 * widthRatio,
+        width : 350 * widthRatio,
         aspectRatio : 325/47,
         backgroundColor : '#FFB74D',
         borderRadius  : 7* widthRatio,
@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
         color: '#FFE97D',
     },
     borderButton: {
-        width : 325 * widthRatio,
-        aspectRatio : 325/47,
+        width : 350 * widthRatio,
+        aspectRatio : 350/47,
         borderColor : '#FFE97D', 
         borderWidth : 1,
         borderRadius  : 7 * widthRatio,
