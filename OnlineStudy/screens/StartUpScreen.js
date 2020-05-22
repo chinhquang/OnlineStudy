@@ -27,6 +27,8 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default class  StartUpScreen extends Component{

@@ -15,6 +15,7 @@ import {
   Text,
   StatusBar, 
   Dimensions,
+  TouchableOpacity,
   Image
   
 } from 'react-native';
@@ -27,19 +28,44 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export default class  SignInScreen extends Component{
-    constructor(props) {
-        super(props)
-    }
-    goToMain = () => {
-        this.props.navigation.navigate('Main')
-    }
-    render (){
+// export default class  SignInScreen extends Component{
+//     constructor(props) {
+//         super(props)
+//     }
+//     render (){
         
-
-        return (
+        
+//         return (
+//             <>
+//         <StatusBar barStyle="light-content" />
+        
+//         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+//         </LinearGradient>
+            
+//         </>
+//         );
+//     }
+  
+// };
+export default function  SignInScreen ({ navigation }){
+    const [count, setCount] = React.useState(0);
+    settingClick=()=>{
+        alert('This button is not implemented yet')
+    };
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+                    <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+                </TouchableOpacity>
+              ),
+        });
+    }, [navigation, setCount]);
+    return (
             <>
         <StatusBar barStyle="light-content" />
         
@@ -47,11 +73,8 @@ export default class  SignInScreen extends Component{
         </LinearGradient>
             
         </>
-        );
-    }
-  
+    );
 };
-
 const styles = StyleSheet.create({
     container : {
         flex: 1,
