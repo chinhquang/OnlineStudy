@@ -26,15 +26,17 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 const Stack = createStackNavigator();
 import StartUpScreen from './screens/StartUpScreen'
+import Main from './screens/Main'
 const App: () => React$Node = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="StartUp"
-      screenOptions={{
-        headerShown: false
-      }}
+      <Stack.Navigator 
+      // screenOptions={{
+      //   headerShown: false
+      // }}
       >
-        <Stack.Screen name="Home" component={StartUpScreen} />
+        <Stack.Screen options={{headerShown: false}} name="StartUp" component={StartUpScreen} />
+        <Stack.Screen options={{ headerShown: false}} name="Main" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
     

@@ -29,7 +29,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export default class  StartUpScreen extends Component{
+export default class  HomeScreen extends Component{
     constructor(props) {
         super(props)
     }
@@ -45,7 +45,7 @@ export default class  StartUpScreen extends Component{
         
         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
 
-            <View style={styles.iconContainer}>
+            {/* <View style={styles.iconContainer}>
                 <Image style={styles.icon} source={require('../image/icon.png')}/>
                 <Text style={styles.iconTitle}>polygon runway</Text>
             </View>
@@ -53,7 +53,7 @@ export default class  StartUpScreen extends Component{
                 <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" ></CustomButton>
                 <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway" ></CustomButton>
                 <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
-            </View>
+            </View> */}
         </LinearGradient>
             
         </>
