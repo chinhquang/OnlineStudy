@@ -79,6 +79,8 @@ target 'OnlineStudy' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'OnlineStudyTests' do
     inherit! :complete
     # Pods for testing
@@ -92,7 +94,23 @@ target 'OnlineStudy' do
   # you should disable these next few lines.
   add_flipper_pods!
   post_install do |installer|
-    flipper_post_install(installer)
+    installer.pods_project.targets.each do |target|
+      if target.name == 'react-native-google-maps'
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
+        end
+      end
+      if target.name == "React"
+        target.remove_from_project
+      end
+      if target.name == 'yoga'
+        target.remove_from_project
+        target.build_configurations.each do |config|
+            config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+            config.build_settings['GCC_WARN_64_TO_32_BIT_CONVERSION'] = 'NO'
+        end
+      end
+    end
   end
 end
 

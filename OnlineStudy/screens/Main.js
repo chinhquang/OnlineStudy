@@ -4,6 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -94,12 +96,39 @@ export default function Main() {
     <Tab.Navigator tabBarOptions={{
         activeTintColor: '#FFB74D',
         inactiveTintColor: 'gray',
+        
         style: {
             backgroundColor: 'rgba(38, 50, 56, 1)',//color you want to change
-          }
-        }}>
+          },
+        }}
+        
+        screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+  
+                if (route.name === 'Home') {
+                    // iconName = focused ? "ios-home" : "ios-home-outline";
+                    iconName = "ios-home";
+                }
+                if (route.name === 'Download') {
+                    // iconName = focused ? "ios-home" : "ios-home-outline";
+                    iconName = "ios-download";
+                }
+                if (route.name === 'Browse') {
+                    // iconName = focused ? "ios-home" : "ios-home-outline";
+                    iconName = "ios-desktop";
+                }
+                if (route.name === 'Search') {
+                    // iconName = focused ? "ios-home" : "ios-home-outline";
+                    iconName = "ios-search";
+                }
+              // You can return any component that you like here!
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          })}
+        >
 
-        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Home" component={HomeStackScreen}/>
         <Tab.Screen name="Download" component={DownloadStackScreen} />
         <Tab.Screen name="Browse" component={BrowseStackScreen} />
         <Tab.Screen name="Search" component={SearchStackScreen} />
