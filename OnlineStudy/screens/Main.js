@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
-
+import BrowseScreen from './BrowseScreen'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -63,7 +63,7 @@ return (
         },}}
     >
 
-        <BrowseStack.Screen options={{title:"Browse"}} name="BrowseScreen" component={HomeScreen} />
+        <BrowseStack.Screen options={{title:"Browse"}} name="BrowseScreen" component={BrowseScreen} />
     
     </BrowseStack.Navigator>
 );
