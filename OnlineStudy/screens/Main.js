@@ -143,6 +143,7 @@ export default function Main() {
               return <Ionicons name={iconName} size={size} color={color} />;
             },
           })}
+          initialRouteName={"Browse"}
         >
 
         <Tab.Screen name="Home" component={HomeStackScreen}/>
