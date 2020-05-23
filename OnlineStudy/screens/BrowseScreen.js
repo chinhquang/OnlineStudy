@@ -86,7 +86,7 @@ export default function  BrowseScreen ({ navigation }){
                     
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <ImageBackground style={styles.previewImageButton} source={{  uri: 'https://cdn.shopify.com/s/files/1/0588/6745/products/sfc1_1480x800.jpg?v=1532864374', }}>
+                    <ImageBackground style={styles.previewImageButton} source={{  uri: 'https://cdn.shopify.com/s/files/1/0588/6745/products/sfc1_1480x800.jpg', }}>
                         <Text style={styles.title}>RECOMMENDED FOR YOU</Text>
                     </ImageBackground>
                 </TouchableOpacity>
