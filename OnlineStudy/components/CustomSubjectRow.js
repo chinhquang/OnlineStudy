@@ -10,10 +10,11 @@ const styles = StyleSheet.create({
         paddingHorizontal : 8 * widthRatio,
         paddingVertical: 5 * widthRatio,
         borderColor : '#FFE97D',
-        borderWidth : 1,
+        borderWidth : 0,
         borderRadius : 1000,
         marginTop : 8 * widthRatio,
-        marginLeft  :  12.5 * widthRatio
+        marginLeft  :  12.5 * widthRatio,
+        backgroundColor : "rgba(38, 50, 56, 0.7)",
     },
     title : {
         fontFamily: "Helvetica Neue",
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
         fontSize: 15 * widthRatio,
         lineHeight: 21 * widthRatio,
 
-        color: '#FFE97D',
+        color: '#939cab',
     }
 });
 
