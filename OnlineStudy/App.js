@@ -77,7 +77,7 @@ return (
     </SignInStack.Navigator>
 );
 }
-const App: () => React$Node = () => {
+const App = () => {
   return (
     <NavigationContainer>
       <mainStack.Navigator mode="modal">

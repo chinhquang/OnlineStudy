@@ -66,6 +66,23 @@ const SubjectBannerList = ({ itemList }) => (
 
     </View>
 );
+const CourseList = ({ itemList }) => (
+    <View style={styles.bannerList}>
+        <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+            
+                data={itemList}
+                keyExtractor={item => item.key} // 
+                renderItem={({ item }) => <SubjectBannerRow
+                    url={item.url}
+                    title={item.title}
+                />
+            }
+            />
+
+    </View>
+);
 export default function  BrowseScreen ({ navigation }){
     getSubjectData = () => {
         return [
@@ -143,6 +160,7 @@ export default function  BrowseScreen ({ navigation }){
                     <Text style={styles.seeAllButtonText}>See all ></Text>
                 </TouchableOpacity>
             </View>
+            <CourseList itemList={this.getSubjectBannerData()}></CourseList>
         </ScrollView>
 
         </LinearGradient>
@@ -197,7 +215,7 @@ const styles = StyleSheet.create({
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',
         fontWeight: 'normal',
-        fontSize: 15 * widthRatio,
+        fontSize: 12 * widthRatio,
         lineHeight: 21 * widthRatio,
 
         color: '#939cab',
@@ -206,7 +224,7 @@ const styles = StyleSheet.create({
         alignSelf : 'center',
         justifyContent : 'center',
         paddingHorizontal : 8 * widthRatio,
-        paddingVertical: 5 * widthRatio,
+        paddingVertical: 1 * widthRatio,
         borderColor : '#FFE97D',
         borderWidth : 0,
         borderRadius : 1000,

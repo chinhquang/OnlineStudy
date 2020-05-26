@@ -7,6 +7,7 @@ import HomeScreen from './HomeScreen'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
+import SearchScreen from './SearchScreen'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -101,7 +102,7 @@ return (
           fontWeight: 'bold',
         },}}
     >
-        <SearchStack.Screen options={{title:"Search"}} name="SearchScreen" component={HomeScreen} />
+        <SearchStack.Screen options={{title: "Search"}} name="SearchScreen" component={SearchScreen} />
     
     </SearchStack.Navigator>
 );
@@ -144,6 +145,7 @@ export default function Main() {
             },
           })}
           initialRouteName={"Browse"}
+          
         >
 
         <Tab.Screen name="Home" component={HomeStackScreen}/>
