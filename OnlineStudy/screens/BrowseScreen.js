@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
 import CustomRow from '../components/CustomSubjectRow'
 import SubjectBannerRow from '../components/SubjectBannerRow'
+import PathRow  from '../components/PathRow'
 import {
   Header,
   LearnMoreLinks,
@@ -66,6 +67,26 @@ const SubjectBannerList = ({ itemList }) => (
 
     </View>
 );
+const PathList = ({ itemList }) => (
+    <View style={styles.bannerList}>
+        <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+            
+                data={itemList}
+                keyExtractor={item => item.key} // 
+                renderItem={({ item }) => <PathRow
+                
+                    title={item.title}
+
+                    imageURl={item.imgURL} 
+                    courseCount={item.courseCount}
+                />
+            }
+            />
+
+    </View>
+);
 const CourseList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
@@ -77,6 +98,7 @@ const CourseList = ({ itemList }) => (
                 renderItem={({ item }) => <SubjectBannerRow
                     url={item.url}
                     title={item.title}
+
                 />
             }
             />
@@ -130,12 +152,28 @@ export default function  BrowseScreen ({ navigation }){
             },
         ]
     }
+    getPathData = () =>{
+        return [
+            {
+                key: 1,
+                title: 'Querying Data with SQL from PostgreSQL',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+            {
+                key: 2,
+                title: 'Querying Data with SQL from PostgreSQL',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+        ]
+    }
     return (
         <>
         <StatusBar barStyle="light-content" />
         <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
             
-        <ScrollView style={styles.scrollView}>
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
             
             <View style={styles.preview }>
                 <TouchableOpacity>
@@ -160,7 +198,8 @@ export default function  BrowseScreen ({ navigation }){
                     <Text style={styles.seeAllButtonText}>See all ></Text>
                 </TouchableOpacity>
             </View>
-            <CourseList itemList={this.getSubjectBannerData()}></CourseList>
+            <PathList itemList={this.getPathData()}></PathList>
+            <Text style={styles.headerSection}>Top Authors</Text>
         </ScrollView>
 
         </LinearGradient>
@@ -208,7 +247,7 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         // fontWeight: 'bold',
         fontSize: 17 * widthRatio,
-        marginTop : 18 * widthRatio,
+        marginTop : 15 * widthRatio,
         color: '#FFFFFF',
     },
     seeAllButtonText : {
@@ -230,7 +269,8 @@ const styles = StyleSheet.create({
         borderRadius : 1000,
         backgroundColor : "rgba(38, 50, 56, 0.7)",
         marginRight : 12.5 * widthRatio,
-        marginTop : 18 * widthRatio,
+        marginTop : 15 * widthRatio,
+        
     },
     title : {
         // flex : 1,

@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         fontWeight: 'normal',
         fontSize: 15 * widthRatio,
+        color: '#939cab',
         lineHeight: 21 * widthRatio,
 
-        color: '#939cab',
     }
 });
 
