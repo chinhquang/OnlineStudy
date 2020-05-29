@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
         aspectRatio : 3/2,
         alignItems : 'center',
         backgroundColor : 'white',
-        marginVertical : 15 * widthRatio,
+        marginVertical : 8 * widthRatio,
         marginHorizontal: 10 * widthRatio,
         backgroundColor : "rgba(38, 50, 56, 0.7)",
         
@@ -63,7 +63,7 @@ const PathRow= ({ title, imageURL, courseCount }) => (
             <Image style={styles.image} source={require('../image/icon.png')}/>
         </View >
         <View style={styles.content}>
-            <Text  style={styles.title}>{title}</Text>
+            <Text style={styles.title}>{title}</Text>
             <Text style={styles.courseCountLabel}>{courseCount} courses </Text>       
              </View>
     </View>

@@ -25,6 +25,7 @@ import CustomButton from '../components/CustomButton'
 import CustomRow from '../components/CustomSubjectRow'
 import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
+import AuthorRow from '../components/AuthorRow'
 import {
   Header,
   LearnMoreLinks,
@@ -105,6 +106,25 @@ const CourseList = ({ itemList }) => (
 
     </View>
 );
+const TopAuthorList = ({ itemList }) => (
+    <View style={styles.bannerList}>
+        <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+            
+                data={itemList}
+                keyExtractor={item => item.key} // 
+                renderItem={({ item }) => <AuthorRow
+                
+                    authorName={item.authorName}
+
+                    avatarURL={item.avatarURL} 
+                />
+            }
+            />
+
+    </View>
+);
 export default function  BrowseScreen ({ navigation }){
     getSubjectData = () => {
         return [
@@ -168,6 +188,27 @@ export default function  BrowseScreen ({ navigation }){
             },
         ]
     }
+
+    getAuthorData = () =>{
+        return [
+            {
+                key: 1,
+                authorName: 'Blender Guru',
+                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+            },
+            {
+                key: 2,
+                authorName: 'Blender Guru',
+                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+            },
+            {
+                key: 3,
+                authorName: 'Blender Guru',
+                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+            },
+          
+        ]
+    }
     return (
         <>
         <StatusBar barStyle="light-content" />
@@ -200,6 +241,7 @@ export default function  BrowseScreen ({ navigation }){
             </View>
             <PathList itemList={this.getPathData()}></PathList>
             <Text style={styles.headerSection}>Top Authors</Text>
+            <TopAuthorList itemList={this.getAuthorData()}></TopAuthorList>
         </ScrollView>
 
         </LinearGradient>
@@ -228,7 +270,7 @@ const styles = StyleSheet.create({
     //    
         // backgroundColor : 'red',
         flexDirection : "row",
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     previewImageButton:{
         
@@ -236,7 +278,8 @@ const styles = StyleSheet.create({
         aspectRatio : 200/50 * widthRatio,
         marginVertical : 10 * widthRatio,  
         alignItems : 'center',
-        justifyContent : 'center'
+        justifyContent : 'center',
+        
 
     },
     
@@ -273,8 +316,6 @@ const styles = StyleSheet.create({
         
     },
     title : {
-        // flex : 1,
-        // position: 'absolute',
         textAlign : 'center',
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',
