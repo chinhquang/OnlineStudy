@@ -16,8 +16,8 @@ import {
   StatusBar, 
   Dimensions,
   TouchableOpacity,
-  TextInput
-  
+  TextInput,
+  AsyncStorage
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
@@ -29,7 +29,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import {AuthContext} from "../App.js"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -40,16 +40,12 @@ export default function  SignInScreen ({ navigation }){
     };
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
+    const { signIn } = React.useContext(AuthContext);
+    doSignIn = () =>{
+        signIn({ emailValue, passwordValue })
+        navigation.goBack()
+    }
     
-    // React.useLayoutEffect(() => {
-    //     navigation.setOptions({
-    //         headerLeft: () => (
-    //             <TouchableOpacity onPress={settingClick} style={{left: 10}}>
-    //                 <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
-    //             </TouchableOpacity>
-    //           ),
-    //     });
-    // }, [navigation]);
     return (
             <>
         <StatusBar barStyle="light-content" />
@@ -69,7 +65,7 @@ export default function  SignInScreen ({ navigation }){
                 secureTextEntry={true}
                 value={passwordValue}
             />
-            <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" ></CustomButton>
+            <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" onPress={() => doSignIn()}></CustomButton>
             <CustomButton style={styles.noneBorderButton} textStyle={styles.smallYellowText} text="Need help?" ></CustomButton>
             <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Use Single Sign-On (SSO)"></CustomButton>
             <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway"></CustomButton>
