@@ -23,27 +23,28 @@ import Main from './screens/Main'
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
 const mainStack = createStackNavigator()
-function  MainStack() {
+function  MainStack({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
-  if (isSignout){
-    return (
-      <mainStack.Navigator initialRouteName={"StartUp"}>
-        <mainStack.Screen options={{headerShown: false}} name="StartUp" component={StartUpScreen} />
-        <mainStack.Screen options={{ headerShown: false}} name="Main" component={Main} />
-      </mainStack.Navigator>
+  console.log ("mainStack sign out " + isSignout)
+  return (
+    <mainStack.Navigator>
+      {
+        isSignout ? (
+          <>
+          <mainStack.Screen options={{headerShown: false}} name="StartUp" component={StartUpScreen} />
+          <mainStack.Screen options={{headerShown: false}} name="MainPublic" component={Main} />
+          </>
+        ) : (
+          <>
+          
+          <mainStack.Screen options={{headerShown: false}} name="MainPrivate" component={Main} />
+          </>
+        )
+      }
       
-    );
-  }else {
-    return (
+    </mainStack.Navigator>
     
-      <mainStack.Navigator>
-        <mainStack.Screen options={{ headerShown: false}} name="Main" component={Main} />
-    
-      </mainStack.Navigator>
-      
-      
-    );
-  }
+  );
   
   
 }

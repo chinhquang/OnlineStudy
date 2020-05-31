@@ -36,7 +36,7 @@ export default class  StartUpScreen extends Component{
         super(props)
     }
     goToMain = () => {
-        this.props.navigation.navigate('Main')
+        this.props.navigation.navigate('MainPublic')
     }
     
     goToSignIn = () => {

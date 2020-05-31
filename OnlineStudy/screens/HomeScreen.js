@@ -29,6 +29,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import {AuthContext} from '../App'
+import {StartUpScreen} from './StartUpScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  HomeScreen({ navigation }){
@@ -52,7 +53,7 @@ export default function  HomeScreen({ navigation }){
         navigation.navigate('Main')
     }
     doSignOut = () => {
-       
+        
         signOut()
     }
     return (
