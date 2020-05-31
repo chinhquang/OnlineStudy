@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View,Button, TouchableOpacity, Dimensions, Alert} from 'react-native';
+import { Text, View,Button, TouchableOpacity, Dimensions, Alert,AsyncStorage} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
+import {LoginStatusContext} from '../App.js'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -20,9 +21,12 @@ import SearchScreen from './SearchScreen'
                 </TouchableOpacity> */}
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator()
-function HomeStackScreen() {
 
-return (
+function HomeStackScreen() {
+const isSignout  = React.useContext(LoginStatusContext)
+console.log("User token " + isSignout)
+if (isSignout){
+  return (
     <HomeStack.Navigator 
         screenOptions={{
             headerStyle: {
@@ -35,8 +39,9 @@ return (
             
 
         }}
-    > 
-        <HomeStack.Screen options={{
+    >   
+      
+      <HomeStack.Screen options={{
             title:"Sign In",
             headerLeft: () => (
                 <TouchableOpacity onPress={settingClick} style={{left: 10}}>
@@ -45,11 +50,43 @@ return (
               ),
         }}
          name="SignInScreen"
-          component={SignInScreen} />          
-        {/* <HomeStack.Screen options={{title:"Home"}} name="HomeScreen" component={HomeScreen} />  */}
+          component={SignInScreen} initialParams={{ isPublic : true }}/>     
+        
     </HomeStack.Navigator>
-);
+   
+)
+}else {
+  return (
+    <HomeStack.Navigator 
+    screenOptions={{
+        headerStyle: {
+            backgroundColor: 'rgba(55, 71, 79, 0.92)',
+        },
+        headerTintColor: '#ffff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+        
+
+    }}
+    >   
+      <HomeStack.Screen options={{title:"Home",
+          headerLeft: () => (
+            <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+                <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+            </TouchableOpacity>
+          ),
+      }} name="HomeScreen" component={HomeScreen} /> 
+    
+    
+    </HomeStack.Navigator>
+    
+  )
 }
+
+}
+
+
 const BrowseStack = createStackNavigator();
 function BrowseStackScreen() {
 return (
@@ -108,10 +145,11 @@ return (
 );
 }
 
-export default function Main() {
+export default function Main({navigation}) {
+  const isSignout  = React.useContext(LoginStatusContext)
+  
   return (
-
-    <Tab.Navigator tabBarOptions={{
+      <Tab.Navigator tabBarOptions={{
         activeTintColor: '#FFB74D',
         inactiveTintColor: 'gray',
         
@@ -144,16 +182,17 @@ export default function Main() {
               return <Ionicons name={iconName} size={size} color={color} />;
             },
           })}
-          initialRouteName={"Browse"}
+          initialRouteName={isSignout ? "Browse" : "Home"}
           
         >
-
+        
         <Tab.Screen name="Home" component={HomeStackScreen}/>
         <Tab.Screen name="Download" component={DownloadStackScreen} />
         <Tab.Screen name="Browse" component={BrowseStackScreen} />
         <Tab.Screen name="Search" component={SearchStackScreen} />
         
     </Tab.Navigator>
+    
     
   );
 };

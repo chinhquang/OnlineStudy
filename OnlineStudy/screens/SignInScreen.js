@@ -33,7 +33,7 @@ import {AuthContext} from "../App.js"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
-export default function  SignInScreen ({ navigation }){
+export default function  SignInScreen ({ navigation, route }){
     // const [count, setCount] = React.useState(0);
     settingClick=()=>{
         alert('This button is not implemented yet')
@@ -41,9 +41,14 @@ export default function  SignInScreen ({ navigation }){
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
     const { signIn } = React.useContext(AuthContext);
+    const { isPublic } = route.params;
+    console.log(" ----------------- SIGN IN SCREEN----------------- " + isPublic)
     doSignIn = () =>{
-        signIn({ emailValue, passwordValue })
-        navigation.goBack()
+        signIn({ emailValue, passwordValue })  
+        if (!isPublic){
+            navigation.goBack()
+        } 
+        
     }
     
     return (

@@ -15,7 +15,8 @@ import {
   Text,
   StatusBar, 
   Dimensions,
-  Image
+  Image,
+  Alert
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -27,28 +28,42 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {AuthContext} from '../App'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export default class  HomeScreen extends Component{
-    constructor(props) {
-        super(props)
-    }
+export default function  HomeScreen({ navigation }){
+    const {signOut} = React.useContext(AuthContext);
+    settingClick=()=>{
+        Alert.alert(
+            "Setting",
+            "This feature have just implemented SIGN OUT",
+            [
+              {
+                text: "Cancel",
+                onPress: () => {console.log("Cancel Pressed")},
+                style: "cancel"
+              },
+              { text: "OK", onPress: ()=>{console.log("OK Pressed"); doSignOut()}}
+            ],
+            { cancelable: false }
+          );
+    };
     goToMain = () => {
-        this.props.navigation.navigate('Main')
+        navigation.navigate('Main')
     }
-    render (){
-        
-
-        return (
-            <>
-        <StatusBar barStyle="light-content" />
-        
-        <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
-        </LinearGradient>
-            
-        </>
-        );
+    doSignOut = () => {
+       
+        signOut()
     }
+    return (
+        <>
+    <StatusBar barStyle="light-content" />
+    
+    <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+    </LinearGradient>
+        
+    </>
+    );
   
 };
 

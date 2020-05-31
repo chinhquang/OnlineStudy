@@ -21,48 +21,22 @@ import Main from './screens/Main'
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
-
+export const LoginStatusContext = React.createContext();
 const mainStack = createStackNavigator()
 function  MainStack() {
-  const {userToken, setToken }=React
-  
-  
-  React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
-    const getUserToken = async () => {
-      
-      let userToken 
-      try {
-        userToken = await AsyncStorage.getItem('userToken');
-        setToken(userToken)
-      } catch (e) {
-
-      }
-     
-    };
-
-    getUserToken();
-  }, []);
-  
-
-  if (userToken === null){
+  const isSignout  = React.useContext(LoginStatusContext)
+  if (isSignout){
     return (
-    
-      <mainStack.Navigator>
-        
+      <mainStack.Navigator initialRouteName={"StartUp"}>
         <mainStack.Screen options={{headerShown: false}} name="StartUp" component={StartUpScreen} />
         <mainStack.Screen options={{ headerShown: false}} name="Main" component={Main} />
-    
       </mainStack.Navigator>
-      
       
     );
   }else {
     return (
     
       <mainStack.Navigator>
-        
-        {/* <mainStack.Screen options={{headerShown: false}} name="StartUp" component={StartUpScreen} /> */}
         <mainStack.Screen options={{ headerShown: false}} name="Main" component={Main} />
     
       </mainStack.Navigator>
@@ -99,12 +73,11 @@ return (
               onPress={() => navigation.goBack()}
               title="Cancel"
               color="#fff"
-            
               />
               ),
         }}
          name="SignInScreen"
-          component={SignInScreen} />          
+          component={SignInScreen}  initialParams={{ isPublic : false }}/>          
         {/* <HomeStack.Screen options={{title:"Home"}} name="HomeScreen" component={HomeScreen} />  */}
     </SignInStack.Navigator>
 );
@@ -134,8 +107,8 @@ const App = () => {
       }
     },
     {
-      isLoading: true,
-      isSignout: false,
+      
+      isSignout: true,
       userToken: null,
     }
   );
@@ -147,15 +120,14 @@ const App = () => {
 
       try {
         userToken = await AsyncStorage.getItem('userToken');
+        if (userToken == null){
+          dispatch({ type: 'SIGN_OUT' })
+        }else {
+          dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        }
       } catch (e) {
-        // Restoring token failed
       }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: 'RESTORE_TOKEN', token: userToken });
+      
     };
 
     bootstrapAsync();
@@ -168,30 +140,41 @@ const App = () => {
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
         console.log('SIGN_IN')
+        await AsyncStorage.setItem('userToken', 'dummy-auth-token');
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+       
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      signOut: async data => {
+        await AsyncStorage.removeItem('userToken');
+        console.log("//////////// SIGN OUT //////////////////")
+        dispatch({ type: 'SIGN_OUT' })
+        
+      },
       signUp: async data => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-
+        await AsyncStorage.setItem('userToken', 'dummy-auth-token');
         dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        
       },
     }),
     []
   );
+  
   return (
     <AuthContext.Provider value={authContext}>
+        <LoginStatusContext.Provider value={state.isSignout}>
+          <NavigationContainer>
+          <mainStack.Navigator mode="modal">
+            <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
 
-        <NavigationContainer>
-        <mainStack.Navigator mode="modal">
-          <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
-
-          <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
-        </mainStack.Navigator>
-      </NavigationContainer>
+            <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
+          </mainStack.Navigator>
+          </NavigationContainer>
+        </LoginStatusContext.Provider>
+        
     </AuthContext.Provider>
     
     
