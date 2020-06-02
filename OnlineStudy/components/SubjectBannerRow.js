@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
 const SubjectBannerRow= ({ title, url }) => (
     <TouchableOpacity style={styles.container}>
-        <ImageBackground style={styles.imageBackground} source={{  uri: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg', }}>
+        <ImageBackground style={styles.imageBackground} source={{  uri: url, }}>
             <Text style={styles.title}>{title}</Text>
         </ImageBackground>
         

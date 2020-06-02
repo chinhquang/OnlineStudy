@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     }
 });
 
-const AuthorRow= ({ authorName, avatarURL }) => (
+const AuthorRow = ({ authorName, avatarURL }) => (
     <View style={styles.container}>
-        <Image style={styles.image} source={{uri : 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'}}/>
+        <Image style={styles.image} source={{uri : avatarURL}}/>
         <Text numberOfLines={1} ellipsizeMode='tail' style={styles.title}>{authorName}</Text>
     </View>
 );

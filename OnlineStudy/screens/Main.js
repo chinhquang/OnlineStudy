@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
+import DownloadScreen from './DownloadScreen'
 import {LoginStatusContext} from '../App.js'
 /**
  * Sample React Native App
@@ -120,7 +121,7 @@ return (
           fontWeight: 'bold',
         },}}
     >
-        <DownloadStack.Screen options={{title:"Download"}} name="DownloadScreen" component={HomeScreen} />          
+        <DownloadStack.Screen options={{title:"Download"}} name="DownloadScreen" component={DownloadScreen} />          
     
     </DownloadStack.Navigator>
 );

@@ -149,7 +149,7 @@ export default function  BrowseScreen ({ navigation }){
           {
             key: 1,
             title: 'VFX',
-            url:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+            url:"https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg",
             },
           {
             key: 2,
@@ -306,9 +306,11 @@ const styles = StyleSheet.create({
         justifyContent : 'center',
         paddingHorizontal : 8 * widthRatio,
         paddingVertical: 1 * widthRatio,
-        borderWidth : 0,
-        borderRadius : 1000,
+        borderColor : "#939cab",
+        borderWidth : 1,
         backgroundColor : "#4f525c",
+        borderRadius : 1000,
+        
         marginRight : 12.5 * widthRatio,
         marginTop : 15 * widthRatio,
         
