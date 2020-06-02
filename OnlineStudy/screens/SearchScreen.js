@@ -21,16 +21,7 @@ import {
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-import CustomButton from '../components/CustomButton'
-import CustomRow from '../components/CustomSubjectRow'
-import SubjectBannerRow from '../components/SubjectBannerRow'
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SearchBar } from 'react-native-elements'
 const {width, height} = Dimensions.get('window');

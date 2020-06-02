@@ -16,23 +16,33 @@ import {
   StatusBar, 
   Dimensions,
   Image,
-  Alert
+  Alert,
+  TouchableOpacity
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-import CustomButton from '../components/CustomButton'
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+
 import {AuthContext} from '../App'
-import {StartUpScreen} from './StartUpScreen'
+import {PathList} from './BrowseScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  HomeScreen({ navigation }){
+    getPathData = () =>{
+        return [
+            {
+                key: 1,
+                title: 'Querying Data with SQL from PostgreSQL',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+            {
+                key: 2,
+                title: 'Querying Data with SQL from PostgreSQL',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+        ]
+    }
     const {signOut} = React.useContext(AuthContext);
     settingClick=()=>{
         Alert.alert(
@@ -49,9 +59,6 @@ export default function  HomeScreen({ navigation }){
             { cancelable: false }
           );
     };
-    goToMain = () => {
-        navigation.navigate('Main')
-    }
     doSignOut = () => {
         
         signOut()
@@ -61,6 +68,18 @@ export default function  HomeScreen({ navigation }){
     <StatusBar barStyle="light-content" />
     
     <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+            
+           
+            <View style={styles.coursePathHeaderContainer}>
+                <Text style={styles.headerSection}>Path</Text>
+                <TouchableOpacity style={styles.seeAllButton}>
+                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                </TouchableOpacity>
+            </View>
+            <PathList itemList={this.getPathData()}></PathList>
+            
+        </ScrollView>
     </LinearGradient>
         
     </>
@@ -73,87 +92,41 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection : 'column',
     },
-    iconContainer : {
-        
-        marginTop : 0.26 * width,
-        alignSelf : 'center',
-        justifyContent : 'center',
-        width: 205 * widthRatio,
-        aspectRatio: 205 / 125,
-        // backgroundColor : '#000000'
+    coursePathHeaderContainer :{
+        //    
+        // backgroundColor : 'red',
+        flexDirection : "row",
+        justifyContent: 'space-between',
     },
-    icon :{
-        flex:1 ,
-        width: 100 * widthRatio,
-        aspectRatio : 1,
-        resizeMode : 'contain',
-        alignSelf : 'center',
-        marginTop : 0,
-    },
-    iconTitle: {
-        alignSelf : 'center',
-        color : '#ffffff',
-        fontFamily: 'Copperplate',
-        width : '100%',
-        bottom : 0,
-        // top : 0,
-        textAlign : 'center',
-        fontWeight: 'normal',
-        fontStyle :'normal',
-        lineHeight: 25 * widthRatio,
-        // backgroundColor : '#FAABBB',
-        fontSize: 24 * widthRatio
-
-    },
-    buttonContainer : {
-        flex:1,
-        marginTop : 75 * widthRatio,
-        
-        // aspectRatio : 375 / 191,
-        // backgroundColor : '#FAABBB',
-        alignSelf : 'center',
-        alignContent : 'center',
-        // justifyContent : 'center',
-    },
-    button: {
-        // flex : 1,
-        //  margin : 100,
-        width : 325 * widthRatio,
-        aspectRatio : 325/47,
-        backgroundColor : '#FFB74D',
-        borderRadius  : 7* widthRatio,
-        // borderWidth : 1,
-        marginBottom : 35 * widthRatio,
-        alignItems : "center",
-        justifyContent : "center"
-    },
-    whiteText : {
-        fontFamily: "Helvetica Neue",
+    headerSection :{
+        marginLeft : 12.5 * widthRatio,
+        // textAlign : 'center',
+        fontFamily: "Arial Rounded MT Bold",
         fontStyle: 'normal',
-        fontWeight: 'normal',
-        fontSize: 18 * widthRatio,
-        lineHeight: 21 * widthRatio,
-
+        // fontWeight: 'bold',
+        fontSize: 17 * widthRatio,
+        marginTop : 15 * widthRatio,
         color: '#FFFFFF',
     },
-    yellowText : {
+    seeAllButtonText : {
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',
         fontWeight: 'normal',
-        fontSize: 18 * widthRatio,
+        fontSize: 12 * widthRatio,
         lineHeight: 21 * widthRatio,
 
-        color: '#FFE97D',
+        color: '#ffffff',
     },
-    borderButton: {
-        width : 325 * widthRatio,
-        aspectRatio : 325/47,
-        borderColor : '#FFE97D', 
-        borderWidth : 1,
-        borderRadius  : 7 * widthRatio,
-        marginBottom : 10 * widthRatio,
-        alignItems : "center",
-        justifyContent : "center"
-    }
+    seeAllButton : {
+        alignSelf : 'center',
+        justifyContent : 'center',
+        paddingHorizontal : 8 * widthRatio,
+        paddingVertical: 1 * widthRatio,
+        borderRadius : 1000,
+        backgroundColor : "#4f525c",
+        marginRight : 12.5 * widthRatio,
+        marginTop : 15 * widthRatio,
+        
+    },
 });
 

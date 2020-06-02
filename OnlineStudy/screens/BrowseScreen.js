@@ -21,7 +21,6 @@ import {
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-import CustomButton from '../components/CustomButton'
 import CustomRow from '../components/CustomSubjectRow'
 import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
@@ -37,7 +36,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-const CustomListSubjectView = ({ itemList }) => (
+export const CustomListSubjectView = ({ itemList }) => (
     <View style={styles.container}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -51,7 +50,7 @@ const CustomListSubjectView = ({ itemList }) => (
 
     </View>
 );
-const SubjectBannerList = ({ itemList }) => (
+export const SubjectBannerList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -68,7 +67,7 @@ const SubjectBannerList = ({ itemList }) => (
 
     </View>
 );
-const PathList = ({ itemList }) => (
+export const PathList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -88,7 +87,7 @@ const PathList = ({ itemList }) => (
 
     </View>
 );
-const CourseList = ({ itemList }) => (
+export const CourseList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -106,7 +105,7 @@ const CourseList = ({ itemList }) => (
 
     </View>
 );
-const TopAuthorList = ({ itemList }) => (
+export const TopAuthorList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -300,17 +299,16 @@ const styles = StyleSheet.create({
         fontSize: 12 * widthRatio,
         lineHeight: 21 * widthRatio,
 
-        color: '#939cab',
+        color: '#ffffff',
     },
     seeAllButton : {
         alignSelf : 'center',
         justifyContent : 'center',
         paddingHorizontal : 8 * widthRatio,
         paddingVertical: 1 * widthRatio,
-        borderColor : '#FFE97D',
         borderWidth : 0,
         borderRadius : 1000,
-        backgroundColor : "rgba(38, 50, 56, 0.7)",
+        backgroundColor : "#4f525c",
         marginRight : 12.5 * widthRatio,
         marginTop : 15 * widthRatio,
         
