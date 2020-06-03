@@ -13,14 +13,13 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import StartUpScreen from './screens/StartUpScreen'
 import SignInScreen from './screens/SignInScreen'
 import Main from './screens/Main'
-export const ThemeContext = React.createContext();
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
+
 const mainStack = createStackNavigator()
 function  MainStack({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
@@ -51,14 +50,17 @@ function  MainStack({navigation}) {
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 const SignInStack = createStackNavigator()
+
 function SignInStackScreen({navigation}) {
+const {colors, setColors} = React.useContext(ColorThemeContext);
+
 return (
     <SignInStack.Navigator 
         screenOptions={{
             headerStyle: {
-                backgroundColor: 'rgba(55, 71, 79, 0.92)',
+                backgroundColor: colors.navBackgroundColor,
             },
-            headerTintColor: '#ffff',
+            headerTintColor: colors.navTint,
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -72,7 +74,7 @@ return (
               <Button
               onPress={() => navigation.goBack()}
               title="Cancel"
-              color="#fff"
+              color={colors.navTint}
               />
               ),
         }}
@@ -82,6 +84,63 @@ return (
     </SignInStack.Navigator>
 );
 }
+
+
+
+export const ColorThemeContext = React.createContext();
+
+export function ColorThemeProvider({ children }) {
+    const [colors, setColors] = React.useState(mainColors.darkTheme) //setting light theme as default
+  const value = React.useMemo(
+    () => ({
+        colors,
+        setColors,
+    }),
+    [colors, setColors],
+  );
+
+  return (
+    <ColorThemeContext.Provider value={value}>{children}</ColorThemeContext.Provider>
+  );
+}
+
+export const mainColors = {
+  lightTheme: {
+  //light theme colors
+  statusBar : "dark-content",
+  type : 'light',
+  buttonColor: '#FFB74D',
+  backgroundColorButton : "#fb8c00",
+  navBackgroundColor : 'rgba(248, 248, 248, 0.92)',
+  gradientColor :['rgba(224, 224, 224, 0.3)', 'rgba(224, 224, 224, 1)'],
+  textPrimary : "#000000",
+  navTint : '#000000',
+  tabBackgroundColor: 'rgba(248, 248, 248, 0.92)',
+  navIconTintColor : "gray",
+  smallButtonBackgroundColor : "#9e9e9e",
+  cellBackgroundColor : "#e0e0e0",
+  subjectBackgroundColor: "#9e9e9e",
+  },
+  darkTheme: {
+  //dark theme colors 
+  navBackgroundColor: 'rgba(55, 71, 79, 0.92)',
+  statusBar : "light-content",
+  type : 'dark',
+  buttonColor: '#FFE97D',
+  backgroundColorButton : "#FFB74D",
+  gradientColor :['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)'],
+  textPrimary : "#ffffff",
+  navTint : '#ffffff',
+  tabBackgroundColor: 'rgba(38, 50, 56, 1)',
+  navIconTintColor : "#ffffff",
+  smallButtonBackgroundColor : "#4f525c",
+  cellBackgroundColor : "rgba(38, 50, 56, 0.7)",
+  subjectBackgroundColor: "rgba(38, 50, 56, 0.7)",
+
+  }
+  //common colors
+}
+
 const App = () => {
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -164,18 +223,20 @@ const App = () => {
   );
   
   return (
-    <AuthContext.Provider value={authContext}>
-        <LoginStatusContext.Provider value={state.isSignout}>
-          <NavigationContainer>
-          <mainStack.Navigator mode="modal">
-            <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
+    <ColorThemeProvider>
+      <AuthContext.Provider value={authContext}>
+      <LoginStatusContext.Provider value={state.isSignout}>
+        <NavigationContainer>
+        <mainStack.Navigator mode="modal">
+          <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
 
-            <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
-          </mainStack.Navigator>
-          </NavigationContainer>
-        </LoginStatusContext.Provider>
-        
+          <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
+        </mainStack.Navigator>
+        </NavigationContainer>
+      </LoginStatusContext.Provider>
+      
     </AuthContext.Provider>
+    </ColorThemeProvider>
     
     
   );

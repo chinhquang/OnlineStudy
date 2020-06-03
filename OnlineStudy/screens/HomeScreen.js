@@ -24,7 +24,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext} from '../App'
+import {AuthContext, ColorThemeContext} from '../App'
 import {PathList} from './BrowseScreen'
 
 const {width, height} = Dimensions.get('window');
@@ -49,6 +49,8 @@ export const CourseList = ({ itemList }) => (
     </View>
 );
 export default function  HomeScreen({ navigation }){
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+
     var listCourseCategory = ['Software Development', 'IT Operations', 'Data Professional']
     getCourseData = () =>{
         return [
@@ -89,7 +91,7 @@ export default function  HomeScreen({ navigation }){
                 onPress: () => {console.log("Cancel Pressed")},
                 style: "cancel"
               },
-              { text: "OK", onPress: ()=>{console.log("OK Pressed"); doSignOut()}}
+              { text: "OK", onPress: ()=>{ doSignOut()}}
             ],
             { cancelable: false }
           );
@@ -100,9 +102,9 @@ export default function  HomeScreen({ navigation }){
     }
     return (
         <>
-    <StatusBar barStyle="light-content" />
+    <StatusBar barStyle={colors.statusBar} />
     
-    <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+    <LinearGradient colors={colors.gradientColor} style = { styles.container }>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
             
             <View  style={styles.descriptionContainer}>
@@ -120,8 +122,8 @@ export default function  HomeScreen({ navigation }){
                 (
                     <>
                     <View style={styles.coursePathHeaderContainer}>
-                        <Text style={styles.headerSection}>{item}</Text>
-                        <TouchableOpacity style={styles.seeAllButton}>
+                        <Text style={{...styles.headerSection, color: colors.textPrimary}}>{item}</Text>
+                        <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                             <Text style={styles.seeAllButtonText}>See all ></Text>
                         </TouchableOpacity>
                     </View>
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
         // fontWeight: 'bold',
         fontSize: 17 * widthRatio,
         marginTop : 15 * widthRatio,
-        color: '#FFFFFF',
+        
     },
     seeAllButtonText : {
         fontFamily: "Helvetica Neue",

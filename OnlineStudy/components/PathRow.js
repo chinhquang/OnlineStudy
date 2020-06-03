@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Dimensions,TouchableOpacity, ImageBackground } from 'react-native';
+import {ColorThemeContext} from "../App"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const styles = StyleSheet.create({
@@ -11,7 +12,6 @@ const styles = StyleSheet.create({
         backgroundColor : 'white',
         marginVertical : 8 * widthRatio,
         marginHorizontal: 10 * widthRatio,
-        backgroundColor : "rgba(38, 50, 56, 0.7)",
         
     },
     imageContainer :{
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         fontSize: 12 * widthRatio,
         marginStart : 8 * widthRatio,
-        color: '#ffffff',
+        
     },
     courseCountLabel :{ 
         width : '90%',
@@ -57,16 +57,21 @@ const styles = StyleSheet.create({
     }
 });
 
-const PathRow= ({ title, imageURL, courseCount }) => (
-    <View style={styles.container}>
+function PathRow({ title, imageURL, courseCount }) {
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+    return(
+        <View style={{...styles.container, backgroundColor : "rgba(38, 50, 56, 0.7)"}}>
         <View  style={styles.imageContainer}>
             <Image style={styles.image} source={require('../image/icon.png')}/>
         </View >
         <View style={styles.content}>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={{...styles.title, color: "#ffffff",}}>{title}</Text>
             <Text style={styles.courseCountLabel}>{courseCount} courses </Text>       
              </View>
     </View>
-);
+    );
+}
+    
+
 
 export default PathRow;

@@ -24,17 +24,18 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {AuthContext} from '../App'
+import {AuthContext, ColorThemeContext} from '../App'
 import {PathList} from './BrowseScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  DownloadScreen({ navigation }){
     const [isEmpty, setEmpty] = React.useState(true);
+    const {colors, setColors} = React.useContext(ColorThemeContext);
     return (
         <>
-    <StatusBar barStyle="light-content" />
+    <StatusBar barStyle={colors.statusBar} />
     
-    <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+    <LinearGradient colors={colors.gradientColor} style = { styles.container }>
         {
             isEmpty ? (
                 <>

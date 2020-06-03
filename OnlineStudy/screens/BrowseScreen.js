@@ -25,6 +25,7 @@ import CustomRow from '../components/CustomSubjectRow'
 import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
+import {ColorThemeContext} from '../App.js'
 import {
   Header,
   LearnMoreLinks,
@@ -125,6 +126,8 @@ export const TopAuthorList = ({ itemList }) => (
     </View>
 );
 export default function  BrowseScreen ({ navigation }){
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+
     getSubjectData = () => {
         return [
           {
@@ -210,8 +213,8 @@ export default function  BrowseScreen ({ navigation }){
     }
     return (
         <>
-        <StatusBar barStyle="light-content" />
-        <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+        <StatusBar barStyle={colors.statusBar}/>
+        <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
             
@@ -233,8 +236,8 @@ export default function  BrowseScreen ({ navigation }){
             <CustomListSubjectView itemList={this.getSubjectData()} />
             <SubjectBannerList itemList={this.getSubjectBannerData()}/>
             <View style={styles.coursePathHeaderContainer}>
-                <Text style={styles.headerSection}>Path</Text>
-                <TouchableOpacity style={styles.seeAllButton}>
+                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Path</Text>
+                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                     <Text style={styles.seeAllButtonText}>See all ></Text>
                 </TouchableOpacity>
             </View>
@@ -290,7 +293,6 @@ const styles = StyleSheet.create({
         // fontWeight: 'bold',
         fontSize: 17 * widthRatio,
         marginTop : 15 * widthRatio,
-        color: '#FFFFFF',
     },
     seeAllButtonText : {
         fontFamily: "Helvetica Neue",

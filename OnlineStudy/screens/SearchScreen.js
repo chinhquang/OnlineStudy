@@ -24,21 +24,27 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SearchBar } from 'react-native-elements'
+import {ColorThemeContext} from '../App'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 export default function  SearchScreen ({ navigation }){
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+
     const [searchText, onChangeSearchText] = React.useState('');
     
     return (
         <>
-        
-        <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.gradient }>
+           
+        <StatusBar barStyle={colors.statusBar} />
+        <LinearGradient colors={colors.gradientColor} style = { styles.gradient }>
                 <SearchBar style={styles.searchBox}
-                placeholder='Type Here...'  
-                onChangeText={text=>onChangeSearchText(text)}          
-                value={searchText}/>
-                <Text>Hello</Text>
+                    platform='default'
+                    lightTheme={colors.type === 'dark' ? false : true}
+                    placeholder='Type Here...'  
+                    onChangeText={text=>onChangeSearchText(text)}          
+                    value={searchText}/>
+                
             </LinearGradient>
         
         

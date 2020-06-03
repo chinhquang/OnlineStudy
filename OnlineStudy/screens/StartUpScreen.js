@@ -15,56 +15,52 @@ import {
   Text,
   StatusBar, 
   Dimensions,
-  Image
+  Image,
+  TouchableOpacity
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {ColorThemeContext} from "../App.js"
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export default class  StartUpScreen extends Component{
-    constructor(props) {
-        super(props)
-    }
+export default function  StartUpScreen ({navigation}){
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+    
     goToMain = () => {
-        this.props.navigation.navigate('MainPublic')
+        navigation.navigate('MainPublic')
     }
     
     goToSignIn = () => {
-        this.props.navigation.navigate ('SignInStack')
+        navigation.navigate ('SignInStack')
     }
-    render (){
-        
 
-        return (
-            <>
-        <StatusBar barStyle="light-content" />
         
-        <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
+    return (
+        <>
+    <StatusBar barStyle={colors.statusBar} />
+    
+    <LinearGradient colors={colors.gradientColor} style = { styles.container }>
 
-            <View style={styles.iconContainer}>
-                <Image style={styles.icon} source={require('../image/icon.png')}/>
-                <Text style={styles.iconTitle}>polygon runway</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-                <CustomButton style={styles.button} textStyle={styles.whiteText} text="Sign in" onPress={() => this.goToSignIn()}></CustomButton>
-                <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Subcribe to Polygon Runway" ></CustomButton>
-                <CustomButton style={styles.borderButton} textStyle={styles.yellowText} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
-            </View>
-        </LinearGradient>
+        <View style={styles.iconContainer}>
+            <Image style={styles.icon} source={require('../image/icon.png')}/>
+            <Text style={{...styles.iconTitle, color:colors.textPrimary}}>polygon runway</Text>
+        </View>
+        <View style={styles.buttonContainer}>
             
-        </>
-        );
-    }
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign In" onPress={() => this.goToSignIn()}></CustomButton>
+
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Subcribe to Polygon Runway" ></CustomButton>
+
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
+        </View>
+    </LinearGradient>
+        
+    </>
+    );
+    
   
 };
 
@@ -94,7 +90,7 @@ const styles = StyleSheet.create({
     },
     iconTitle: {
         alignSelf : 'center',
-        color : '#ffffff',
+       
         fontFamily: 'Copperplate',
         width : '100%',
         bottom : 0,
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
         //  margin : 100,
         width : 350 * widthRatio,
         aspectRatio : 350/47,
-        backgroundColor : '#FFB74D',
+        // backgroundColor:'#FFB74D',
         borderRadius  : 7* widthRatio,
         // borderWidth : 1,
         marginBottom : 35 * widthRatio,
@@ -137,7 +133,7 @@ const styles = StyleSheet.create({
         fontSize: 18 * widthRatio,
         lineHeight: 21 * widthRatio,
 
-        color: '#FFE97D',
+        
     },
     whiteText : {
         fontFamily: "Helvetica Neue",
@@ -160,7 +156,7 @@ const styles = StyleSheet.create({
     borderButton: {
         width : 350 * widthRatio,
         aspectRatio : 350/47,
-        borderColor : '#FFE97D', 
+        
         borderWidth : 1,
         borderRadius  : 7 * widthRatio,
         marginBottom : 10 * widthRatio,

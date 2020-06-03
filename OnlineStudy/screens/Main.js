@@ -9,7 +9,7 @@ import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
 import DownloadScreen from './DownloadScreen'
-import {LoginStatusContext} from '../App.js'
+import {LoginStatusContext, ColorThemeContext} from '../App.js'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -25,6 +25,7 @@ const HomeStack = createStackNavigator()
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 function HomeStackScreen() {
+const {colors, setColors} = React.useContext(ColorThemeContext);
 const isSignout  = React.useContext(LoginStatusContext)
 console.log("User token " + isSignout)
 if (isSignout){
@@ -32,9 +33,9 @@ if (isSignout){
     <HomeStack.Navigator 
         screenOptions={{
             headerStyle: {
-                backgroundColor: 'rgba(55, 71, 79, 0.92)',
+                backgroundColor: colors.navBackgroundColor,
             },
-            headerTintColor: '#ffff',
+            headerTintColor: colors.navTint,
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
@@ -47,7 +48,7 @@ if (isSignout){
             title:"Sign In",
             headerLeft: () => (
                 <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
-                    <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+                    <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
                 </TouchableOpacity>
               ),
         }}
@@ -62,9 +63,9 @@ if (isSignout){
     <HomeStack.Navigator 
     screenOptions={{
         headerStyle: {
-            backgroundColor: 'rgba(55, 71, 79, 0.92)',
+            backgroundColor: colors.navBackgroundColor,
         },
-        headerTintColor: '#ffff',
+        headerTintColor: colors.navTint,
         headerTitleStyle: {
             fontWeight: 'bold',
         },
@@ -75,7 +76,7 @@ if (isSignout){
       <HomeStack.Screen options={{title:"Home",
           headerLeft: () => (
             <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
-                <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
+                <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
             </TouchableOpacity>
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
@@ -91,13 +92,15 @@ if (isSignout){
 
 const BrowseStack = createStackNavigator();
 function BrowseStackScreen() {
+const {colors, setColors} = React.useContext(ColorThemeContext);
+
 return (
     <BrowseStack.Navigator
         screenOptions={{
         headerStyle: {
-          backgroundColor: 'rgba(55, 71, 79, 0.92)',
+          backgroundColor: colors.navBackgroundColor,
         },
-        headerTintColor: '#ffff',
+        headerTintColor: colors.navTint,
         headerTitleStyle: {
           fontWeight: 'bold',
         },}}
@@ -111,13 +114,14 @@ return (
 
 const DownloadStack = createStackNavigator();
 function DownloadStackScreen() {
+const {colors, setColors} = React.useContext(ColorThemeContext);
 return (
     <DownloadStack.Navigator
         screenOptions={{
         headerStyle: {
-          backgroundColor: 'rgba(55, 71, 79, 0.92)',
+          backgroundColor: colors.navBackgroundColor,
         },
-        headerTintColor: '#ffff',
+        headerTintColor: colors.navTint,
         headerTitleStyle: {
           fontWeight: 'bold',
         },}}
@@ -130,13 +134,14 @@ return (
 
 const SearchStack = createStackNavigator();
 function SearchStackScreen() {
+  const {colors, setColors} = React.useContext(ColorThemeContext);
 return (
     <SearchStack.Navigator
         screenOptions={{
         headerStyle: {
-          backgroundColor: 'rgba(55, 71, 79, 0.92)',
+          backgroundColor: colors.navBackgroundColor,
         },
-        headerTintColor: '#ffff',
+        headerTintColor: colors.navTint,
         headerTitleStyle: {
           fontWeight: 'bold',
         },}}
@@ -149,14 +154,15 @@ return (
 
 export default function Main({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
-  
+  const {colors, setColors} = React.useContext(ColorThemeContext);
+
   return (
       <Tab.Navigator tabBarOptions={{
-        activeTintColor: '#FFB74D',
+        activeTintColor: colors.backgroundColorButton,
         inactiveTintColor: 'gray',
         
         style: {
-            backgroundColor: 'rgba(38, 50, 56, 1)',//color you want to change
+            backgroundColor: colors.tabBackgroundColor,//color you want to change
           },
         }}
         
