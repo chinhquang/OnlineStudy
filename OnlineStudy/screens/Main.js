@@ -22,7 +22,8 @@ import {LoginStatusContext} from '../App.js'
                 </TouchableOpacity> */}
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator()
-
+const {width, height} = Dimensions.get('window');
+const widthRatio = width / 375
 function HomeStackScreen() {
 const isSignout  = React.useContext(LoginStatusContext)
 console.log("User token " + isSignout)
@@ -45,7 +46,7 @@ if (isSignout){
       <HomeStack.Screen options={{
             title:"Sign In",
             headerLeft: () => (
-                <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+                <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
                     <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
                 </TouchableOpacity>
               ),
@@ -73,7 +74,7 @@ if (isSignout){
     >   
       <HomeStack.Screen options={{title:"Home",
           headerLeft: () => (
-            <TouchableOpacity onPress={settingClick} style={{left: 10}}>
+            <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
                 <Ionicons style={alignSelf='center'} name="ios-settings" size={30} color={'white'}/>
             </TouchableOpacity>
           ),

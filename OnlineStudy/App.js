@@ -8,7 +8,6 @@
 
 import React from 'react';
 import {
-
   Button,
   AsyncStorage
 } from 'react-native';
@@ -18,7 +17,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import StartUpScreen from './screens/StartUpScreen'
 import SignInScreen from './screens/SignInScreen'
 import Main from './screens/Main'
-
+export const ThemeContext = React.createContext();
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();

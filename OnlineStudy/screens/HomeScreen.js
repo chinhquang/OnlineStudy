@@ -114,6 +114,7 @@ export default function  HomeScreen({ navigation }){
                 </Text>
             </View>
             
+            <View>
             {
                 listCourseCategory.map(( item, key ) =>
                 (
@@ -129,7 +130,7 @@ export default function  HomeScreen({ navigation }){
                     
                 ))
             }
-            
+            </View>
         </ScrollView>
     </LinearGradient>
         

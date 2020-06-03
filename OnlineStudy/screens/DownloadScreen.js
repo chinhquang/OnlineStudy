@@ -22,21 +22,39 @@ import {
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {AuthContext} from '../App'
 import {PathList} from './BrowseScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  DownloadScreen({ navigation }){
-    
+    const [isEmpty, setEmpty] = React.useState(true);
     return (
         <>
     <StatusBar barStyle="light-content" />
     
     <LinearGradient colors={['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)']} style = { styles.container }>
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {
+            isEmpty ? (
+                <>
+                <View style={styles.noDataContainer}>
+                    <Ionicons style={alignSelf='center'} name="md-cloud-download" size={90 * widthRatio} color={'#939cab'}/> 
+                    <Text style={styles.boldTitle}>No downloads</Text>
+                    <Text style={styles.lightDescription}>Courses you download will appear here</Text>
+                </View>
+                
+
+                </>
+            ):(
+                <>
+                <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
             
-        </ScrollView>
+                </ScrollView>
+                </>
+            )
+        }
+        
     </LinearGradient>
         
     </>
@@ -49,6 +67,28 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection : 'column',
     },
-    
+    noDataContainer : {
+        flex : 1,
+        alignItems : 'center',
+        justifyContent : 'center'
+    },
+    boldTitle :{ 
+        
+        
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        fontSize: 20 * widthRatio,
+       
+        color: '#939cab',
+    },
+    lightDescription: {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 15 * widthRatio,
+       
+        color: '#939cab',
+    }
 });
 

@@ -59,12 +59,14 @@ export default function  SignInScreen ({ navigation, route }){
             <View style = { styles.itemsFrame }>
             <Text style={styles.label}>Email or username</Text>
             <TextInput
+                keyboardAppearance={'dark'}
                 style={styles.textInput}
                 onChangeText={text => onChangeEmailField(text)}
                 value={emailValue}
             />
             <Text style={styles.label}>Password</Text>
             <TextInput
+                keyboardAppearance={'dark'}
                 style={styles.textInput}
                 onChangeText={text => onChangePassword(text)}
                 secureTextEntry={true}
