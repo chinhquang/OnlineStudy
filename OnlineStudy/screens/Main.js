@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen'
+import SettingScreen from './SettingScreen'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
@@ -81,7 +82,7 @@ if (isSignout){
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
     
-    
+    <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
     </HomeStack.Navigator>
     
   )

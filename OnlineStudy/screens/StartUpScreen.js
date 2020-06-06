@@ -22,7 +22,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
 import {ColorThemeContext} from "../App.js"
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375

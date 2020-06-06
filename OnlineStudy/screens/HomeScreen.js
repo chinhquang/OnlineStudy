@@ -82,24 +82,8 @@ export default function  HomeScreen({ navigation }){
     }
     const {signOut} = React.useContext(AuthContext);
     settingClick=()=>{
-        Alert.alert(
-            "Setting",
-            "This feature have just implemented SIGN OUT",
-            [
-              {
-                text: "Cancel",
-                onPress: () => {console.log("Cancel Pressed")},
-                style: "cancel"
-              },
-              { text: "OK", onPress: ()=>{ doSignOut()}}
-            ],
-            { cancelable: false }
-          );
+        navigation.navigate ('SettingScreen')
     };
-    doSignOut = () => {
-        
-        signOut()
-    }
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />

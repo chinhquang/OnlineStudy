@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  ImageBackground,FlatList
+  ImageBackground,FlatList, List
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -26,6 +26,7 @@ import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
+
 import {
   Header,
   LearnMoreLinks,
@@ -232,7 +233,7 @@ export default function  BrowseScreen ({ navigation }){
                     </ImageBackground>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.headerSection} >Popular skills</Text>
+            <Text style={{...styles.headerSection, color: colors.textPrimary}} >Popular skills</Text>
             <CustomListSubjectView itemList={this.getSubjectData()} />
             <SubjectBannerList itemList={this.getSubjectBannerData()}/>
             <View style={styles.coursePathHeaderContainer}>
@@ -242,7 +243,7 @@ export default function  BrowseScreen ({ navigation }){
                 </TouchableOpacity>
             </View>
             <PathList itemList={this.getPathData()}></PathList>
-            <Text style={styles.headerSection}>Top Authors</Text>
+            <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top Authors</Text>
             <TopAuthorList itemList={this.getAuthorData()}></TopAuthorList>
         </ScrollView>
 
