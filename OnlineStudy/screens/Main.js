@@ -10,6 +10,7 @@ import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
 import DownloadScreen from './DownloadScreen'
+import ThemeSetting from './ThemeSetting'
 import {LoginStatusContext, ColorThemeContext} from '../App.js'
 /**
  * Sample React Native App
@@ -83,6 +84,9 @@ if (isSignout){
       }} name="HomeScreen" component={HomeScreen} /> 
     
     <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
+    <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
+
+    
     </HomeStack.Navigator>
     
   )

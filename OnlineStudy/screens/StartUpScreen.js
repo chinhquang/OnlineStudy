@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
 
         
     },
+    
     whiteText : {
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',

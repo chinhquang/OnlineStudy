@@ -7,6 +7,8 @@
  */
 
 import React,{Component} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   SafeAreaView,
   StyleSheet,
@@ -19,7 +21,8 @@ import {
   FlatList, 
   Alert,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  TouchableWithoutFeedback
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -31,23 +34,37 @@ const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 
-export const CourseList = ({ itemList }) => (
-    <View style={styles.bannerList}>
+export function CourseList ({ itemList, navigation },props) {
+    showCourseDetail=(item)=>{
+        console.log(item)
+        navigation.navigate ('CourseDetail', item)
+    };
+    return (
+        <View style={styles.bannerList}>
         <FlatList
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
             
                 data={itemList}
                 keyExtractor={item => item.key} // 
-                renderItem={({ item }) => <CourseRow
-                    data={item}
-                    
-                />
+                renderItem={({ item }) =>{
+                    return (
+                        <TouchableOpacity onPress = {()=>showCourseDetail(item)}>
+                            <CourseRow
+                            data={item}
+
+                        />
+                        </TouchableOpacity>
+                        
+                    )
+                } 
             }
             />
 
     </View>
 );
+}
+    
 export default function  HomeScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
 
@@ -84,6 +101,7 @@ export default function  HomeScreen({ navigation }){
     settingClick=()=>{
         navigation.navigate ('SettingScreen')
     };
+    
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />
@@ -111,7 +129,7 @@ export default function  HomeScreen({ navigation }){
                             <Text style={styles.seeAllButtonText}>See all ></Text>
                         </TouchableOpacity>
                     </View>
-                    <CourseList itemList={this.getCourseData()}></CourseList>
+                    <CourseList itemList={this.getCourseData()} navigation={navigation} ></CourseList>
                     </>
                     
                 ))

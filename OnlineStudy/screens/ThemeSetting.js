@@ -25,29 +25,23 @@ import { ListItem } from 'react-native-elements'
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext} from '../App'
+import {AuthContext, ColorThemeContext, mainColors} from '../App'
 import CustomButton from '../components/CustomButton'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 
 
-export default function  SettingScreen({ navigation }){
+export default function  ThemeSetting({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
     const list = [
         {
-            id : 1,
-            name: 'Theme',
-            value : colors.type == 'dark' ? 'Dark' : 'Light'
-
-            
+          name: 'Dark',
+          isCheck : colors.type == 'dark'
         },
         {
-            id : 2,
-            name: 'App version',
-            value :'1.0.1'
-          
+          name: 'Light',
+          isCheck : colors.type == 'light'
         },
       ]
     const {signOut} = React.useContext(AuthContext);
@@ -56,14 +50,14 @@ export default function  SettingScreen({ navigation }){
         
         signOut()
     }
-
-    selectItem = (i) => {
-        if (i==1){
-            navigation.navigate ('ThemeSettingScreen')
+    changeTheme = (themeName) =>{
+        if (themeName == 'Dark' && colors.type != 'dark'){
+            setColors(mainColors.darkTheme)
+        } 
+        if (themeName == 'Light' && colors.type != 'light'){
+            setColors(mainColors.lightTheme)
         }
-        
     }
-    
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />
@@ -71,30 +65,29 @@ export default function  SettingScreen({ navigation }){
     <LinearGradient colors={colors.gradientColor} style = { styles.container }>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
          
-        <View >
+        <View style={{width : 350 * widthRatio}}>
         {
             list.map((l, i) => (
-            <ListItem 
+            <ListItem
                 key={i}
                 underlayColor="#807c7c"
-                onPress={() =>this.selectItem(l.id)} 
-                containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
-                contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
+                containerStyle={{ backgroundColor :'rgba(0,0,0,0)' }}
+                onPress = {()=> changeTheme(l.name)}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 titleStyle={{ color: colors.textPrimary, fontWeight: 'normal' }}
                 title={l.name}
                 // subtitle={l.subtitle}
+                checkmark={l.isCheck}
+                
                 rightSubtitle={l.value}
                 rightSubtitleStyle={{color: colors.textPrimary}}
                 bottomDivider
-                chevron
-            
+
             />
             ))
         }
         </View>
-        <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton>
-
+        
         </ScrollView>
     </LinearGradient>
         
@@ -106,29 +99,11 @@ export default function  SettingScreen({ navigation }){
 const styles = StyleSheet.create({
     container : {
         flex: 1,
+       
         flexDirection : 'column',
         alignItems : 'center'
     },
     
-    yellowText : {
-        fontFamily: "Helvetica Neue",
-        fontStyle: 'normal',
-        fontWeight: '700',
-        fontSize: 18 * widthRatio,
-        lineHeight: 21 * widthRatio,
-
-        
-    },
-    borderButton: {
-        marginTop : 10 * widthRatio,
-        width : 350 * widthRatio,
-        aspectRatio : 350/47,
-        
-        borderWidth : 1,
-        borderRadius  : 7 * widthRatio,
-        marginBottom : 10 * widthRatio,
-        alignItems : "center",
-        justifyContent : "center"
-    }
+    
 });
 
