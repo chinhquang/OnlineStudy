@@ -19,7 +19,8 @@ import {
   FlatList, 
   Alert,
   TouchableOpacity,
-  Animated
+  Animated,
+  Platform
   
 } from 'react-native';
 // import * as ScreenOrientation from 'expo-screen-orientation';
@@ -28,6 +29,7 @@ import { ListItem } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
 import {AuthContext, ColorThemeContext, mainColors} from '../App'
+import {StatusBarHeight} from '../utils/Dimension'
 import Video from 'react-native-video';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 
@@ -65,11 +67,12 @@ export default function  CourseDetail({ navigation, route}){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const [currentTime, setCurrentTime] = React.useState(0);
     const [duration, setDuration] = React.useState(0);
-    const [isFullScreen, setIsFullScreen] = React.useState(true);
+    const [isFullScreen, setIsFullScreen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const [paused, setPaused] = React.useState(true);
     const [playerState, setPlayerState] = React.useState(PLAYER_STATES.PAUSED);
     const [screenType, setScreenType] = React.useState('content');
+    
     const {signOut} = React.useContext(AuthContext);
    
     
@@ -82,10 +85,11 @@ export default function  CourseDetail({ navigation, route}){
         // }else {
         //     setScreenType('content')
         // }
-
-        toggleAnimation()
+        videoPlayer.current.presentFullscreenPlayer()
+        // toggleAnimation()
     }
     const onPaused = playerState => {
+
         setPaused(!paused);
         setPlayerState(playerState);
     };
@@ -111,8 +115,10 @@ export default function  CourseDetail({ navigation, route}){
     };
     
     const onLoad = data => {
+       
         setDuration(data.duration);
         setIsLoading(false);
+        
     };
 
     const onLoadStart = () => setIsLoading(true);
@@ -160,6 +166,7 @@ export default function  CourseDetail({ navigation, route}){
         onSeeking={onSeeking}
         playerState={playerState}
         progress={currentTime}
+        
       >
         <MediaControls.Toolbar>
           {/* <View style={styles.toolbar}>
@@ -181,7 +188,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     videoContainer : {
-        
+        marginTop: StatusBarHeight
     },
     videoFullScreenContainer : {
         flex : 1

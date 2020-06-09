@@ -21,8 +21,8 @@ import {
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
+import {StatusBarHeight} from '../utils/Dimension'
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SearchBar } from 'react-native-elements'
 import {ColorThemeContext} from '../App'
 const {width, height} = Dimensions.get('window');
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
 
     gradient:{
         flex : 1,
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     }
 });
 
