@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         width : 200 * widthRatio,
         aspectRatio : 3/3.2,
         alignItems : 'center',
-        backgroundColor : 'white',
+        
         marginVertical : 8 * widthRatio,
         marginHorizontal: 10 * widthRatio,
         backgroundColor : "rgba(38, 50, 56, 0.7)",

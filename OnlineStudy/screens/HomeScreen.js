@@ -25,16 +25,28 @@ import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
 import {AuthContext, ColorThemeContext} from '../App'
 import {PathList} from './BrowseScreen'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 
 export function CourseList ({ itemList, navigation },props) {
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+
     showCourseDetail=(item)=>{
         console.log(item)
         navigation.navigate ('CourseDetail', item)
     };
+    ListEmpty = () => {
+        return (
+          //View to show when list is empty
+          <View style={{...styles.bookmarkEmpty, backgroundColor: colors.emptyCellBackgroundColor}}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={70 * widthRatio} color={'#939cab'}/> 
+                    <Text style={styles.lightDescription}>Use bookmarks to quickly save courses for later</Text>
+          </View>
+        );
+      };
     return (
         <View style={styles.bannerList}>
         <FlatList
@@ -43,9 +55,10 @@ export function CourseList ({ itemList, navigation },props) {
             
                 data={itemList}
                 keyExtractor={item => item.key} // 
+                ListEmptyComponent={ListEmpty}
                 renderItem={({ item }) =>{
                     return (
-                        <TouchableOpacity onPress = {()=>showCourseDetail(item)}>
+                        <TouchableOpacity onPress = {()=> showCourseDetail(item)}>
                             <CourseRow
                             data={item}
 
@@ -54,6 +67,7 @@ export function CourseList ({ itemList, navigation },props) {
                         
                     )
                 } 
+                
             }
             />
 
@@ -88,6 +102,25 @@ export default function  HomeScreen({ navigation }){
                 totalRating : 832,
                 totalDuration : '10h',
                 date : 'Feb 2019',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+        ]
+    }
+    getBookmarkData = () =>{
+        return []
+    }
+    getPathData = () =>{
+        return [
+            {
+                key: 1,
+                title: 'Querying Data with SQL from PostgreSQL',
+                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
+                courseCount : 6,
+            },
+            {
+                key: 2,
+                title: 'Querying Data with SQL from PostgreSQL',
                 imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
                 courseCount : 6,
             },
@@ -130,13 +163,31 @@ export default function  HomeScreen({ navigation }){
                 ))
             }
             </View>
+            <View style={styles.coursePathHeaderContainer}>
+                <Text style={{...styles.headerSection, color: colors.textPrimary}}>My paths</Text>
+                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                </TouchableOpacity>
+            </View>
+            <PathList itemList={this.getPathData()}></PathList>
+            <View style={styles.coursePathHeaderContainer}>
+                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Bookmarks</Text>
+                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                </TouchableOpacity>
+            </View>
+            <CourseList itemList={this.getBookmarkData()} navigation={navigation} ></CourseList>
+            
+            
+            
+            
         </ScrollView>
     </LinearGradient>
         
     </>
     );
   
-};
+};StatusBar
 
 const styles = StyleSheet.create({
     container : {
@@ -210,6 +261,25 @@ const styles = StyleSheet.create({
     descriptionContainer: {
         alignSelf : 'center',
         width : 350 * widthRatio,
+    },
+    bookmarkEmpty:{
+        width : 350,
+        height: 150 * widthRatio,
+        // backgroundColor : 'rgba(38, 50, 56, 0.7)',
+        alignItems : 'center',
+        justifyContent : "center",
+        marginVertical : 8 * widthRatio,
+        marginHorizontal: 10 * widthRatio,
+    },
+    
+    lightDescription: {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 14 * widthRatio,
+        width : '70%',
+        color: '#939cab',
+        textAlign: 'center'
     }
 });
 

@@ -122,6 +122,7 @@ export const mainColors = {
   smallButtonBackgroundColor : "#9e9e9e",
   cellBackgroundColor : "#e0e0e0",
   subjectBackgroundColor: "#9e9e9e",
+  emptyCellBackgroundColor : "white",
   },
   darkTheme: {
   //dark theme colors 
@@ -138,7 +139,7 @@ export const mainColors = {
   smallButtonBackgroundColor : "#4f525c",
   cellBackgroundColor : "rgba(38, 50, 56, 0.7)",
   subjectBackgroundColor: "rgba(38, 50, 56, 0.7)",
-
+  emptyCellBackgroundColor : "rgba(38, 50, 56, 0.7)",
   }
   //common colors
 }
