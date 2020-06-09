@@ -15,7 +15,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StartUpScreen from './screens/StartUpScreen'
 import SignInScreen from './screens/SignInScreen'
-import CourseDetail from './screens/CourseDetail'
+import CourseDetail  from './screens/CourseDetail'
+import VideoFullScreen  from './screens/CourseDetail'
 import Main from './screens/Main'
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
@@ -233,7 +234,9 @@ const App = () => {
 
           <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
           <mainStack.Screen options={{headerShown: false}} name="CourseDetail" component={CourseDetail} />
-          
+          <mainStack.Screen options={{headerShown: false}} name="VideoFullScreen" component={VideoFullScreen} />
+
+                    
         </mainStack.Navigator>
         </NavigationContainer>
       </LoginStatusContext.Provider>

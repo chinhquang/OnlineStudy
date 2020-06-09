@@ -1,6 +1,5 @@
-  platform :ios, '9.0'
+  platform :ios, '10.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-
 def add_flipper_pods!(versions = {})
   versions['Flipper'] ||= '~> 0.33.1'
   versions['DoubleConversion'] ||= '1.1.7'
@@ -45,6 +44,7 @@ def flipper_post_install(installer)
 end
 
 target 'OnlineStudy' do
+  
   # Pods for OnlineStudy
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
@@ -89,7 +89,6 @@ target 'OnlineStudy' do
   end
 
   use_native_modules!
-
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

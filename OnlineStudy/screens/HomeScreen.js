@@ -7,8 +7,6 @@
  */
 
 import React,{Component} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,12 +15,10 @@ import {
   Text,
   StatusBar, 
   Dimensions,
-  Image,
   FlatList, 
   Alert,
   TouchableOpacity,
   ImageBackground,
-  TouchableWithoutFeedback
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -97,7 +93,6 @@ export default function  HomeScreen({ navigation }){
             },
         ]
     }
-    const {signOut} = React.useContext(AuthContext);
     settingClick=()=>{
         navigation.navigate ('SettingScreen')
     };

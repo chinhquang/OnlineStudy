@@ -7,7 +7,7 @@ import App from './App';
 import {name as appName} from './app.json';
 import { Platform } from 'react-native';
 import KeyboardManager from 'react-native-keyboard-manager';
-
+console.disableYellowBox = true;
 if (Platform.OS === 'ios') {
     KeyboardManager.setEnable(true);
     KeyboardManager.setEnableDebugging(false);
