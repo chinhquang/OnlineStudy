@@ -25,7 +25,7 @@ import {
 } from 'react-native';
 // import * as ScreenOrientation from 'expo-screen-orientation';
 import { ListItem } from 'react-native-elements'
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
@@ -39,44 +39,61 @@ const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const HEADER_EXPANDED_HEIGHT = 200 * widthRatio;
 const HEADER_COLLAPSED_HEIGHT = 60 * widthRatio;
-const str = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ultrices ante. Duis vulputate lorem non tortor pharetra, aliquet aliquet leo efficitur. Ut sed rutrum nisi. Pellentesque facilisis erat sit amet mi ornare, et dapibus tortor congue. Integer vulputate magna a vehicula accumsan. Cras nec nunc consequat, volutpat felis vitae, pulvinar nibh. Vestibulum lacinia in tortor vel maximus. Suspendisse semper dolor ligula. Praesent pellentesque suscipit enim, at dictum nisl pellentesque non. Phasellus nec consectetur magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed condimentum porttitor elit ut dignissim. Nunc nec libero a orci porttitor accumsan eget sed diam. Cras dignissim, nulla sed laoreet accumsan, mi quam egestas mauris, id posuere purus lorem sagittis purus. Duis sollicitudin neque ac aliquet sollicitudin.
-In eros est, sollicitudin sit amet risus eget, porttitor pulvinar ipsum. Nulla eget quam arcu. Mauris vel odio cursus, hendrerit augue et, ultricies massa. Phasellus pharetra et libero id semper. Sed sollicitudin commodo mi, nec efficitur sem congue vitae. Ut pellentesque augue ut lacus finibus sollicitudin. Donec a auctor augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam vitae convallis nulla. Maecenas venenatis lorem at mi commodo pharetra. Mauris finibus hendrerit magna, sit amet ultrices turpis aliquet nec. Proin et diam suscipit, sollicitudin risus ac, porta nibh.
-Aliquam pretium, elit maximus vehicula lobortis, neque dolor tempor nisl, sit amet interdum erat turpis eu metus. Sed semper libero ac diam finibus, ac interdum orci placerat. Donec nec erat ac erat rhoncus blandit. Nunc felis dui, semper eu porttitor in, porttitor vitae eros. In vel mattis est, vel molestie dui. Nulla semper nisl tempor scelerisque egestas. Duis faucibus, elit id accumsan aliquet, turpis felis scelerisque felis, quis tincidunt felis massa nec eros. Vivamus pellentesque congue velit finibus porttitor. Pellentesque eu mi lacinia sapien fermentum tincidunt sit amet eu nisl. Suspendisse pharetra ex in magna molestie venenatis.
-Suspendisse non gravida tortor. Donec tristique ipsum eget arcu aliquet molestie. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam cursus purus eget accumsan maximus. Duis eu iaculis arcu. Donec iaculis, sem vel condimentum maximus, lectus nisl pellentesque dolor, non ullamcorper sapien lectus sed enim. Aenean et leo nisi. Nulla viverra magna id luctus fermentum. Donec et mauris placerat, mollis elit lacinia, cursus lacus. Donec aliquet libero arcu, non consectetur elit maximus sit amet. Quisque lacinia, libero et fermentum rutrum, lorem arcu tincidunt ante, sed iaculis velit tortor non lacus.
-Sed accumsan lectus laoreet mollis cursus. Phasellus sagittis vulputate erat, non tempus dui pellentesque vel. Fusce imperdiet nulla vitae mauris facilisis bibendum. Fusce vestibulum fringilla orci, sit amet euismod nunc eleifend id. Curabitur mattis dolor at odio maximus lacinia. Vivamus ornare lorem sed augue faucibus, vel volutpat lacus elementum. Suspendisse potenti.`
+const TabBarHeight = 48;
+const HeaderHeight = 300;
+const tab1ItemSize = (Dimensions.get('window').width - 30) / 2;
+const tab2ItemSize = (Dimensions.get('window').width - 40) / 3;
+class TabScene extends React.Component {
+  render = () => {
+    const windowHeight = Dimensions.get('window').height;
+    const {
+      numCols,
+      data,
+      renderItem,
+      onGetRef,
+      scrollY,
+      onScrollEndDrag,
+      onMomentumScrollEnd,
+      onMomentumScrollBegin,
+      stickyHeaderIndices
+    } = this.props;
+    console.log('Sticky ' + stickyHeaderIndices)
+    return (
+      <Animated.FlatList
+        scrollToOverflowEnabled={true}
+        numColumns={numCols}
+        ref={onGetRef}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: true},
+        )}
 
-
-const DATA = [
-  {
-    title: "Main dishes",
-    data: ["Pizza", "Burger", "Risotto"]
-  },
-  {
-    title: "Sides",
-    data: ["French Fries", "Onion Rings", "Fried Shrimps"]
-  },
-  {
-    title: "Drinks",
-    data: ["Water", "Coke", "Beer"]
-  },
-  {
-    title: "Desserts",
-    data: ["Cheese Cake", "Ice Cream"]
-  }
-];
-const initialLayout = { width: Dimensions.get('window').width };
-
-const Item = ({ title }) => (
-  <View style={styles.itemSection}>
-    <Text style={styles.titleSection}>{title}</Text>
-  </View>
-);
+        onMomentumScrollBegin={onMomentumScrollBegin}
+        onScrollEndDrag={onScrollEndDrag}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        // ListHeaderComponent={() => <View style={{height: 10}} />}
+        contentContainerStyle={{
+          paddingTop: HeaderHeight + TabBarHeight,
+          paddingHorizontal: 10,
+          minHeight: windowHeight - TabBarHeight,
+        }}
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={stickyHeaderIndices}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
+  };
+}
 
 export default function  CourseDetail({ navigation, route}){
     const videoPlayer = useRef(null);
     const [animationValue, setAnimationValue] = React.useState(new Animated.Value(width * 0.5));
     const [viewState, setViewState] = React.useState(true);
-    const [scrollY, setScrollY] = React.useState(new Animated.Value(0));
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const [currentTime, setCurrentTime] = React.useState(0);
     const [duration, setDuration] = React.useState(0);
@@ -85,38 +102,260 @@ export default function  CourseDetail({ navigation, route}){
     const [paused, setPaused] = React.useState(true);
     const [playerState, setPlayerState] = React.useState(PLAYER_STATES.PAUSED);
     const [screenType, setScreenType] = React.useState('content');
-    const data = route.params
-    const toggleAnimation=()=>{
- 
-        if(viewState == true){
-            StatusBar.setHidden(true);
-            Animated.timing(animationValue, {
-            toValue : height,
-            timing : 1500
-            }).start(()=>{
-                setViewState(false)
-            });
+    
+    const [tab1Data, setData1]=  useState([
+      { name: "Movies", header: true },
+      { name: "Interstellar", header: false },
+      { name: "Dark Knight", header: false },
+      { name: "Pop", header: false },
+      { name: "Pulp Fiction", header: false },
+      { name: "Burning Train", header: false },
+      { name: "Music", header: true },
+      { name: "Adams", header: false },
+      { name: "Nirvana", header: false },
+      { name: "Amrit Maan", header: false },
+      { name: "Oye Hoye", header: false },
+      { name: "Eminem", header: false },
+      { name: "Places", header: true },
+      { name: "Jordan", header: false },
+      { name: "Punjab", header: false },
+      { name: "Ludhiana", header: false },
+      { name: "Jamshedpur", header: false },
+      { name: "India", header: false },
+      { name: "People", header: true },
+      { name: "Jazzy", header: false },
+      { name: "Appie", header: false },
+      { name: "Baby", header: false },
+      { name: "Sunil", header: false },
+      { name: "Arrow", header: false },
+      { name: "Things", header: true },
+      { name: "table", header: false },
+      { name: "chair", header: false },
+      { name: "fan", header: false },
+      { name: "cup", header: false },
+      { name: "cube", header: false }
+    ])
+    const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
+    const [tabIndex, setIndex] = useState(0);
+    const [routes] = useState([
+      {key: 'tab1', title: 'Content'},
+      {key: 'tab2', title: 'Transcript'},
+    ]);
+    // const [tab1Data] = useState(Array(40).fill(0));
+    const [tab2Data] = useState(Array(30).fill(0));
+    const scrollY = useRef(new Animated.Value(0)).current;
+    let listRefArr = useRef([]);
+    let listOffset = useRef({});
+    let isListGliding = useRef(false);
+    const syncScrollOffset = () => {
+      const curRouteKey = routes[tabIndex].key;
+      listRefArr.current.forEach((item) => {
+        if (item.key !== curRouteKey) {
+          if (scrollY._value < HeaderHeight && scrollY._value >= 0) {
+            if (item.value) {
+              item.value.scrollToOffset({
+                offset: scrollY._value,
+                animated: false,
+              });
+              listOffset.current[item.key] = scrollY._value;
+            }
+          } else if (scrollY._value >= HeaderHeight) {
+            if (
+              listOffset.current[item.key] < HeaderHeight ||
+              listOffset.current[item.key] == null
+            ) {
+              if (item.value) {
+                item.value.scrollToOffset({
+                  offset: HeaderHeight,
+                  animated: false,
+                });
+                listOffset.current[item.key] = HeaderHeight;
+              }
+            }
+          }
         }
-        else{
-          Animated.timing(animationValue, {
-            toValue : width * 0.5,
-            timing : 1500
-          }).start(setViewState(true)
-          );
+      });
+    };
+  
+    const onMomentumScrollBegin = () => {
+      isListGliding.current = true;
+    };
+    const onMomentumScrollEnd = () => {
+      isListGliding.current = false;
+      syncScrollOffset();
+    };
+  
+    const onScrollEndDrag = () => {
+      syncScrollOffset();
+    };
+  
+    const renderHeader = () => {
+      const y = scrollY.interpolate({
+        inputRange: [0, HeaderHeight],
+        outputRange: [0, -HeaderHeight],
+        extrapolateRight: 'clamp',
+      });
+      return (
+        <Animated.View style={[styles.header, {transform: [{translateY: y}]}]}>
+          <Text>{'Header'}</Text>
+        </Animated.View>
+      );
+    };
+    const renderTab1Item = ({item, index}) => {
+      return (
+        <View
+          style={{
+            
+            width: 350 * widthRatio,
+
+            height: tab1ItemSize,
+            backgroundColor: '#000000',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            {
+              item.header 
+              ? <Text style={{color : 'white', fontWeight:'bold', fontSize : 20*widthRatio}}>{item.name}</Text> 
+              : <Text style={{color : 'white'}}>{item.name}</Text>
+            }
+          
+        </View>
+      );
+    };
+  
+    const renderTab2Item = ({item, index}) => {
+      return (
+        <View
+          style={{
+            marginLeft: index % 3 === 0 ? 0 : 10,
+            borderRadius: 16,
+            width: tab2ItemSize,
+            height: tab2ItemSize,
+            backgroundColor: '#aaa',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text>{index}</Text>
+        </View>
+      );
+    };
+    const renderLabel = ({route, focused}) => {
+      return (
+        <Text style={[styles.label, {opacity: focused ? 1 : 0.8}]}>
+          {route.title}
+        </Text>
+      );
+    };
+    const renderScene = ({route}) => {
+      const focused = route.key === routes[tabIndex].key;
+      let numCols;
+      let data;
+      let renderItem;
+      let stickyHeader=[]
+      switch (route.key) {
+        case 'tab1':
+          numCols = 1;
+          data = tab1Data;
+          renderItem = renderTab1Item;
+          stickyHeader = stickyHeaderIndices
+          break;
+        case 'tab2':
+          numCols = 1;
+          data = tab2Data;
+          renderItem = renderTab2Item;
+          break;
+        default:
+          return null;
+      }
+      return (
+        <TabScene
+          numCols={numCols}
+          data={data}
+          renderItem={renderItem}
+          scrollY={scrollY}
+          onMomentumScrollBegin={onMomentumScrollBegin}
+          onScrollEndDrag={onScrollEndDrag}
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          stickyHeaderIndices={stickyHeader}
+          onGetRef={(ref) => {
+            if (ref) {
+              const found = listRefArr.current.find((e) => e.key === route.key);
+              if (!found) {
+                listRefArr.current.push({
+                  key: route.key,
+                  value: ref,
+                });
+              }
+            }
+          }}
+        />
+      );
+    };
+  
+    const renderTabBar = (props) => {
+      const y = scrollY.interpolate({
+        inputRange: [0, HeaderHeight],
+        outputRange: [HeaderHeight, 0],
+        extrapolateRight: 'clamp',
+      });
+      return (
+        <Animated.View
+          style={{
+            top: 0,
+            zIndex: 1,
+            position: 'absolute',
+            transform: [{translateY: y}],
+            width: '100%',
+          }}>
+          <TabBar
+            {...props}
+            onTabPress={({route, preventDefault}) => {
+              if (isListGliding.current) {
+                preventDefault();
+              }
+            }}
+            style={styles.tab}
+            renderLabel={renderLabel}
+            indicatorStyle={{backgroundColor : colors.buttonColor}}
+          />
+        </Animated.View>
+      );
+    };
+  
+    const renderTabView = () => {
+      return (
+        <TabView
+          onIndexChange={(index) => setIndex(index)}
+          navigationState={{index: tabIndex, routes}}
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          initialLayout={{
+            height: 0,
+            width: Dimensions.get('window').width,
+          }}
+        />
+      );
+    };
+    React.useEffect(() => {
+      var arr = [];
+      tab1Data.map(obj => {
+        if (obj.header == true) {
+          arr.push(tab1Data.indexOf(obj));
         }
-    }
-    const topConstraint = scrollY.interpolate({
-      inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-      outputRange: [0, HEADER_COLLAPSED_HEIGHT - HEADER_EXPANDED_HEIGHT],
-      extrapolate: 'clamp'
-    });
-   
-    const first = scrollY.interpolate({
-      inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT , 9999],
-      outputRange: [0,HEADER_COLLAPSED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
-      useNativeDrive : true,
-      extrapolate: 'clamp'
-    });
+      });
+      arr.push(0);
+      setStickyHeaderIndices(arr);
+
+
+      scrollY.addListener(({value}) => {
+        const curRoute = routes[tabIndex].key;
+        listOffset.current[curRoute] = value;
+      });
+      return () => {
+        scrollY.removeAllListeners();
+      };
+      
+    }, [routes, tabIndex]);
    
     // const [top, setTop] = useState( new Animated.Value(0))
    
@@ -173,55 +412,7 @@ export default function  CourseDetail({ navigation, route}){
     
     const onSeeking = currentTime => setCurrentTime(currentTime);
 
-    handleScroll = (e) => {
-        // if (e.nativeEvent.contentOffset.y > HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT ){
-          
-        //   // setTop (HEADER_COLLAPSED_HEIGHT)
-        // } else {
-        //   setTop (0)
-        // }
-    }
-    const [index, setIndex] = React.useState(0);
-    const [routes] = React.useState([
-      { key: 'first', title: 'First' },
-      { key: 'second', title: 'Second' },
-    ]);
-
     
-    const FirstRoute = () => (
-      <View></View>
-    );
-    
-    const SecondRoute = () => (
-        <Animated.SectionList
-          contentContainerStyle={{...styles.scrollContainer, paddingTop : HEADER_EXPANDED_HEIGHT }}
-          style={{marginTop: first}}
-          sections={DATA}
-          onScroll={Animated.event(
-            [{ nativeEvent: {
-                contentOffset: {
-                  y: scrollY
-                }
-              }
-            }],
-            { 
-            
-              listener: (event) => handleScroll(event)
-            }
-            )
-          }
-          scrollEventThrottle={16}
-          keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item title={item} />}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.headerSection}>{title}</Text>
-          )}
-        />
-    );
-    const renderScene = SceneMap({
-      first: FirstRoute,
-      second: SecondRoute,
-    });
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />
@@ -271,46 +462,10 @@ export default function  CourseDetail({ navigation, route}){
         </MediaControls.Toolbar>
       </MediaControls>
     </Animated.View>
-    <View style={styles.container}>
-        <Animated.View style={[styles.header, { top: topConstraint }]}>
-            <Text style={{position :'absolute'}}>{data.courseName}</Text>
-        </Animated.View>
-        
-        {/* <TabView
-            style={{ marginTop : HEADER_EXPANDED_HEIGHT}}
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={initialLayout}
-          /> */}
-        <Animated.SectionList
-          contentContainerStyle={{...styles.scrollContainer, paddingTop : HEADER_EXPANDED_HEIGHT }}
-          style={{marginTop: first}}
-          sections={DATA}
-          onScroll={Animated.event(
-            [{ nativeEvent: {
-                contentOffset: {
-                  y: scrollY
-                }
-              }
-            }],
-            { 
-            
-              listener: (event) => handleScroll(event)
-            }
-            )
-          }
-          scrollEventThrottle={16}
-          keyExtractor={(item, index) => item + index}
-          renderItem={({ item }) => <Item title={item} />}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.headerSection}>{title}</Text>
-          )}
-        />
-        
-        
+    <View style={{flex: 1}}>
+        {renderTabView()}
+        {renderHeader()}
       </View>
-    
     </LinearGradient>
         
     </>
@@ -362,17 +517,13 @@ const styles = StyleSheet.create({
       fontSize: 24,
       
     },
-    itemSection: {
-      backgroundColor: "#f9c2ff",
-      padding: 20,
-      marginVertical: 8
+    label:{
+      
+      color: "white",
+      fontWeight: "bold",
+      fontSize: 16 * widthRatio,
     },
-    headerSection: {
-      fontSize: 32,
-      backgroundColor: "#fff"
-    },
-    titleSection: {
-      fontSize: 24
-    }
+    tab: {elevation: 0, shadowOpacity: 0, backgroundColor: "rgba(38, 50, 56, 0.7)"},
+    
 });
 
