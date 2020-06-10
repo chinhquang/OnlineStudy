@@ -20,11 +20,12 @@ import {
   Alert,
   TouchableOpacity,
   Animated,
-  Platform
-  
+  Platform,
+  SectionList
 } from 'react-native';
 // import * as ScreenOrientation from 'expo-screen-orientation';
 import { ListItem } from 'react-native-elements'
+import { TabView, SceneMap } from 'react-native-tab-view';
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
@@ -45,6 +46,31 @@ Suspendisse non gravida tortor. Donec tristique ipsum eget arcu aliquet molestie
 Sed accumsan lectus laoreet mollis cursus. Phasellus sagittis vulputate erat, non tempus dui pellentesque vel. Fusce imperdiet nulla vitae mauris facilisis bibendum. Fusce vestibulum fringilla orci, sit amet euismod nunc eleifend id. Curabitur mattis dolor at odio maximus lacinia. Vivamus ornare lorem sed augue faucibus, vel volutpat lacus elementum. Suspendisse potenti.`
 
 
+const DATA = [
+  {
+    title: "Main dishes",
+    data: ["Pizza", "Burger", "Risotto"]
+  },
+  {
+    title: "Sides",
+    data: ["French Fries", "Onion Rings", "Fried Shrimps"]
+  },
+  {
+    title: "Drinks",
+    data: ["Water", "Coke", "Beer"]
+  },
+  {
+    title: "Desserts",
+    data: ["Cheese Cake", "Ice Cream"]
+  }
+];
+const initialLayout = { width: Dimensions.get('window').width };
+
+const Item = ({ title }) => (
+  <View style={styles.itemSection}>
+    <Text style={styles.titleSection}>{title}</Text>
+  </View>
+);
 
 export default function  CourseDetail({ navigation, route}){
     const videoPlayer = useRef(null);
@@ -60,7 +86,6 @@ export default function  CourseDetail({ navigation, route}){
     const [playerState, setPlayerState] = React.useState(PLAYER_STATES.PAUSED);
     const [screenType, setScreenType] = React.useState('content');
     const data = route.params
-    console.log(data)
     const toggleAnimation=()=>{
  
         if(viewState == true){
@@ -80,21 +105,21 @@ export default function  CourseDetail({ navigation, route}){
           );
         }
     }
-    const headerHeight = scrollY.interpolate({
+    const topConstraint = scrollY.interpolate({
       inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-      outputRange: [HEADER_EXPANDED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
+      outputRange: [0, HEADER_COLLAPSED_HEIGHT - HEADER_EXPANDED_HEIGHT],
       extrapolate: 'clamp'
     });
-    const headerTitleOpacity = scrollY.interpolate({
-      inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-      outputRange: [0, 1],
+   
+    const first = scrollY.interpolate({
+      inputRange: [0, HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT , 9999],
+      outputRange: [0,HEADER_COLLAPSED_HEIGHT, HEADER_COLLAPSED_HEIGHT],
+      useNativeDrive : true,
       extrapolate: 'clamp'
     });
-    const heroTitleOpacity = scrollY.interpolate({
-      inputRange: [0, HEADER_EXPANDED_HEIGHT-HEADER_COLLAPSED_HEIGHT],
-      outputRange: [1, 0],
-      extrapolate: 'clamp'
-    });
+   
+    // const [top, setTop] = useState( new Animated.Value(0))
+   
 
     const headerTitle = 'HEADER'
     dismiss = () =>{
@@ -147,7 +172,56 @@ export default function  CourseDetail({ navigation, route}){
     };
     
     const onSeeking = currentTime => setCurrentTime(currentTime);
+
+    handleScroll = (e) => {
+        // if (e.nativeEvent.contentOffset.y > HEADER_EXPANDED_HEIGHT - HEADER_COLLAPSED_HEIGHT ){
+          
+        //   // setTop (HEADER_COLLAPSED_HEIGHT)
+        // } else {
+        //   setTop (0)
+        // }
+    }
+    const [index, setIndex] = React.useState(0);
+    const [routes] = React.useState([
+      { key: 'first', title: 'First' },
+      { key: 'second', title: 'Second' },
+    ]);
+
     
+    const FirstRoute = () => (
+      <View></View>
+    );
+    
+    const SecondRoute = () => (
+        <Animated.SectionList
+          contentContainerStyle={{...styles.scrollContainer, paddingTop : HEADER_EXPANDED_HEIGHT }}
+          style={{marginTop: first}}
+          sections={DATA}
+          onScroll={Animated.event(
+            [{ nativeEvent: {
+                contentOffset: {
+                  y: scrollY
+                }
+              }
+            }],
+            { 
+            
+              listener: (event) => handleScroll(event)
+            }
+            )
+          }
+          scrollEventThrottle={16}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => <Item title={item} />}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.headerSection}>{title}</Text>
+          )}
+        />
+    );
+    const renderScene = SceneMap({
+      first: FirstRoute,
+      second: SecondRoute,
+    });
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />
@@ -198,25 +272,43 @@ export default function  CourseDetail({ navigation, route}){
       </MediaControls>
     </Animated.View>
     <View style={styles.container}>
-        <Animated.View style={[styles.header, { height: headerHeight }]}>
-          {/* <Animated.Text style={{textAlign: 'center', fontSize: 18, color: 'black', marginTop: 28, opacity: headerTitleOpacity}}>{headerTitle}</Animated.Text> */}
-          {/* <Animated.Text style={{textAlign: 'center', fontSize: 32, color: 'black', position: 'absolute', bottom: 16, left: 16, opacity: heroTitleOpacity}}>{headerTitle}</Animated.Text> */}
-          <Text style={{position :'absolute'}}>{data.courseName}</Text>
+        <Animated.View style={[styles.header, { top: topConstraint }]}>
+            <Text style={{position :'absolute'}}>{data.courseName}</Text>
         </Animated.View>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
+        
+        {/* <TabView
+            style={{ marginTop : HEADER_EXPANDED_HEIGHT}}
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={initialLayout}
+          /> */}
+        <Animated.SectionList
+          contentContainerStyle={{...styles.scrollContainer, paddingTop : HEADER_EXPANDED_HEIGHT }}
+          style={{marginTop: first}}
+          sections={DATA}
           onScroll={Animated.event(
             [{ nativeEvent: {
                 contentOffset: {
                   y: scrollY
                 }
               }
-            }])
+            }],
+            { 
+            
+              listener: (event) => handleScroll(event)
+            }
+            )
           }
-          scrollEventThrottle={16}>
-          <Text style={styles.title}>This is Title</Text>
-          <Text style={styles.content}>{str}</Text>
-        </ScrollView>
+          scrollEventThrottle={16}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => <Item title={item} />}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.headerSection}>{title}</Text>
+          )}
+        />
+        
+        
       </View>
     
     </LinearGradient>
@@ -231,7 +323,8 @@ const styles = StyleSheet.create({
        flex :1 
     },
     videoContainer : {
-        marginTop: StatusBarHeight
+        marginTop: StatusBarHeight,
+        zIndex : 2
     },
     videoFullScreenContainer : {
         flex : 1
@@ -249,21 +342,36 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
     },
     scrollContainer: {
+      
       padding: 16,
-      paddingTop: HEADER_EXPANDED_HEIGHT
+      // paddingTop: HEADER_EXPANDED_HEIGHT,
+      
     },
     header: {
-      backgroundColor: 'lightblue',
+      backgroundColor: 'rgba(0,0,0,0)',
       position: 'absolute',
       width: width,
-      top: 0,
+      height : HEADER_EXPANDED_HEIGHT,
       left: 0,
-      zIndex: 9999
+      zIndex: -1
     },
     title: {
       marginVertical: 16,
       color: "black",
       fontWeight: "bold",
+      fontSize: 24,
+      
+    },
+    itemSection: {
+      backgroundColor: "#f9c2ff",
+      padding: 20,
+      marginVertical: 8
+    },
+    headerSection: {
+      fontSize: 32,
+      backgroundColor: "#fff"
+    },
+    titleSection: {
       fontSize: 24
     }
 });
