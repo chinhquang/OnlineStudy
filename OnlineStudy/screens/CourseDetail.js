@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
       fontWeight: "bold",
       fontSize: 16 * widthRatio,
     },
-    tab: {elevation: 0, shadowOpacity: 0, backgroundColor: "rgba(38, 50, 56, 0.7)"},
+    tab: {elevation: 0, shadowOpacity: 0, backgroundColor: "rgba(38, 50, 56, 1)"},
     
 });
 
