@@ -59,7 +59,8 @@ export default function  CourseDetail({ navigation, route}){
     const [paused, setPaused] = React.useState(true);
     const [playerState, setPlayerState] = React.useState(PLAYER_STATES.PAUSED);
     const [screenType, setScreenType] = React.useState('content');
-    
+    const data = route.params
+    console.log(data)
     const toggleAnimation=()=>{
  
         if(viewState == true){
@@ -198,8 +199,9 @@ export default function  CourseDetail({ navigation, route}){
     </Animated.View>
     <View style={styles.container}>
         <Animated.View style={[styles.header, { height: headerHeight }]}>
-          <Animated.Text style={{textAlign: 'center', fontSize: 18, color: 'black', marginTop: 28, opacity: headerTitleOpacity}}>{headerTitle}</Animated.Text>
-          <Animated.Text style={{textAlign: 'center', fontSize: 32, color: 'black', position: 'absolute', bottom: 16, left: 16, opacity: heroTitleOpacity}}>{headerTitle}</Animated.Text>
+          {/* <Animated.Text style={{textAlign: 'center', fontSize: 18, color: 'black', marginTop: 28, opacity: headerTitleOpacity}}>{headerTitle}</Animated.Text> */}
+          {/* <Animated.Text style={{textAlign: 'center', fontSize: 32, color: 'black', position: 'absolute', bottom: 16, left: 16, opacity: heroTitleOpacity}}>{headerTitle}</Animated.Text> */}
+          <Text style={{position :'absolute'}}>{data.courseName}</Text>
         </Animated.View>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
