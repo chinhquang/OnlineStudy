@@ -118,6 +118,7 @@ export const mainColors = {
   textPrimary : "#000000",
   navTint : '#000000',
   tabBackgroundColor: 'rgba(248, 248, 248, 0.92)',
+  toolBackgroundColor: 'rgba(248, 248, 248, 1)',
   navIconTintColor : "gray",
   smallButtonBackgroundColor : "#9e9e9e",
   cellBackgroundColor : "#e0e0e0",
@@ -131,6 +132,8 @@ export const mainColors = {
   type : 'dark',
   buttonColor: '#FFE97D',
   backgroundColorButton : "#FFB74D",
+  toolBackgroundColor: 'rgba(38, 50, 56, 1)',
+
   gradientColor :['rgba(38, 50, 56, 1)', 'rgba(38, 50, 56, 0.7)'],
   textPrimary : "#ffffff",
   navTint : '#ffffff',

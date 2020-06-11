@@ -85,7 +85,18 @@ export default function  HomeScreen({ navigation }){
                 key: 1,
                 courseName : 'Angular Fundamental',
                 courseLevel : 'Intermediate',
-                authorName : ['Joe Eames', 'Jim Cooper'],
+                author : [
+                {
+                    key: 1,
+                    authorName: 'Joe Earnes',
+                    avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+                },
+                {
+                    key: 2,
+                    authorName: 'Jim Cooper',
+                    avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+                }
+                ],
                 averageRating : 4.5,
                 totalRating : 832,
                 totalDuration : '10h',
@@ -97,7 +108,18 @@ export default function  HomeScreen({ navigation }){
                 key: 2,
                 courseName : 'Angular Fundamental',
                 courseLevel : 'Intermediate',
-                authorName : ['Joe Eames', 'Jim Cooper'],
+                author : [
+                    {
+                        key: 1,
+                        authorName: 'Joe Earnes',
+                        avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+                    },
+                    {
+                        key: 2,
+                        authorName: 'Jim Cooper',
+                        avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
+                    }
+                ],
                 averageRating : 4.5,
                 totalRating : 832,
                 totalDuration : '10h',
@@ -263,7 +285,7 @@ const styles = StyleSheet.create({
         width : 350 * widthRatio,
     },
     bookmarkEmpty:{
-        width : 350,
+        width : 350 * widthRatio,
         height: 150 * widthRatio,
         // backgroundColor : 'rgba(38, 50, 56, 0.7)',
         alignItems : 'center',

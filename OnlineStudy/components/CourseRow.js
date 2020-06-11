@@ -68,10 +68,10 @@ const styles = StyleSheet.create({
 const ConcatString = (stringList) => {
     str = ""
     
-
+    console.log(stringList)
     for (let i = 0; i < stringList.length; i++) 
     {
-        str += stringList[i] 
+        str += stringList[i].authorName
         if (i != stringList.length - 1){
             str +=  ", "
         }
@@ -88,7 +88,7 @@ const CourseRow= ({ data }) => (
         </View >
         <View style={styles.content}>
             <Text style={styles.title}>{data.courseName}</Text>
-            <Text style={styles.courseCountLabel}>{ConcatString(data.authorName)}</Text>    
+            <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    
             <Text style={styles.courseCountLabel}>{data.courseLevel}  -  {data.date}  -  {data.totalDuration}</Text>  
             <View style={styles.star}>
                 <AirbnbRating

@@ -215,6 +215,7 @@ export default function  BrowseScreen ({ navigation }){
     return (
         <>
         <StatusBar barStyle={colors.statusBar}/>
+        <SafeAreaView></SafeAreaView>
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
