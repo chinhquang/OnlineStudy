@@ -45,7 +45,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const TabBarHeight = 48 * widthRatio;
-const HeaderHeight = 450 * widthRatio;
+const HeaderHeight = 405 * widthRatio;
 const tab1ItemSize = (Dimensions.get('window').width - 30) / 2;
 const tab2ItemSize = (Dimensions.get('window').width - 40) / 3;
 
@@ -216,7 +216,7 @@ export default function  CourseDetail({ navigation, route}){
                 <>
                   <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
                     <Image style={styles.avatarImage} source={{uri : item.avatarURL}}/>
-                    <Text numberOfLines={1} ellipsizeMode='tail' style={data.authorName} style={{color : 'white'}}>{item.authorName}</Text>
+                    <Text numberOfLines={1} ellipsizeMode='tail' style={{color : 'white',fontSize : 12 * widthRatio}}>{item.authorName}</Text>
                   </View>
                 </>
               )  
@@ -243,13 +243,43 @@ export default function  CourseDetail({ navigation, route}){
 
             </TouchableOpacity>
           </View> */}
-          
-          <View style={{justifyContent: 'center',flexDirection: 'row', alignSelf: 'stretch', marginTop : 10 * widthRatio, textAlignVertical :'center', height : 50}}>
-          <ScrollView>
-          <Text numberOfLines={description} ellipsizeMode='tail' style={{...styles.lightText,marginStart : 10* widthRatio,width : 350 * widthRatio}}>{str}</Text>
-          </ScrollView>    
+          <View style={{flexDirection:'row', justifyContent:'space-evenly', marginVertical : 10 * widthRatio}}>
+            <TouchableOpacity style={{alignItems : 'center'}}>
+              <View style={{...styles.roundedButton}}>   
+                 <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={35} color={colors.textPrimary}/>
+              </View>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Bookmark</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{alignItems : 'center'}}>
+              <View style={{...styles.roundedButton}}>   
+                 <Icon style={alignSelf='center'} type="MaterialIcons" name="wifi-tethering" size={35} color={colors.textPrimary}/>
+              </View>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Add to channel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{alignItems : 'center'}}>
+              <View style={{...styles.roundedButton}}>   
+                 <Icon style={alignSelf='center'} type="MaterialIcons" name="file-download" size={35} color={colors.textPrimary}/>
+              </View>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Download</Text>
+            </TouchableOpacity>
           </View>
-
+          
+          <View style={{height: 1, width: 350 * widthRatio, backgroundColor : '#939cab', marginVertical : 10 * widthRatio, alignSelf : 'center'}}></View>
+          <View style={{justifyContent: 'center',flexDirection: 'row', alignSelf: 'stretch', marginTop : 10 * widthRatio, textAlignVertical :'center', height : 55}}>
+            <ScrollView>
+              <Text numberOfLines={description} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{str}</Text>
+            </ScrollView>    
+          </View>
+          <TouchableOpacity style={styles.bigButton}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="format-list-bulleted" size={35} color={colors.textPrimary}/>
+              
+              <Text style={{marginLeft: 5 * widthRatio, color:colors.textPrimary, fontSize : 13 * widthRatio}}>Related paths and courses</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.bigButton}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="playlist-add-check" size={35} color={colors.textPrimary}/>
+              
+              <Text style={{marginLeft: 5 * widthRatio ,color:colors.textPrimary, fontSize : 13 * widthRatio}}>Take a learning check</Text>
+          </TouchableOpacity>
         </Animated.View>
       );
     };
@@ -628,8 +658,27 @@ const styles = StyleSheet.create({
       marginRight : 3 * widthRatio,
     },
     authorName:{
-
+      
     },
-    
+    roundedButton: {
+      width : 50 * widthRatio,
+      aspectRatio : 1,
+      borderRadius: 1000,
+      backgroundColor: 'rgba(255,255,255, 0.5)',
+      alignItems : 'center',
+      justifyContent:'center',
+      
+    },
+    bigButton : {
+      alignSelf:'center',
+      borderRadius: 5 * widthRatio,
+      marginTop : 10 * widthRatio,
+      alignItems : 'center', 
+      flexDirection: 'row',
+      justifyContent : 'center', 
+      width:350 * widthRatio,
+      backgroundColor: 'rgba(255,255,255, 0.5)',
+      aspectRatio : 350/47,
+    },
 });
 
