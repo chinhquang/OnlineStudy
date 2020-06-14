@@ -19,6 +19,7 @@ import {
   FlatList, 
   Alert,
   TouchableOpacity,
+  AsyncStorage
   
 } from 'react-native';
 import { ListItem } from 'react-native-elements'
@@ -52,10 +53,14 @@ export default function  ThemeSetting({ navigation }){
     }
     changeTheme = (themeName) =>{
         if (themeName == 'Dark' && colors.type != 'dark'){
+            
             setColors(mainColors.darkTheme)
+            // AsyncStorage.setItem('theme', colors.type);
         } 
         if (themeName == 'Light' && colors.type != 'light'){
+           
             setColors(mainColors.lightTheme)
+            // AsyncStorage.setItem('theme', colors.type);
         }
     }
     return (

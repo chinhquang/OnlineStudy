@@ -115,36 +115,10 @@ export default function  CourseDetail({ navigation, route}){
 
     console.log(data)
     const [tab1Data, setData1]=  useState([
-      { name: "Movies", header: true },
-      { name: "Interstellar", header: false },
-      { name: "Dark Knight", header: false },
-      { name: "Pop", header: false },
-      { name: "Pulp Fiction", header: false },
-      { name: "Burning Train", header: false },
-      { name: "Music", header: true },
-      { name: "Adams", header: false },
-      { name: "Nirvana", header: false },
-      { name: "Amrit Maan", header: false },
-      { name: "Oye Hoye", header: false },
-      { name: "Eminem", header: false },
-      { name: "Places", header: true },
-      { name: "Jordan", header: false },
-      { name: "Punjab", header: false },
-      { name: "Ludhiana", header: false },
-      { name: "Jamshedpur", header: false },
-      { name: "India", header: false },
-      { name: "People", header: true },
-      { name: "Jazzy", header: false },
-      { name: "Appie", header: false },
-      { name: "Baby", header: false },
-      { name: "Sunil", header: false },
-      { name: "Arrow", header: false },
-      { name: "Things", header: true },
-      { name: "table", header: false },
-      { name: "chair", header: false },
-      { name: "fan", header: false },
-      { name: "cup", header: false },
-      { name: "cube", header: false }
+      { name: "Course 1", header: true },
+      { name: "Lesson 1", header: false },
+      { name: "Lesson 2", header: false },
+      
     ])
     const [description, setDescriptionExpand ] = useState(0)
     const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
@@ -298,8 +272,8 @@ export default function  CourseDetail({ navigation, route}){
             
             width: 350 * widthRatio,
 
-            height: tab1ItemSize,
-            backgroundColor: '#000000',
+            height: item.header ? tab1ItemSize: tab1ItemSize,
+            backgroundColor: item.header ? '#000000': 'grey',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
