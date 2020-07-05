@@ -11,6 +11,7 @@ import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
 import DownloadScreen from './DownloadScreen'
 import ThemeSetting from './ThemeSetting'
+import SignUpScreen from './SignUpScreen'
 import {LoginStatusContext, ColorThemeContext} from '../App.js'
 /**
  * Sample React Native App

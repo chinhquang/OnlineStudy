@@ -15,6 +15,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import StartUpScreen from './screens/StartUpScreen'
 import SignInScreen from './screens/SignInScreen'
+import SignUpScreen from './screens/SignUpScreen'
 import CourseDetail  from './screens/CourseDetail'
 import VideoFullScreen  from './screens/CourseDetail'
 import Main from './screens/Main'
@@ -87,7 +88,41 @@ return (
 );
 }
 
+const SignUpStack = createStackNavigator()
 
+function SignUpStackScreen({navigation}) {
+const {colors, setColors} = React.useContext(ColorThemeContext);
+
+return (
+    <SignUpStack.Navigator 
+        screenOptions={{
+            headerStyle: {
+                backgroundColor: colors.navBackgroundColor,
+            },
+            headerTintColor: colors.navTint,
+            headerTitleStyle: {
+                fontWeight: 'bold',
+            },
+            
+
+        }}
+    > 
+        <SignInStack.Screen options={{
+            title:"Sign Up",
+            headerLeft: () => (
+              <Button
+              onPress={() => navigation.goBack()}
+              title="Cancel"
+              color={colors.navTint}
+              />
+              ),
+        }}
+         name="SignUpScreen"
+          component={SignUpScreen}  initialParams={{ isPublic : false }}/>          
+        {/* <HomeStack.Screen options={{title:"Home"}} name="HomeScreen" component={HomeScreen} />  */}
+    </SignUpStack.Navigator>
+);
+}
 
 export const ColorThemeContext = React.createContext();
 
@@ -235,6 +270,7 @@ const App = () => {
         <NavigationContainer>
         <mainStack.Navigator mode="modal">
           <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
+          <mainStack.Screen options={{headerShown: false}} name="SignUpStack" component={SignUpStackScreen} />
 
           <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
           <mainStack.Screen options={{headerShown: false}} name="CourseDetail" component={CourseDetail} />
