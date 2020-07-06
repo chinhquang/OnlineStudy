@@ -19,6 +19,7 @@ import SignUpScreen from './screens/SignUpScreen'
 import CourseDetail  from './screens/CourseDetail'
 import VideoFullScreen  from './screens/CourseDetail'
 import Main from './screens/Main'
+import { DrawerLayoutAndroidBase } from 'react-native';
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
@@ -223,7 +224,7 @@ const App = () => {
         if (userToken == null){
           dispatch({ type: 'SIGN_OUT' })
         }else {
-          dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+          dispatch({ type: 'SIGN_IN', token: userToken });
         }
       } catch (e) {
       }
@@ -239,10 +240,20 @@ const App = () => {
         // We will also need to handle errors if sign in failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-        console.log('SIGN_IN')
-        await AsyncStorage.setItem('userToken', 'dummy-auth-token');
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-       
+        let response = await doSignIn(data)
+        
+        if (response.statusCode == 200) {
+          console.log('SIGN_IN')
+          console.log ("SIGNINRES : ", response.statusCode)
+          let responseJson = response.responseJson
+          console.log(responseJson.token)
+          await AsyncStorage.setItem('userToken', responseJson.token);
+          dispatch({ type: 'SIGN_IN', token: responseJson.token });
+          
+        }
+        
+        return response.statusCode
+        
       },
       signOut: async data => {
         await AsyncStorage.removeItem('userToken');
@@ -258,14 +269,19 @@ const App = () => {
         let statusCode = await doSignUp(data)
         console.log("Doing sign up")
         console.log (statusCode)
-        
-        
+        return statusCode
+        // if (statusCode == 200){
+        //   alert ("Sign up successfull")
+        // }
+        // else {
+        //   alert ("Sign up failed")
+        // }
       },
     }),
     []
   );
   async function doSignUp(data) {
-    console.log("Data" + data.username)
+    console.log("Data" + data.name)
     try {
       let response  = await fetch('https://api.itedu.me/user/register', {
         method: 'POST',
@@ -274,16 +290,42 @@ const App = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: data.username,
+          name: data.name,
           email: data.email,
           phone : data.phone,
           password : data.password
         })
       })
-      // let responseJson = await response.json();
+      let responseJson = await response.json();
       let statusCode = await response.status;
+      
       console.log()
       return statusCode;
+    }catch(error) {
+      console.error(error); 
+    }
+    
+  }
+  async function doSignIn(data) {
+    console.log("Data " + data.email)
+    console.log("Data " + data.password)
+    try {
+      let response  = await fetch('https://api.itedu.me/user/login', {
+        method: 'POST',
+        headers: {
+          
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          
+          email: data.email,
+          password : data.password
+        })
+      })
+      let responseJson = await response.json()
+      let statusCode = await response.status;
+      console.log ("********response******** : ",)
+      return {responseJson : responseJson, statusCode : statusCode};
     }catch(error) {
       console.error(error); 
     }

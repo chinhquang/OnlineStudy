@@ -17,6 +17,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  Alert,
   AsyncStorage
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -48,10 +49,40 @@ export default function  SignUpScreen ({ navigation, route }){
     const { isPublic } = route.params;
     console.log(" ----------------- SIGN Up SCREEN----------------- " + isPublic)
      doSignIn = async() =>{
-        if (!isPublic){
-            navigation.goBack()
-        } 
-        await signUp({ username : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
+        
+        let statusCode = await signUp({ name : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
+        if (statusCode == 200){
+            Alert.alert(
+                "Sign up successfull",
+                "You have create an account. Please go to your email box to activate your account",
+                [,
+                    {
+                      text: "OK", onPress: () => {
+                      console.log("OK Pressed")
+                      if (!isPublic){
+                        navigation.goBack()
+                        } 
+                    } 
+                }
+                ],
+                { cancelable: false }
+            );
+        }
+        else {
+            Alert.alert(
+                "Sign up failed",
+                "Email or phone had been in used",
+                [,
+                  { 
+                      text: "OK", onPress: () => {
+                      console.log("OK Pressed")
+                       
+                    } 
+                }
+                ],
+                { cancelable: false }
+            );
+        }
     }
     
     return (

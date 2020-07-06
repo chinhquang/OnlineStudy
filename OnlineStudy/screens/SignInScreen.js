@@ -17,7 +17,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  AsyncStorage
+  AsyncStorage, Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
@@ -45,11 +45,29 @@ export default function  SignInScreen ({ navigation, route }){
     const { signIn } = React.useContext(AuthContext);
     const { isPublic } = route.params;
     console.log(" ----------------- SIGN IN SCREEN----------------- " + isPublic)
-    doSignIn = () =>{
-        signIn({ emailValue, passwordValue })  
-        if (!isPublic){
-            navigation.goBack()
-        } 
+    doSignIn = async() =>{
+        // signIn({ emailValue, passwordValue })  
+        let statusCode = await signIn({  email: emailValue, password : passwordValue })
+        if (statusCode == 200){
+            if (!isPublic){
+                navigation.goBack()
+            } 
+        }
+        else {
+            Alert.alert(
+                "Sign in failed",
+                "Invalid account",
+                [,
+                  { 
+                      text: "OK", onPress: () => {
+                      console.log("OK Pressed")
+                       
+                    } 
+                }
+                ],
+                { cancelable: false }
+            );
+        }
         
     }
     
