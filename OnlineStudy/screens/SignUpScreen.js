@@ -44,15 +44,14 @@ export default function  SignUpScreen ({ navigation, route }){
     const [passwordValue, onChangePassword] = React.useState('');
     const [usernameValue, onChangeUsername] = React.useState('');
     const [phoneValue, onChangePhoneNumber] = React.useState('');
-    const { signIn } = React.useContext(AuthContext);
+    const { signUp } = React.useContext(AuthContext);
     const { isPublic } = route.params;
     console.log(" ----------------- SIGN Up SCREEN----------------- " + isPublic)
-    doSignIn = () =>{
-        signIn({ emailValue, passwordValue })  
+     doSignIn = async() =>{
         if (!isPublic){
             navigation.goBack()
         } 
-        
+        await signUp({ username : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
     }
     
     return (
@@ -64,38 +63,40 @@ export default function  SignUpScreen ({ navigation, route }){
             <Text style={{...styles.label, color: colors.textPrimary}}>Username</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 onChangeText={text => onChangeUsername(text)}
                 value={usernameValue}
+                autoCapitalize = 'none'
+                
             />
             <Text style={{...styles.label, color: colors.textPrimary}}>Email</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 onChangeText={text => onChangeEmailField(text)}
                 value={emailValue}
+                autoCapitalize = 'none'
             />
             <Text style={{...styles.label, color: colors.textPrimary}}>Phone</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 keyboardType='numeric'
-                
+                autoCapitalize = 'none'
                 onChangeText={text => onChangePhoneNumber(text)}
                 value={phoneValue}
             />
             <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 onChangeText={text => onChangePassword(text)}
                 secureTextEntry={true}
+                autoCapitalize = 'none'
                 value={passwordValue}
             />
             <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Create Account" onPress={() => doSignIn()}></CustomButton>
             </View>
-            
-            
         </LinearGradient>
             
         </>
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
         borderColor : 'gray',
         borderWidth: 1,
         borderRadius  : 7 * widthRatio,
+        paddingHorizontal : 12 * widthRatio
     },
     button: {
         // flex : 1,

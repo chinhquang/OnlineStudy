@@ -62,17 +62,19 @@ export default function  SignInScreen ({ navigation, route }){
             <Text style={{...styles.label, color: colors.textPrimary}}>Email or username</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 onChangeText={text => onChangeEmailField(text)}
                 value={emailValue}
+                autoCapitalize = 'none'
             />
             <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
             <TextInput
                 keyboardAppearance={colors.type}
-                style={styles.textInput}
+                style={{...styles.textInput, color : colors.textPrimary}}
                 onChangeText={text => onChangePassword(text)}
                 secureTextEntry={true}
                 value={passwordValue}
+                autoCapitalize = 'none'
             />
             <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign in" onPress={() => doSignIn()}></CustomButton>
             <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text="Need help?" ></CustomButton>
@@ -114,6 +116,7 @@ const styles = StyleSheet.create({
         borderColor : 'gray',
         borderWidth: 1,
         borderRadius  : 7 * widthRatio,
+        paddingHorizontal : 12 * widthRatio
     },
     button: {
         // flex : 1,

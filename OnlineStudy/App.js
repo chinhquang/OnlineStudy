@@ -255,14 +255,40 @@ const App = () => {
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `AsyncStorage`
         // In the example, we'll use a dummy token
-        await AsyncStorage.setItem('userToken', 'dummy-auth-token');
-        dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        let statusCode = await doSignUp(data)
+        console.log("Doing sign up")
+        console.log (statusCode)
+        
         
       },
     }),
     []
   );
-  
+  async function doSignUp(data) {
+    console.log("Data" + data.username)
+    try {
+      let response  = await fetch('https://api.itedu.me/user/register', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: data.username,
+          email: data.email,
+          phone : data.phone,
+          password : data.password
+        })
+      })
+      // let responseJson = await response.json();
+      let statusCode = await response.status;
+      console.log()
+      return statusCode;
+    }catch(error) {
+      console.error(error); 
+    }
+    
+  }
   return (
     <ColorThemeProvider>
       <AuthContext.Provider value={authContext}>
