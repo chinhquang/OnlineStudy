@@ -53,7 +53,7 @@ export default function  StartUpScreen ({navigation}){
             
             <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign In" onPress={() => this.goToSignIn()}></CustomButton>
 
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Subcribe to Polygon Runway"  onPress={()=>this.goToSignUp()}></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign up"  onPress={()=>this.goToSignUp()}></CustomButton>
 
             <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
         </View>
