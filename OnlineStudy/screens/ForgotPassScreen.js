@@ -35,71 +35,42 @@ import {ColorThemeContext} from "../App.js"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
-export default function  SignUpScreen ({ navigation, route }){
+export default function  ForgotPassScreen ({ navigation, route }){
     // const [count, setCount] = React.useState(0);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     settingClick=()=>{
         alert('This button is not implemented yet')
     };
-    const [emailValue, onChangeEmailField] = React.useState('');
-    const [passwordValue, onChangePassword] = React.useState('');
-    const [usernameValue, onChangeUsername] = React.useState('');
-    const [phoneValue, onChangePhoneNumber] = React.useState('');
+    const [emailValue, onChangeEmailField] = React.useState("");
     const { signUp } = React.useContext(AuthContext);
-    const { isPublic } = route.params;
-    doSignIn = async() =>{
+   
+    forgetPassRequest = async (email) => {
         
-        let statusCode = await signUp({ name : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
-        if (statusCode == 200){
-            Alert.alert(
-                "Sign up successfull",
-                "You have create an account. Please go to your email box to activate your account",
-                [,
-                    {
-                      text: "OK", onPress: () => {
-                      console.log("OK Pressed")
-                      if (!isPublic){
-                        navigation.goBack()
-                        } 
-                    } 
-                }
-                ],
-                { cancelable: false }
-            );
-        }
-        else {
-            Alert.alert(
-                "Sign up failed",
-                "Email or phone had been in used",
-                [,
-                  { 
-                      text: "OK", onPress: () => {
-                      console.log("OK Pressed")
-                       
-                    } 
-                }
-                ],
-                { cancelable: false }
-            );
-        }
+        let response  = await fetch('https://api.itedu.me/user/forget-pass/send-email', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+            })
+        })
+        let responseJson = await response.json();
+        let statusCode = await response.status;
+        alert (responseJson.message)
     }
-    
+    doResetPassword = () =>{
+        forgetPassRequest(emailValue)
+    }
     return (
             <>
         <StatusBar barStyle={colors.statusBar} />
         
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
+
             <View style = { styles.itemsFrame }>
-            <Text style={{...styles.label, color: colors.textPrimary}}>Username</Text>
-            <TextInput
-                keyboardAppearance={colors.type}
-                style={{...styles.textInput, color : colors.textPrimary}}
-                onChangeText={text => onChangeUsername(text)}
-                value={usernameValue}
-                autoCapitalize = 'none'
-                
-            />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Email</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>Enter your email to reset password</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -107,25 +78,8 @@ export default function  SignUpScreen ({ navigation, route }){
                 value={emailValue}
                 autoCapitalize = 'none'
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Phone</Text>
-            <TextInput
-                keyboardAppearance={colors.type}
-                style={{...styles.textInput, color : colors.textPrimary}}
-                keyboardType='numeric'
-                autoCapitalize = 'none'
-                onChangeText={text => onChangePhoneNumber(text)}
-                value={phoneValue}
-            />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
-            <TextInput
-                keyboardAppearance={colors.type}
-                style={{...styles.textInput, color : colors.textPrimary}}
-                onChangeText={text => onChangePassword(text)}
-                secureTextEntry={true}
-                autoCapitalize = 'none'
-                value={passwordValue}
-            />
-            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Create Account" onPress={() => doSignIn()}></CustomButton>
+            
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Send email" onPress={() => doResetPassword()} ></CustomButton>
             </View>
         </LinearGradient>
             

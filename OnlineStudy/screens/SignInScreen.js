@@ -44,7 +44,6 @@ export default function  SignInScreen ({ navigation, route }){
     const [passwordValue, onChangePassword] = React.useState('');
     const { signIn } = React.useContext(AuthContext);
     const { isPublic } = route.params;
-    console.log(" ----------------- SIGN IN SCREEN----------------- " + isPublic)
     doSignIn = async() =>{
         // signIn({ emailValue, passwordValue })  
         let statusCode = await signIn({  email: emailValue, password : passwordValue })
@@ -95,7 +94,7 @@ export default function  SignInScreen ({ navigation, route }){
                 autoCapitalize = 'none'
             />
             <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign in" onPress={() => doSignIn()}></CustomButton>
-            <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text="Need help?" ></CustomButton>
+            <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text="Need help?" onPress={() => navigation.navigate('SupportScreen')} ></CustomButton>
             <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Use Single Sign-On (SSO)"></CustomButton>
             <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign up"></CustomButton>
             </View>

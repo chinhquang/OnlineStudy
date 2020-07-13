@@ -32,20 +32,20 @@ const widthRatio = width / 375
 
 
 
-export default function  SettingScreen({ navigation }){
+export default function  SupportScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     
     const list = [
         {
             id : 1,
-            name: 'Theme',
-            value : colors.type == 'dark' ? 'Dark' : 'Light'
+            name: 'Forgot your password?',
+            // value : colors.type == 'dark' ? 'Dark' : 'Light'
             
         },
         {
             id : 2,
-            name: 'App version',
-            value :'1.0.1'
+            name: 'Sign up',
+            // value :'1.0.1'
           
         },
       ]
@@ -58,9 +58,9 @@ export default function  SettingScreen({ navigation }){
 
     selectItem = (i) => {
         if (i==1){
-            navigation.navigate ('ThemeSettingScreen')
+            console.log("Forgot pass")
+            navigation.navigate("ForgotPassScreen")
         }
-        
     }
     
     return (
@@ -77,7 +77,7 @@ export default function  SettingScreen({ navigation }){
                 key={i}
                 underlayColor="#807c7c"
                 onPress={() =>this.selectItem(l.id)} 
-                containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
+                containerStyle={{ backgroundColor :'rgba(0,0,0,0)',width : 350 * widthRatio,}}
                 contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}
                 titleStyle={{ color: colors.textPrimary, fontWeight: 'normal' }}
@@ -92,7 +92,7 @@ export default function  SettingScreen({ navigation }){
             ))
         }
         </View>
-        <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton>
+        {/* <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton> */}
 
         </ScrollView>
     </LinearGradient>

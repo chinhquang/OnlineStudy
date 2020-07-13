@@ -17,7 +17,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  ImageBackground,FlatList, List
+  ImageBackground,FlatList, List, ActivityIndicator
   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -110,6 +110,7 @@ export const CourseList = ({ itemList }) => (
 export const TopAuthorList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
+                nestedScrollEnabled={true}
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
             
@@ -117,9 +118,9 @@ export const TopAuthorList = ({ itemList }) => (
                 keyExtractor={item => item.key} // 
                 renderItem={({ item }) => <AuthorRow
                 
-                    authorName={item.authorName}
+                    authorName={item["user.name"]}
 
-                    avatarURL={item.avatarURL} 
+                    avatarURL={item["user.avatar"]} 
                 />
             }
             />
@@ -128,7 +129,61 @@ export const TopAuthorList = ({ itemList }) => (
 );
 export default function  BrowseScreen ({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
+    React.useEffect(() => {
 
+
+    },[])
+    const [state, dispatch] = React.useReducer(
+        (prevState, action) => {
+          switch (action.type) {
+            case 'FETCH':
+              return {
+                ...prevState,
+                
+                isLoading: true,
+                
+              };
+            case 'DONE_FETCH':
+            return {
+                ...prevState,
+               
+                isLoading: false,
+                authorData : action.authorData
+            };
+          }
+        },
+        {
+            isLoading: false,
+            authorData: null,
+        }
+      );
+   
+    React.useEffect(() => {
+        doGetAuthorData = async () => {
+            dispatch({ type: 'FETCH'});
+            let authorData =  await getAuthorData()
+            dispatch({ type: 'DONE_FETCH', authorData : authorData});
+            
+        }
+        doGetAuthorData()
+    },[])
+    getAuthorData = async () =>{
+        try {
+            let response  = await fetch('https://api.itedu.me/instructor', {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                
+              }
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
     getSubjectData = () => {
         return [
           {
@@ -176,6 +231,8 @@ export default function  BrowseScreen ({ navigation }){
         ]
     }
     getPathData = () =>{
+        
+
         return [
             {
                 key: 1,
@@ -192,26 +249,7 @@ export default function  BrowseScreen ({ navigation }){
         ]
     }
 
-    getAuthorData = () =>{
-        return [
-            {
-                key: 1,
-                authorName: 'Blender Guru',
-                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
-            },
-            {
-                key: 2,
-                authorName: 'Blender Guru',
-                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
-            },
-            {
-                key: 3,
-                authorName: 'Blender Guru',
-                avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
-            },
-          
-        ]
-    }
+
     return (
         <>
         <StatusBar barStyle={colors.statusBar}/>
@@ -219,7 +257,15 @@ export default function  BrowseScreen ({ navigation }){
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-            
+            {   
+                state.isLoading && (
+                    <>
+                        <ActivityIndicator style={{position:'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex : 2, color:"#0000ff"}} size="large" animating={state.isLoading}/>
+
+                    </>
+                )
+                
+            }
             <View style={styles.preview }>
                 <TouchableOpacity>
                     <ImageBackground style={styles.previewImageButton} source={{  uri: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg', }}>
@@ -240,12 +286,12 @@ export default function  BrowseScreen ({ navigation }){
             <View style={styles.coursePathHeaderContainer}>
                 <Text style={{...styles.headerSection, color: colors.textPrimary}}>Path</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                    <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                 </TouchableOpacity>
             </View>
             <PathList itemList={this.getPathData()}></PathList>
             <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top Authors</Text>
-            <TopAuthorList itemList={this.getAuthorData()}></TopAuthorList>
+            <TopAuthorList itemList={state.authorData}></TopAuthorList>
         </ScrollView>
 
         </LinearGradient>

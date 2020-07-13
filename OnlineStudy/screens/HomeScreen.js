@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext} from '../App'
+import {AuthContext, ColorThemeContext, UserInfoContext} from '../App'
 import {PathList} from './BrowseScreen'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -33,7 +33,7 @@ const widthRatio = width / 375
 
 export function CourseList ({ itemList, navigation },props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
-
+    
     showCourseDetail=(item)=>{
         console.log(item)
         navigation.navigate ('CourseDetail', item)
@@ -151,7 +151,9 @@ export default function  HomeScreen({ navigation }){
     settingClick=()=>{
         navigation.navigate ('SettingScreen')
     };
-    
+    userInfoClick = () =>{
+        navigation.navigate ('UserInfoScreen')
+    }
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />

@@ -19,11 +19,13 @@ import SignUpScreen from './screens/SignUpScreen'
 import CourseDetail  from './screens/CourseDetail'
 import VideoFullScreen  from './screens/CourseDetail'
 import Main from './screens/Main'
+import SupportScreen from './screens/SupportScreen'
+import ForgotPassScreen from "./screens/ForgotPassScreen"
 import { DrawerLayoutAndroidBase } from 'react-native';
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
-
+export const UserInfoContext = React.createContext();
 const mainStack = createStackNavigator()
 function  MainStack({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
@@ -83,7 +85,23 @@ return (
               ),
         }}
          name="SignInScreen"
-          component={SignInScreen}  initialParams={{ isPublic : false }}/>          
+          component={SignInScreen}  initialParams={{ isPublic : false }}/>  
+
+        <SignInStack.Screen options={{
+            title:"",
+            
+        }}
+         name="SupportScreen"
+         
+          component={SupportScreen}  />    
+
+        <SignInStack.Screen options={{
+            title:"Forgot your password",
+            
+        }}
+         name="ForgotPassScreen"
+         
+          component={ForgotPassScreen}  />    
         {/* <HomeStack.Screen options={{title:"Home"}} name="HomeScreen" component={HomeScreen} />  */}
     </SignInStack.Navigator>
 );
@@ -192,47 +210,76 @@ const App = () => {
             ...prevState,
             userToken: action.token,
             isLoading: false,
+            userInfo : action.userInfo,
+            
           };
         case 'SIGN_IN':
           return {
             ...prevState,
             isSignout: false,
             userToken: action.token,
+            userInfo : action.userInfo,
+            
           };
         case 'SIGN_OUT':
           return {
             ...prevState,
             isSignout: true,
             userToken: null,
+            userInfo : null,
+            
           };
       }
     },
     {
-      
+      userInfo : null,
       isSignout: true,
       userToken: null,
     }
   );
 
-  React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
-      let userToken;
+  // React.useEffect(() => {
+  //   // Fetch the token from storage then navigate to our appropriate place
+  //   const bootstrapAsync = async () => {
+  //     let userToken;
 
-      try {
-        userToken = await AsyncStorage.getItem('userToken');
-        if (userToken == null){
-          dispatch({ type: 'SIGN_OUT' })
-        }else {
-          dispatch({ type: 'SIGN_IN', token: userToken });
-        }
-      } catch (e) {
-      }
+  //     try {
+  //       userToken = await AsyncStorage.getItem('userToken');
+  //       if (userToken == null){
+  //         dispatch({ type: 'SIGN_OUT' })
+  //       }else {
+  //         var isExpired = false;
+  //         var decodedToken = jwt.decode(userToken, {complete: true});
+  //         var dateNow = new Date();
+  //         if(decodedToken.exp < dateNow.getTime()){
+  //           isExpired = true;
+  //         }
+  //         if(isExpired){
+  //           await AsyncStorage.removeItem('userToken');
+  //           dispatch({ type: 'SIGN_OUT' })
+  //         }else {
+  //           let response = await doGetUserInfo(userToken)
+            
+  //           let user =  response.payload
+  //           if (user == null){
+
+  //           }
+  //           console.log("User token",response)
+  //           console.log("User token",userToken)
+  //           console.log("User info",user)
+  //           dispatch({ type: 'SIGN_IN', token: userToken, userInfo : user});
+  //         }
+
+          
+          
+  //       }
+  //     } catch (e) {
+  //     }
       
-    };
+  //   };
 
-    bootstrapAsync();
-  }, []);
+  //   bootstrapAsync();
+  // }, []);
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
@@ -244,12 +291,11 @@ const App = () => {
         
         if (response.statusCode == 200) {
           console.log('SIGN_IN')
-          console.log ("SIGNINRES : ", response.statusCode)
           let responseJson = response.responseJson
           console.log(responseJson.token)
           await AsyncStorage.setItem('userToken', responseJson.token);
-          dispatch({ type: 'SIGN_IN', token: responseJson.token });
-          
+          let userInfo = responseJson.userInfo
+          dispatch({ type: 'SIGN_IN', token: responseJson.token, userInfo : userInfo});
         }
         
         return response.statusCode
@@ -324,8 +370,26 @@ const App = () => {
       })
       let responseJson = await response.json()
       let statusCode = await response.status;
-      console.log ("********response******** : ",)
+      
       return {responseJson : responseJson, statusCode : statusCode};
+    }catch(error) {
+      console.error(error); 
+    }
+    
+  }
+  async function doGetUserInfo(userToken) {
+    try {
+      let response  = await fetch('https://api.itedu.me/user/me', {
+        method: 'GET',
+        headers: {
+          'Authorization' : 'Bearer ' + userToken,
+          'Content-Type': 'application/json',
+        },
+      })
+      let responseJson = await response.json()
+      let statusCode = await response.status;
+      
+      return responseJson;
     }catch(error) {
       console.error(error); 
     }
@@ -335,18 +399,21 @@ const App = () => {
     <ColorThemeProvider>
       <AuthContext.Provider value={authContext}>
       <LoginStatusContext.Provider value={state.isSignout}>
+      <UserInfoContext.Provider value={state.userInfo}>
         <NavigationContainer>
-        <mainStack.Navigator mode="modal">
-          <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
-          <mainStack.Screen options={{headerShown: false}} name="SignUpStack" component={SignUpStackScreen} />
+          <mainStack.Navigator mode="modal">
+            <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
+            <mainStack.Screen options={{headerShown: false}} name="SignUpStack" component={SignUpStackScreen} />
 
-          <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
-          <mainStack.Screen options={{headerShown: false}} name="CourseDetail" component={CourseDetail} />
-          <mainStack.Screen options={{headerShown: false}} name="VideoFullScreen" component={VideoFullScreen} />
+            <mainStack.Screen options={{headerShown: false}} name="SignInStack" component={SignInStackScreen} />
+            <mainStack.Screen options={{headerShown: false}} name="CourseDetail" component={CourseDetail} />
+            <mainStack.Screen options={{headerShown: false}} name="VideoFullScreen" component={VideoFullScreen} />
 
-                    
-        </mainStack.Navigator>
+                      
+          </mainStack.Navigator>
         </NavigationContainer>
+      </UserInfoContext.Provider>
+        
       </LoginStatusContext.Provider>
       
     </AuthContext.Provider>

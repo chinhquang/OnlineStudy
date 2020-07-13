@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Text, View,Button, TouchableOpacity, Dimensions, Alert,AsyncStorage} from 'react-native';
+import { Text, View,Button, TouchableOpacity, Dimensions, Alert,AsyncStorage, Image} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen'
 import SettingScreen from './SettingScreen'
+import SupportScreen from './SupportScreen'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SignInScreen from './SignInScreen';
 import BrowseScreen from './BrowseScreen'
@@ -12,7 +13,9 @@ import SearchScreen from './SearchScreen'
 import DownloadScreen from './DownloadScreen'
 import ThemeSetting from './ThemeSetting'
 import SignUpScreen from './SignUpScreen'
-import {LoginStatusContext, ColorThemeContext} from '../App.js'
+import ForgotPassScreen from './ForgotPassScreen'
+import UserInfoScreen from "./UserInfoScreen"
+import {LoginStatusContext, ColorThemeContext,UserInfoContext} from '../App.js'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -30,6 +33,8 @@ const widthRatio = width / 375
 function HomeStackScreen() {
 const {colors, setColors} = React.useContext(ColorThemeContext);
 const isSignout  = React.useContext(LoginStatusContext)
+const userInfo  = React.useContext(UserInfoContext)
+
 console.log("User token " + isSignout)
 if (isSignout){
   return (
@@ -53,11 +58,10 @@ if (isSignout){
                 <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
                     <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
                 </TouchableOpacity>
-              ),
-        }}
-         name="SignInScreen"
-          component={SignInScreen} initialParams={{ isPublic : true }}/>     
-        
+              ),}} 
+            name="SignInScreen" component={SignInScreen} initialParams={{ isPublic : true }}/>     
+      <HomeStack.Screen options={{ title:"", }} name="SupportScreen" component={SupportScreen}  />    
+      <HomeStack.Screen options={{title:"Forgot your password",}} name="ForgotPassScreen" component={ForgotPassScreen}/> 
     </HomeStack.Navigator>
    
 )
@@ -79,15 +83,21 @@ if (isSignout){
       <HomeStack.Screen options={{title:"Home",
           headerLeft: () => (
             <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
+
                 <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
+            </TouchableOpacity>
+          
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={userInfoClick} style={{left: -10 * widthRatio}}>
+              <Image style={{width : 30, height: 30, borderRadius : 1000, resizeMode:'cover'}} source={{uri : userInfo.avatar}}/>
             </TouchableOpacity>
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
     
     <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
     <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
-
-    
+    <HomeStack.Screen options={{title:""}} name="UserInfoScreen" component={UserInfoScreen} /> 
     </HomeStack.Navigator>
     
   )
@@ -161,7 +171,6 @@ return (
 export default function Main({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
   const {colors, setColors} = React.useContext(ColorThemeContext);
-
   return (
       <Tab.Navigator tabBarOptions={{
         activeTintColor: colors.backgroundColorButton,

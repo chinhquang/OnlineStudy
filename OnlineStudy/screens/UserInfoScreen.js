@@ -25,40 +25,37 @@ import { ListItem } from 'react-native-elements'
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext} from '../App'
+import {AuthContext, ColorThemeContext, UserInfoContext} from '../App'
 import CustomButton from '../components/CustomButton'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 
 
-export default function  SettingScreen({ navigation }){
+export default function  UserInfoScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
+    const userInfo  = React.useContext(UserInfoContext)
     const list = [
         {
             id : 1,
-            name: 'Theme',
-            value : colors.type == 'dark' ? 'Dark' : 'Light'
+            name: userInfo.email,
+            
             
         },
         {
             id : 2,
-            name: 'App version',
-            value :'1.0.1'
+            name: userInfo.phone,
+            
           
         },
       ]
     const {signOut} = React.useContext(AuthContext);
     
-    doSignOut = () => {
-        
-        signOut()
+    doEditProfile = () => {
     }
 
     selectItem = (i) => {
         if (i==1){
-            navigation.navigate ('ThemeSettingScreen')
         }
         
     }
@@ -69,7 +66,8 @@ export default function  SettingScreen({ navigation }){
     
     <LinearGradient colors={colors.gradientColor} style = { styles.container }>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-         
+        <Image style={{ marginVertical  : 16 * widthRatio, alignSelf : 'center' ,width : 200 * widthRatio, aspectRatio : 1, borderRadius : 1000, resizeMode:'cover'}} source={{uri : userInfo.avatar}}/>
+        <Text style={{color: colors.textPrimary, fontWeight: '800', fontSize : 15 * widthRatio, alignSelf : 'center', marginBottom : 16 *widthRatio}}>{userInfo.name}</Text>
         <View >
         {
             list.map((l, i) => (
@@ -86,13 +84,13 @@ export default function  SettingScreen({ navigation }){
                 rightSubtitle={l.value}
                 rightSubtitleStyle={{color: colors.textPrimary}}
                 bottomDivider
-                chevron
+                // chevron
             
             />
             ))
         }
         </View>
-        <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton>
+        <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Edit Profile"onPress={() => doEditProfile()}></CustomButton>
 
         </ScrollView>
     </LinearGradient>
