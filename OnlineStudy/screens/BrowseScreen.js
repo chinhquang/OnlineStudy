@@ -26,15 +26,7 @@ import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {CourseList} from './HomeScreen'
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
@@ -89,24 +81,7 @@ export const PathList = ({ itemList }) => (
 
     </View>
 );
-export const CourseList = ({ itemList }) => (
-    <View style={styles.bannerList}>
-        <FlatList
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-            
-                data={itemList}
-                keyExtractor={item => item.key} // 
-                renderItem={({ item }) => <SubjectBannerRow
-                    url={item.url}
-                    title={item.title}
 
-                />
-            }
-            />
-
-    </View>
-);
 export const TopAuthorList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
@@ -129,10 +104,8 @@ export const TopAuthorList = ({ itemList }) => (
 );
 export default function  BrowseScreen ({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    React.useEffect(() => {
+    var listCourseCategory = ['Top Sell', 'Newest Courses', 'Top Rate']
 
-
-    },[])
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
           switch (action.type) {
@@ -143,18 +116,26 @@ export default function  BrowseScreen ({ navigation }){
                 isLoading: true,
                 
               };
-            case 'DONE_FETCH':
+            case 'DONE_FETCH_AUTHOR':
             return {
                 ...prevState,
                
                 isLoading: false,
-                authorData : action.authorData
+                authorData : action.authorData,
+            };
+            case 'DONE_FETCH_TOP_SELL':
+            return {
+                ...prevState,
+               
+                isLoading: false,
+                topSellCourses : action.topSellCourses
             };
           }
         },
         {
             isLoading: false,
             authorData: null,
+            topSellCourses : null,
         }
       );
    
@@ -162,11 +143,41 @@ export default function  BrowseScreen ({ navigation }){
         doGetAuthorData = async () => {
             dispatch({ type: 'FETCH'});
             let authorData =  await getAuthorData()
-            dispatch({ type: 'DONE_FETCH', authorData : authorData});
+            dispatch({ type: 'DONE_FETCH_AUTHOR', authorData : authorData});
+            
+            
+        }
+        doGetTopSellData = async () => {
+            dispatch({ type: 'FETCH'});
+            let topSellCourses =  await getTopSellCourseData()
+            dispatch({ type: 'DONE_FETCH_TOP_SELL', topSellCourses : topSellCourses});
             
         }
         doGetAuthorData()
+        doGetTopSellData()
     },[])
+    getTopSellCourseData = async () =>{
+        
+        try {
+            let response  = await fetch('https://api.itedu.me/course/top-sell', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                "limit": 10,
+                "page": 1
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
     getAuthorData = async () =>{
         try {
             let response  = await fetch('https://api.itedu.me/instructor', {
@@ -184,71 +195,6 @@ export default function  BrowseScreen ({ navigation }){
             console.error(error); 
           }
     }
-    getSubjectData = () => {
-        return [
-          {
-            key: 1, title: 'VFX',
-            },
-          {
-            key: 2,
-            title: 'Architecture visualizer',
-            },
-          {
-            key: 3, 
-            title: 'Hard-surface Modeling',
-            },
-        {
-            key: 4, 
-            title: 'Texture',
-            },
-        ]
-    }
-    getSubjectBannerData = () => {
-        return [
-          {
-            key: 1,
-            title: 'VFX',
-            url:"https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg",
-            },
-          {
-            key: 2,
-            title: 'Architecture visualizer',
-            url: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-            
-            },
-          {
-            key: 3, 
-            title: 'Hard-surface Modeling',
-            url: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-            
-            },
-        {
-            key: 4, 
-            title: 'Texture', 
-            url: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-            
-            },
-        ]
-    }
-    getPathData = () =>{
-        
-
-        return [
-            {
-                key: 1,
-                title: 'Querying Data with SQL from PostgreSQL',
-                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-                courseCount : 6,
-            },
-            {
-                key: 2,
-                title: 'Querying Data with SQL from PostgreSQL',
-                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-                courseCount : 6,
-            },
-        ]
-    }
-
 
     return (
         <>
@@ -266,30 +212,16 @@ export default function  BrowseScreen ({ navigation }){
                 )
                 
             }
-            <View style={styles.preview }>
-                <TouchableOpacity>
-                    <ImageBackground style={styles.previewImageButton} source={{  uri: 'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg', }}>
-                        <Text style={styles.title}>NEW RELEASES</Text>
-                    
-                    </ImageBackground>
-                    
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <ImageBackground style={styles.previewImageButton} source={{  uri: 'https://cdn.shopify.com/s/files/1/0588/6745/products/sfc1_1480x800.jpg', }}>
-                        <Text style={styles.title}>RECOMMENDED FOR YOU</Text>
-                    </ImageBackground>
-                </TouchableOpacity>
-            </View>
-            <Text style={{...styles.headerSection, color: colors.textPrimary}} >Popular skills</Text>
-            <CustomListSubjectView itemList={this.getSubjectData()} />
-            <SubjectBannerList itemList={this.getSubjectBannerData()}/>
-            <View style={styles.coursePathHeaderContainer}>
-                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Path</Text>
-                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                    <Text style={styles.seeAllButtonText}>See all {">"}</Text>
-                </TouchableOpacity>
-            </View>
-            <PathList itemList={this.getPathData()}></PathList>
+            <>
+                <View style={styles.coursePathHeaderContainer}>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[0]}</Text>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                    </TouchableOpacity>
+                </View>
+                <CourseList itemList={state.topSellCourses} navigation={navigation} ></CourseList>
+            </>
+            
             <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top Authors</Text>
             <TopAuthorList itemList={state.authorData}></TopAuthorList>
         </ScrollView>

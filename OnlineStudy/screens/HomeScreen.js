@@ -88,12 +88,12 @@ export default function  HomeScreen({ navigation }){
                 author : [
                 {
                     key: 1,
-                    authorName: 'Joe Earnes',
+                    "instructor.user.name": 'Joe Earnes',
                     avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
                 },
                 {
                     key: 2,
-                    authorName: 'Jim Cooper',
+                    "instructor.user.name": 'Jim Cooper',
                     avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
                 }
                 ],
@@ -104,29 +104,7 @@ export default function  HomeScreen({ navigation }){
                 imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
                 courseCount : 6,
             },
-            {
-                key: 2,
-                courseName : 'Angular Fundamental',
-                courseLevel : 'Intermediate',
-                author : [
-                    {
-                        key: 1,
-                        authorName: 'Joe Earnes',
-                        avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
-                    },
-                    {
-                        key: 2,
-                        authorName: 'Jim Cooper',
-                        avatarURL: 'https://miro.medium.com/max/3150/1*_MCtd8Oxiy2kR-MdaBp7hQ.jpeg'
-                    }
-                ],
-                averageRating : 4.5,
-                totalRating : 832,
-                totalDuration : '10h',
-                date : 'Feb 2019',
-                imageURL:'https://cdnassets.hw.net/dims4/GG/d49288d/2147483647/thumbnail/876x580%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fac%2Fb4%2F139c93ae4d2eb120b534104656ae%2F42f243baab7043b584071214dde4168b.jpg',
-                courseCount : 6,
-            },
+            
         ]
     }
     getBookmarkData = () =>{
@@ -171,33 +149,28 @@ export default function  HomeScreen({ navigation }){
             </View>
             
             <View>
-            {
-                listCourseCategory.map(( item, key ) =>
-                (
-                    <>
-                    <View style={styles.coursePathHeaderContainer}>
-                        <Text style={{...styles.headerSection, color: colors.textPrimary}}>{item}</Text>
-                        <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                            <Text style={styles.seeAllButtonText}>See all ></Text>
-                        </TouchableOpacity>
-                    </View>
-                    <CourseList itemList={this.getCourseData()} navigation={navigation} ></CourseList>
-                    </>
-                    
-                ))
-            }
+            <>
+                <View style={styles.coursePathHeaderContainer}>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[0]}</Text>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                    </TouchableOpacity>
+                </View>
+                <CourseList itemList={null} navigation={navigation} ></CourseList>
+            </>
+
             </View>
             <View style={styles.coursePathHeaderContainer}>
                 <Text style={{...styles.headerSection, color: colors.textPrimary}}>My paths</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                    <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                 </TouchableOpacity>
             </View>
             <PathList itemList={this.getPathData()}></PathList>
             <View style={styles.coursePathHeaderContainer}>
                 <Text style={{...styles.headerSection, color: colors.textPrimary}}>Bookmarks</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                    <Text style={styles.seeAllButtonText}>See all ></Text>
+                    <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                 </TouchableOpacity>
             </View>
             <CourseList itemList={this.getBookmarkData()} navigation={navigation} ></CourseList>

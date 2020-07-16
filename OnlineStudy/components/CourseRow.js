@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, Dimensions,TouchableOpacity, ImageBackgr
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 import { Rating, AirbnbRating } from 'react-native-ratings';
+import { format } from "date-fns";
 
 const styles = StyleSheet.create({
     container: {
@@ -79,27 +80,33 @@ const ConcatString = (stringList) => {
     return str
  
 }
+function getDateFrom(dateString){
+    var date = new Date(dateString);
 
+    var formattedDate = format(date, "MMM dd");
+    return formattedDate
+}
 const CourseRow= ({ data }) => (
     
     <View style={styles.container}>
         <View  style={styles.imageContainer}>
-            <Image style={styles.image} source={{uri : 'https://cdn.shopify.com/s/files/1/0588/6745/products/sfc1_1480x800.jpg'}}/>
+            <Image style={styles.image} source={{uri : data.imageUrl}}/>
         </View >
         <View style={styles.content}>
-            <Text style={styles.title}>{data.courseName}</Text>
-            <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    
-            <Text style={styles.courseCountLabel}>{data.courseLevel}  -  {data.date}  -  {data.totalDuration}</Text>  
+            <Text numberOfLines={1} style={styles.title}>{data.title}</Text>
+            {/* <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    */}
+            <Text numberOfLines={1} style={styles.courseCountLabel}>{data["instructor.user.name"]}</Text> 
+            <Text style={styles.courseCountLabel}>{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>  
             <View style={styles.star}>
                 <AirbnbRating
                     showRating = {false}
                     count={5}
-                    defaultRating={ Number(data.averageRating) }
+                    defaultRating={ Number(data.ratedNumber) }
                     size={15 * widthRatio}
                     isDisabled = {true}
                     
                 />
-                <Text style={styles.courseCountLabel}>({data.totalRating})</Text>  
+                <Text style={styles.courseCountLabel}>({data.ratedNumber})</Text>  
             </View>
             
         </View>
