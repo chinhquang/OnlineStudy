@@ -30,37 +30,8 @@ import {CourseList} from './HomeScreen'
 
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-export const CustomListSubjectView = ({ itemList }) => (
-    <View style={styles.container}>
-        <FlatList
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-                data={itemList}
-                keyExtractor={item => item.key} // 
-                renderItem={({ item }) => <CustomRow
-                    title={item.title}
-                />}
-            />
 
-    </View>
-);
-export const SubjectBannerList = ({ itemList }) => (
-    <View style={styles.bannerList}>
-        <FlatList
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-            
-                data={itemList}
-                keyExtractor={item => item.key} // 
-                renderItem={({ item }) => <SubjectBannerRow
-                    url={item.url}
-                    title={item.title}
-                />
-            }
-            />
 
-    </View>
-);
 export const PathList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
@@ -130,12 +101,27 @@ export default function  BrowseScreen ({ navigation }){
                 isLoading: false,
                 topSellCourses : action.topSellCourses
             };
+            case 'DONE_FETCH_TOP_NEW':
+            return {
+                ...prevState,
+               
+                isLoading: false,
+                topNewCourses : action.topNewCourses
+            };
+            case 'DONE_FETCH_TOP_RATE':
+            return {
+                ...prevState,
+                isLoading: false,
+                topRateCourses : action.topRateCourses
+            };
           }
         },
         {
             isLoading: false,
             authorData: null,
             topSellCourses : null,
+            topNewCourses : null,
+            topRateCourses : null
         }
       );
    
@@ -153,13 +139,71 @@ export default function  BrowseScreen ({ navigation }){
             dispatch({ type: 'DONE_FETCH_TOP_SELL', topSellCourses : topSellCourses});
             
         }
+        doGetTopNewData = async () => {
+            dispatch({ type: 'FETCH'});
+            let topNewCourses =  await getTopSellCourseData()
+            dispatch({ type: 'DONE_FETCH_TOP_NEW', topNewCourses : topNewCourses});
+            
+        }
+        doGetTopRateData = async () => {
+            dispatch({ type: 'FETCH'});
+            let topRateCourses =  await getTopRateCourseData()
+            dispatch({ type: 'DONE_FETCH_TOP_RATE', topRateCourses : topRateCourses});
+            
+        }
         doGetAuthorData()
         doGetTopSellData()
+        doGetTopNewData()
+        doGetTopRateData()
     },[])
     getTopSellCourseData = async () =>{
         
         try {
             let response  = await fetch('https://api.itedu.me/course/top-sell', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                "limit": 10,
+                "page": 1
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
+    getTopRateCourseData = async () =>{
+        
+        try {
+            let response  = await fetch('https://api.itedu.me/course/top-rate', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                "limit": 10,
+                "page": 1
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
+    getTopNewCourseData = async () =>{
+        
+        try {
+            let response  = await fetch('https://api.itedu.me/course/top-new', {
               method: 'POST',
               headers: {
                 'Accept': 'application/json',
@@ -220,6 +264,24 @@ export default function  BrowseScreen ({ navigation }){
                     </TouchableOpacity>
                 </View>
                 <CourseList itemList={state.topSellCourses} navigation={navigation} ></CourseList>
+            </>
+            <>
+                <View style={styles.coursePathHeaderContainer}>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[1]}</Text>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                    </TouchableOpacity>
+                </View>
+                <CourseList itemList={state.topNewCourses} navigation={navigation} ></CourseList>
+            </>
+            <>
+                <View style={styles.coursePathHeaderContainer}>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[2]}</Text>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                    </TouchableOpacity>
+                </View>
+                <CourseList itemList={state.topRateCourses} navigation={navigation} ></CourseList>
             </>
             
             <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top Authors</Text>

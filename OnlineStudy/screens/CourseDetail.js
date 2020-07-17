@@ -113,7 +113,7 @@ export default function  CourseDetail({ navigation, route}){
     const data = route.params
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
-    console.log(data)
+    console.log("CourseDetail")
     const [tab1Data, setData1]=  useState([
       { name: "Course 1", header: true },
       { name: "Lesson 1", header: false },
@@ -183,19 +183,13 @@ export default function  CourseDetail({ navigation, route}){
       });
       return (
         <Animated.View style={[styles.header, {transform: [{translateY: y}]}]}>
-          <Text style={{...styles.courseName, color : colors.textPrimary}}>{data.courseName}</Text>
+          <Text style={{...styles.courseName, color : colors.textPrimary}}>{data.title}</Text>
           <View style={styles.authorCardContainer}>
-            {
-              data.author.map(( item, key ) =>(
-                <>
-                  <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
-                    <Image style={styles.avatarImage} source={{uri : item.avatarURL}}/>
-                    <Text numberOfLines={1} ellipsizeMode='tail' style={{color : 'white',fontSize : 12 * widthRatio}}>{item.authorName}</Text>
-                  </View>
-                </>
-              )  
-              )   
-            }
+              <>
+                <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
+                  <Text numberOfLines={1} ellipsizeMode='tail' style={{color : 'white',fontSize : 12 * widthRatio}}>{data["instructor.user.name"]}</Text>
+                </View>
+              </>
           </View>
 
           <View style={styles.star}>
@@ -621,9 +615,8 @@ const styles = StyleSheet.create({
       alignItems : 'center',
       marginHorizontal : 8 * widthRatio,
       paddingVertical : 3 * widthRatio,
-      paddingHorizontal : 4 * widthRatio,
+      paddingHorizontal : 7 * widthRatio,
       borderRadius : 1000,
-      paddingRight : 4 * widthRatio,
     },
     avatarImage:{
       height : 15 * widthRatio,
