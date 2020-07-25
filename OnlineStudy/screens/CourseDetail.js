@@ -36,22 +36,39 @@ import { Rating, AirbnbRating } from 'react-native-ratings';
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext, mainColors} from '../App'
+import {AuthContext, ColorThemeContext, mainColors, UserTokenContext,UserInfoContext} from '../App'
 import {StatusBarHeight} from '../utils/Dimension'
 import Video from 'react-native-video';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/Entypo';
 
+import { format } from "date-fns";
+import { color } from 'react-native-reanimated';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const TabBarHeight = 48 * widthRatio;
 const HeaderHeight = 405 * widthRatio;
 const tab1ItemSize = (Dimensions.get('window').width - 30) / 2;
 const tab2ItemSize = (Dimensions.get('window').width - 40) / 3;
+function getDateFrom(dateString){
+  var date = new Date(dateString);
 
-class TabScene extends React.Component {
-  render = () => {
-    const windowHeight = Dimensions.get('window').height;
+  var formattedDate = format(date, "MMM dd");
+  return formattedDate
+}
+function TabScene (props){
+  const {colors, setColors} = React.useContext(ColorThemeContext);
+  ListEmpty = () => {
+    return (
+      //View to show when list is empty
+      <View style={{...styles.bookmarkEmpty, backgroundColor: colors.emptyCellBackgroundColor}}>
+          <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={70 * widthRatio} color={'#939cab'}/> 
+                <Text style={styles.lightDescription}>No data on this section</Text>
+      </View>
+    );
+  };
+  const windowHeight = Dimensions.get('window').height;
     const {
       numCols,
       data,
@@ -62,10 +79,11 @@ class TabScene extends React.Component {
       onMomentumScrollEnd,
       onMomentumScrollBegin,
       stickyHeaderIndices
-    } = this.props;
-    console.log('Sticky ' + stickyHeaderIndices)
+    } = props;
+
     return (
       <Animated.FlatList
+        ListEmptyComponent={this.ListEmpty}
         scrollToOverflowEnabled={true}
         numColumns={numCols}
         ref={onGetRef}
@@ -80,7 +98,6 @@ class TabScene extends React.Component {
         onScrollEndDrag={onScrollEndDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
         ItemSeparatorComponent={() => <View style={{height: 10}} />}
-        // ListHeaderComponent={() => <View style={{height: 10}} />}
         contentContainerStyle={{
           paddingTop: HeaderHeight + TabBarHeight,
           paddingHorizontal: 10,
@@ -93,13 +110,15 @@ class TabScene extends React.Component {
         stickyHeaderIndices={stickyHeaderIndices}
         keyboardShouldPersistTaps='always'
         keyExtractor={(item, index) => index.toString()}
-        
       />
     );
-  };
+  
 }
 export default function  CourseDetail({ navigation, route}){
     const videoPlayer = useRef(null);
+    const userInfo  = React.useContext(UserInfoContext)
+    const  userToken = React.useContext(UserTokenContext)
+
     const [animationValue, setAnimationValue] = React.useState(new Animated.Value(width * 0.5));
     const [viewState, setViewState] = React.useState(true);
     const {colors, setColors} = React.useContext(ColorThemeContext);
@@ -110,25 +129,118 @@ export default function  CourseDetail({ navigation, route}){
     const [paused, setPaused] = React.useState(true);
     const [playerState, setPlayerState] = React.useState(PLAYER_STATES.PAUSED);
     const [screenType, setScreenType] = React.useState('content');
+    const [onBookmarkClickOpacity, setOnBookmarkClickOpacity] = React.useState(true)
+    const [hightLightItem, setHighlightItem] = React.useState(-1)
     const data = route.params
+    const [videoURLDisplay, setVideoURLDisplay] = React.useState(data.promoVidUrl)
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
-
-    console.log("CourseDetail")
-    const [tab1Data, setData1]=  useState([
-      { name: "Course 1", header: true },
-      { name: "Lesson 1", header: false },
-      { name: "Lesson 2", header: false },
-      
-    ])
-    const [description, setDescriptionExpand ] = useState(0)
-    const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
-    const [tabIndex, setIndex] = useState(0);
     const [routes] = useState([
       {key: 'tab1', title: 'Content'},
       {key: 'tab2', title: 'Transcript'},
     ]);
-    // const [tab1Data] = useState(Array(40).fill(0));
-    const [tab2Data] = useState(Array(30).fill(0));
+    onBookMark = () =>{
+      setOnBookmarkClickOpacity(!onBookmarkClickOpacity)
+    }
+    const [state, dispatch] = React.useReducer(
+      (prevState, action) => {
+        switch (action.type) {
+          case 'FETCH':
+            return {
+              ...prevState,
+              
+              isLoading: true,
+              
+            };
+         
+          case 'DONE_FETCH_DETAIL_COURSE':
+          return {
+              ...prevState,
+             
+              isLoading: false,
+              detailCourses : action.detailCourses
+          };
+          case 'DONE_FETCH_LESSON_DATA':
+          return {
+              ...prevState,
+             
+              isLoading: false,
+              lessonData : action.lessonData
+          };
+        }
+      },
+      {
+          lessonData : null,
+          isLoading: false,
+          detailCourses : null,
+      }
+    );
+    React.useEffect(() => {
+        
+      doGetDetailCourses = async () => {
+          dispatch({ type: 'FETCH'});
+          let detailCourses =  await getCourseData()
+          console.log(detailCourses)
+          dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses});
+          convertDataToUsableArray(detailCourses)
+          let t = convertDataToUsableArray(detailCourses)
+          console.log("dsadsadasdsadadasd-----------", t)
+          dispatch({ type: 'DONE_FETCH_LESSON_DATA', lessonData : t});
+          var arr = [];
+          
+          t.map(obj => {
+            if (obj.header == true) {
+              arr.push(t.indexOf(obj));
+            } 
+          });
+          arr.push(0);
+          setStickyHeaderIndices(arr);
+      }
+      
+      doGetDetailCourses()
+      
+    },[])
+    convertDataToUsableArray = (data) =>{
+      var array = []
+      var index = 0; 
+  
+      while (index < data.length) { 
+        array.push({ name : data[index].name, header: true})
+        let lesson = data[index].lesson
+        var indexx = 0;
+        while (indexx < lesson.length) { 
+          array.push({ name : lesson[indexx].name, header: false, videoUrl : lesson[indexx].videoUrl})
+          
+          indexx++; 
+        }
+
+        index++; 
+      }
+      
+      return array
+    }
+    getCourseData = async () =>{
+        
+      try {
+          let response  = await fetch('https://api.itedu.me/course/get-course-detail/'+ data.id +'/' + data.id, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+          })
+          let responseJson = await response.json();
+          let statusCode = await response.status;
+         
+          return responseJson.payload.section;
+        }catch(error) {
+          console.error(error); 
+        }
+  }
+
+    const [description, setDescriptionExpand ] = useState(0)
+    const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
+    const [tabIndex, setIndex] = useState(0);
+   
+    const [tab2Data] = useState(null);
     const scrollY = useRef(new Animated.Value(0)).current;
     let listRefArr = useRef([]);
     let listOffset = useRef({});
@@ -183,7 +295,7 @@ export default function  CourseDetail({ navigation, route}){
       });
       return (
         <Animated.View style={[styles.header, {transform: [{translateY: y}]}]}>
-          <Text style={{...styles.courseName, color : colors.textPrimary}}>{data.title}</Text>
+          <Text style={{...styles.courseName, color : colors.textPrimary, marginRight : 10 * widthRatio}}>{data.title}</Text>
           <View style={styles.authorCardContainer}>
               <>
                 <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
@@ -193,26 +305,19 @@ export default function  CourseDetail({ navigation, route}){
           </View>
 
           <View style={styles.star}>
-            <Text style={styles.lightText} >{data.courseLevel} - {data.date} - {data.totalDuration}</Text>
+            <Text style={styles.lightText} >{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>
             <AirbnbRating
                 showRating = {false}
                 count={5}
-                defaultRating={ Number(data.averageRating)}
+                defaultRating={ Number(data.ratedNumber)}
                 size={9 * widthRatio}
                 starContainerStyle={{marginHorizontal : 10 * widthRatio}}
                 isDisabled = {true}
             />
-            <Text style={styles.lightText}>({data.totalRating})</Text>  
+            <Text style={styles.lightText}>({data.ratedNumber})</Text>
           </View>
-          {/* <View style={{justifyContent: 'center',flexDirection: 'row', alignSelf: 'stretch', marginTop : 10 * widthRatio, textAlignVertical :'center'}}>
-            <Text numberOfLines={description} ellipsizeMode='tail' style={{...styles.lightText,marginStart : 10* widthRatio,width : 320 * widthRatio}}>{str}</Text>
-            <TouchableOpacity style={{width: 30 * widthRatio, borderRadius : 4 * widthRatio, backgroundColor : 'rgba(255,255,255, 0.5)', alignItems: 'center',justifyContent: 'center', marginLeft : 10 * widthRatio, height : '100%'}} onPress={()=>this.expandText()}>
-              <Icon type="MaterialIcons" name="keyboard-arrow-down" size={22 * widthRatio} color={colors.textPrimary}/> 
-
-            </TouchableOpacity>
-          </View> */}
           <View style={{flexDirection:'row', justifyContent:'space-evenly', marginVertical : 10 * widthRatio}}>
-            <TouchableOpacity style={{alignItems : 'center'}}>
+            <TouchableOpacity style={{alignItems : 'center', opacity: onBookmarkClickOpacity ? 1 : 0.4}} onPress={onBookMark}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={35} color={colors.textPrimary}/>
               </View>
@@ -224,6 +329,7 @@ export default function  CourseDetail({ navigation, route}){
               </View>
               <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Add to channel</Text>
             </TouchableOpacity>
+
             <TouchableOpacity style={{alignItems : 'center'}}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="file-download" size={35} color={colors.textPrimary}/>
@@ -235,13 +341,13 @@ export default function  CourseDetail({ navigation, route}){
           <View style={{height: 1, width: 350 * widthRatio, backgroundColor : '#939cab', marginVertical : 10 * widthRatio, alignSelf : 'center'}}></View>
           <View style={{justifyContent: 'center',flexDirection: 'row', alignSelf: 'stretch', marginTop : 10 * widthRatio, textAlignVertical :'center', height : 55}}>
             <ScrollView>
-              <Text numberOfLines={description} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{str}</Text>
+      <Text numberOfLines={description} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{data.description}</Text>
             </ScrollView>    
           </View>
           <TouchableOpacity style={styles.bigButton}>
               <Icon style={alignSelf='center'} type="MaterialIcons" name="format-list-bulleted" size={35} color={colors.textPrimary}/>
               
-              <Text style={{marginLeft: 5 * widthRatio, color:colors.textPrimary, fontSize : 13 * widthRatio}}>Related paths and courses</Text>
+              <Text style={{marginLeft: 5 * widthRatio, color: colors.textPrimary, fontSize : 13 * widthRatio}}>Related paths and courses</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.bigButton}>
               <Icon style={alignSelf='center'} type="MaterialIcons" name="playlist-add-check" size={35} color={colors.textPrimary}/>
@@ -251,36 +357,50 @@ export default function  CourseDetail({ navigation, route}){
         </Animated.View>
       );
     };
-
-    expandText = () => {
-      if (description == 0){
-        setDescriptionExpand (3)
-      }else {
-        setDescriptionExpand (0)
-      }
-    }
     const renderTab1Item = ({item, index}) => {
+      
+      onItemPress = (item, index) => {
+        if (item.videoUrl){
+          setHighlightItem(index)
+          setVideoURLDisplay(item.videoUrl)
+        } else {
+          alert("Bạn chưa đủ quyền để xem bài học này.")
+
+        }
+      }
+     
       return (
         <View
           style={{
-            
             width: 350 * widthRatio,
-
-            height: item.header ? tab1ItemSize: tab1ItemSize,
-            backgroundColor: item.header ? '#000000': 'grey',
+            height: item.header ? 140*widthRatio : 60* widthRatio,
+            backgroundColor: item.header ? colors.toolBackgroundColor : 'rgba(248, 248, 248, 0)',
             justifyContent: 'center',
-            alignItems: 'center',
+            borderRadius : 10 * widthRatio
           }}>
-            {
-              item.header 
-              ? <Text style={{color : 'white', fontWeight:'bold', fontSize : 20*widthRatio}}>{item.name}</Text> 
-              : <Text style={{color : 'white'}}>{item.name}</Text>
-            }
-          
+          {
+            item.header 
+            ? 
+            <View style={{flexDirection : 'row', justifyContent: 'space-between'}}>
+              
+              <Text style={{width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontWeight:'bold', fontSize : 15*widthRatio, textAlign: 'left'}}>{item.name}</Text> 
+              <TouchableOpacity style={{marginRight : 15 * widthRatio}}>
+              <Icon2 style={alignSelf='center'} type="Entypo" name="dots-three-horizontal" size={30 * widthRatio} color={colors.textPrimary}/> 
+
+              </TouchableOpacity>
+            </View>
+            
+            : 
+            
+            <TouchableOpacity onPress={()=>onItemPress(item, index)} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontWeight:(hightLightItem == index) ? 'bold' : 'normal', color: colors.textPrimary,textAlign: 'left', fontSize : 12*widthRatio, marginLeft : 20 * widthRatio, width : '60%'}}>{item.name}</Text>
+              <Icon2 style={alignSelf='center'} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
+            </TouchableOpacity>
+          }
         </View>
       );
     };
-  
+    
     const renderTab2Item = ({item, index}) => {
       return (
         <View
@@ -313,7 +433,7 @@ export default function  CourseDetail({ navigation, route}){
       switch (route.key) {
         case 'tab1':
           numCols = 1;
-          data = tab1Data;
+          data = state.lessonData;
           renderItem = renderTab1Item;
           stickyHeader = stickyHeaderIndices
           break;
@@ -322,8 +442,7 @@ export default function  CourseDetail({ navigation, route}){
           data = tab2Data;
           renderItem = renderTab2Item;
           break;
-        default:
-          return null;
+        default: return null;
       }
       return (
         <TabScene
@@ -395,14 +514,7 @@ export default function  CourseDetail({ navigation, route}){
       );
     };
     React.useEffect(() => {
-      var arr = [];
-      tab1Data.map(obj => {
-        if (obj.header == true) {
-          arr.push(tab1Data.indexOf(obj));
-        }
-      });
-      arr.push(0);
-      setStickyHeaderIndices(arr);
+      
 
 
       scrollY.addListener(({value}) => {
@@ -415,10 +527,8 @@ export default function  CourseDetail({ navigation, route}){
       
     }, [routes, tabIndex]);
    
-    // const [top, setTop] = useState( new Animated.Value(0))
    
 
-    const headerTitle = 'HEADER'
     dismiss = () =>{
       navigation.goBack()
         
@@ -428,13 +538,7 @@ export default function  CourseDetail({ navigation, route}){
         videoPlayer?.current.seek(seek);
     };
     const onFullScreen = () =>{
-        // if (screenType == 'content'){
-        //     setScreenType('cover')
-        // }else {
-        //     setScreenType('content')
-        // }
         videoPlayer.current.presentFullscreenPlayer()
-        // toggleAnimation()
     }
     const onPaused = playerState => {
 
@@ -464,8 +568,6 @@ export default function  CourseDetail({ navigation, route}){
     const onLoadStart = () => setIsLoading(true);
 
     const onEnd = () => {
-    // Uncomment this line if you choose repeat=false in the video player
-    // setPlayerState(PLAYER_STATES.ENDED);
     };
     
     const onSeeking = currentTime => setCurrentTime(currentTime);
@@ -487,7 +589,7 @@ export default function  CourseDetail({ navigation, route}){
         resizeMode="cover"
         source={{
           uri:
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            videoURLDisplay,
         }}
         repeat
         style={styles.mediaPlayer}
@@ -519,8 +621,8 @@ export default function  CourseDetail({ navigation, route}){
           </View>
         </MediaControls.Toolbar>
       </MediaControls>
-    </Animated.View>
-    <View style={{flex: 1}}>
+      </Animated.View>
+      <View style={{flex: 1}}>
         {renderTabView()}
         {renderHeader()}
       </View>
@@ -535,10 +637,8 @@ const styles = StyleSheet.create({
     container : {
        flex :1,
        backgroundColor : "rgba(0,0,0,0)",
-      //  marginTop: StatusBarHeight,
     },
     videoContainer : {
-        // marginTop: StatusBarHeight,
         zIndex : 1
     },
     videoFullScreenContainer : {
@@ -647,5 +747,24 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(255,255,255, 0.5)',
       aspectRatio : 350/47,
     },
+    bookmarkEmpty:{
+      width : 350 * widthRatio,
+      height: 150 * widthRatio,
+      // backgroundColor : 'rgba(38, 50, 56, 0.7)',
+      alignItems : 'center',
+      alignSelf :'center',
+      justifyContent : "center",
+      marginVertical : 8 * widthRatio,
+      marginHorizontal: 10 * widthRatio,
+    },
+    lightDescription: {
+      fontFamily: "Helvetica Neue",
+      fontStyle: 'normal',
+      fontWeight: 'normal',
+      fontSize: 14 * widthRatio,
+      width : '70%',
+      color: '#939cab',
+      textAlign: 'center'
+    }
 });
 

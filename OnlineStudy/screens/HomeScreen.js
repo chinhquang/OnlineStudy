@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext, UserInfoContext} from '../App'
+import {AuthContext, ColorThemeContext, UserInfoContext, UserTokenContext, LoginStatusContext} from '../App'
 import {PathList} from './BrowseScreen'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -33,7 +33,8 @@ const widthRatio = width / 375
 
 export function CourseList ({ itemList, navigation },props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
+   
+
     showCourseDetail=(item)=>{
         console.log(item)
         navigation.navigate ('CourseDetail', item)
@@ -77,7 +78,8 @@ export function CourseList ({ itemList, navigation },props) {
     
 export default function  HomeScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-
+    const  userToken = React.useContext(UserTokenContext)
+    console.log(userToken)
     var listCourseCategory = ['Software Development', 'IT Operations', 'Data Professional']
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
@@ -89,52 +91,41 @@ export default function  HomeScreen({ navigation }){
                 isLoading: true,
                 
               };
-            case 'DONE_FETCH_AUTHOR':
+           
+            case 'DONE_FETCH_PROCESS_COURSE':
             return {
                 ...prevState,
                
                 isLoading: false,
-                authorData : action.authorData,
-            };
-            case 'DONE_FETCH_TOP_SELL':
-            return {
-                ...prevState,
-               
-                isLoading: false,
-                topSellCourses : action.topSellCourses
+                processCourses : action.processCourses
             };
           }
         },
         {
             isLoading: false,
-            authorData: null,
-            topSellCourses : null,
+            processCourses : null,
         }
       );
     React.useEffect(() => {
         
-        doGetTopSellData = async () => {
+        doGetProcessCourses = async () => {
             dispatch({ type: 'FETCH'});
-            let topSellCourses =  await getTopSellCourseData()
-            dispatch({ type: 'DONE_FETCH_TOP_SELL', topSellCourses : topSellCourses});
+            let processCourses =  await getProcessCourseData()
+            dispatch({ type: 'DONE_FETCH_PROCESS_COURSE', processCourses : topSeprocessCoursesllCourses});
             
         }
         
-        doGetTopSellData()
+        doGetProcessCourses()
     },[])
-    getTopSellCourseData = async () =>{
+    getProcessCourseData = async () =>{
         
         try {
-            let response  = await fetch('https://api.itedu.me/course/top-sell', {
-              method: 'POST',
+            let response  = await fetch('https://api.itedu.me/user/get-process-courses', {
+              method: 'GET',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + userToken
               },
-              body: JSON.stringify({
-                "limit": 10,
-                "page": 1
-              })
             })
             let responseJson = await response.json();
             let statusCode = await response.status;
@@ -178,7 +169,7 @@ export default function  HomeScreen({ navigation }){
                         <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                     </TouchableOpacity>
                 </View>
-                <CourseList itemList={state.topSellCourses} navigation={navigation} ></CourseList>
+                <CourseList itemList={state.processCourses} navigation={navigation} ></CourseList>
             </>
             </View>
         

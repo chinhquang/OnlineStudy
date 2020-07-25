@@ -62,6 +62,9 @@ if (isSignout){
             name="SignInScreen" component={SignInScreen} initialParams={{ isPublic : true }}/>     
       <HomeStack.Screen options={{ title:"", }} name="SupportScreen" component={SupportScreen}  />    
       <HomeStack.Screen options={{title:"Forgot your password",}} name="ForgotPassScreen" component={ForgotPassScreen}/> 
+      <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
+      <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
+
     </HomeStack.Navigator>
    
 )

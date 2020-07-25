@@ -27,7 +27,7 @@ import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
 import {CourseList} from './HomeScreen'
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -76,7 +76,6 @@ export const TopAuthorList = ({ itemList }) => (
 export default function  BrowseScreen ({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     var listCourseCategory = ['Top Sell', 'Newest Courses', 'Top Rate']
-
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
           switch (action.type) {
@@ -123,7 +122,7 @@ export default function  BrowseScreen ({ navigation }){
             topNewCourses : null,
             topRateCourses : null
         }
-      );
+    );
    
     React.useEffect(() => {
         doGetAuthorData = async () => {

@@ -38,7 +38,7 @@ export default function  SignInScreen ({ navigation, route }){
     // const [count, setCount] = React.useState(0);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     settingClick=()=>{
-        alert('This button is not implemented yet')
+        navigation.navigate ('SettingScreen')
     };
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');

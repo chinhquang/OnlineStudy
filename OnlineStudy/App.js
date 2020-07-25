@@ -26,6 +26,7 @@ import { DrawerLayoutAndroidBase } from 'react-native';
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
 export const UserInfoContext = React.createContext();
+export const UserTokenContext = React.createContext();
 const mainStack = createStackNavigator()
 function  MainStack({navigation}) {
   const isSignout  = React.useContext(LoginStatusContext)
@@ -238,48 +239,6 @@ const App = () => {
     }
   );
 
-  // React.useEffect(() => {
-  //   // Fetch the token from storage then navigate to our appropriate place
-  //   const bootstrapAsync = async () => {
-  //     let userToken;
-
-  //     try {
-  //       userToken = await AsyncStorage.getItem('userToken');
-  //       if (userToken == null){
-  //         dispatch({ type: 'SIGN_OUT' })
-  //       }else {
-  //         var isExpired = false;
-  //         var decodedToken = jwt.decode(userToken, {complete: true});
-  //         var dateNow = new Date();
-  //         if(decodedToken.exp < dateNow.getTime()){
-  //           isExpired = true;
-  //         }
-  //         if(isExpired){
-  //           await AsyncStorage.removeItem('userToken');
-  //           dispatch({ type: 'SIGN_OUT' })
-  //         }else {
-  //           let response = await doGetUserInfo(userToken)
-            
-  //           let user =  response.payload
-  //           if (user == null){
-
-  //           }
-  //           console.log("User token",response)
-  //           console.log("User token",userToken)
-  //           console.log("User info",user)
-  //           dispatch({ type: 'SIGN_IN', token: userToken, userInfo : user});
-  //         }
-
-          
-          
-  //       }
-  //     } catch (e) {
-  //     }
-      
-  //   };
-
-  //   bootstrapAsync();
-  // }, []);
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
@@ -293,7 +252,7 @@ const App = () => {
           console.log('SIGN_IN')
           let responseJson = response.responseJson
           console.log(responseJson.token)
-          await AsyncStorage.setItem('userToken', responseJson.token);
+          
           let userInfo = responseJson.userInfo
           dispatch({ type: 'SIGN_IN', token: responseJson.token, userInfo : userInfo});
         }
