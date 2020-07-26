@@ -97,8 +97,7 @@ if (isSignout){
             </TouchableOpacity>
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
-    
-    <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
+    <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen2" component={SettingScreen} /> 
     <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
     <HomeStack.Screen options={{title:""}} name="UserInfoScreen" component={UserInfoScreen} /> 
     </HomeStack.Navigator>

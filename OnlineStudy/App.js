@@ -359,6 +359,7 @@ const App = () => {
       <AuthContext.Provider value={authContext}>
       <LoginStatusContext.Provider value={state.isSignout}>
       <UserInfoContext.Provider value={state.userInfo}>
+      <UserTokenContext.Provider value={state.userToken}>
         <NavigationContainer>
           <mainStack.Navigator mode="modal">
             <mainStack.Screen options={{headerShown: false}} name="MainStack" component={MainStack} />
@@ -371,6 +372,8 @@ const App = () => {
                       
           </mainStack.Navigator>
         </NavigationContainer>
+      </UserTokenContext.Provider>
+        
       </UserInfoContext.Provider>
         
       </LoginStatusContext.Provider>

@@ -44,7 +44,7 @@ export function CourseList ({ itemList, navigation },props) {
           //View to show when list is empty
           <View style={{...styles.bookmarkEmpty, backgroundColor: colors.emptyCellBackgroundColor}}>
               <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={70 * widthRatio} color={'#939cab'}/> 
-                    <Text style={styles.lightDescription}>No courses on this section</Text>
+                <Text style={styles.lightDescription}>No courses on this section</Text>
           </View>
         );
       };
@@ -79,8 +79,8 @@ export function CourseList ({ itemList, navigation },props) {
 export default function  HomeScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const  userToken = React.useContext(UserTokenContext)
-    console.log(userToken)
-    var listCourseCategory = ['Software Development', 'IT Operations', 'Data Professional']
+    const userInfo  = React.useContext(UserInfoContext)
+    var listCourseCategory = ['Processing Courses']
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
           switch (action.type) {
@@ -88,7 +88,6 @@ export default function  HomeScreen({ navigation }){
               return {
                 ...prevState,
                 
-                isLoading: true,
                 
               };
            
@@ -96,13 +95,18 @@ export default function  HomeScreen({ navigation }){
             return {
                 ...prevState,
                
-                isLoading: false,
                 processCourses : action.processCourses
+            };
+            case 'DONE_FETCH_BOOKMARK_COURSE':
+            return {
+                ...prevState,
+               
+                bookmarkCourses : action.bookmarkCourses
             };
           }
         },
         {
-            isLoading: false,
+            bookmarkCourses : null,
             processCourses : null,
         }
       );
@@ -111,21 +115,53 @@ export default function  HomeScreen({ navigation }){
         doGetProcessCourses = async () => {
             dispatch({ type: 'FETCH'});
             let processCourses =  await getProcessCourseData()
-            dispatch({ type: 'DONE_FETCH_PROCESS_COURSE', processCourses : topSeprocessCoursesllCourses});
+            dispatch({ type: 'DONE_FETCH_PROCESS_COURSE', processCourses : processCourses});
             
         }
-        
+        doGetBookmarkCourses = async () => {
+            dispatch({ type: 'FETCH'});
+            let bookmarkCourses =  await getBookmarkCourseData()
+            dispatch({ type: 'DONE_FETCH_BOOKMARK_COURSE', bookmarkCourses : bookmarkCourses});
+            
+        }
         doGetProcessCourses()
+        doGetBookmarkCourses()
     },[])
     getProcessCourseData = async () =>{
         
         try {
-            let response  = await fetch('https://api.itedu.me/user/get-process-courses', {
-              method: 'GET',
+            let response  = await fetch('https://api.itedu.me/course/top-rate', {
+              method: 'POST',
               headers: {
                 'Accept': 'application/json',
-                'Authorization' : 'Bearer ' + userToken
+                'Content-Type': 'application/json',
               },
+              body: JSON.stringify({
+                "limit": 10,
+                "page": 1
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
+    getBookmarkCourseData = async () =>{
+        
+        try {
+            let response  = await fetch('https://api.itedu.me/course/top-sell', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                "limit": 10,
+                "page": 1
+              })
             })
             let responseJson = await response.json();
             let statusCode = await response.status;
@@ -140,7 +176,7 @@ export default function  HomeScreen({ navigation }){
     }
     
     settingClick=()=>{
-        navigation.navigate ('SettingScreen')
+        navigation.navigate ('SettingScreen2')
     };
     userInfoClick = () =>{
         navigation.navigate ('UserInfoScreen')
@@ -164,7 +200,7 @@ export default function  HomeScreen({ navigation }){
             <View>
             <>
                 <View style={styles.coursePathHeaderContainer}>
-                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[0]}</Text>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top buy</Text>
                     <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                         <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                     </TouchableOpacity>
@@ -175,12 +211,12 @@ export default function  HomeScreen({ navigation }){
         
             
             <View style={styles.coursePathHeaderContainer}>
-                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Bookmarks</Text>
+                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top votes</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                     <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                 </TouchableOpacity>
             </View>
-            <CourseList itemList={this.getBookmarkData()} navigation={navigation} ></CourseList>
+            <CourseList itemList={state.bookmarkCourses} navigation={navigation} ></CourseList>
             
             
             

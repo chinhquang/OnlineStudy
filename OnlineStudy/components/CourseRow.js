@@ -95,8 +95,12 @@ const CourseRow= ({ data }) => (
         <View style={styles.content}>
             <Text numberOfLines={1} style={styles.title}>{data.title}</Text>
             {/* <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    */}
-            <Text numberOfLines={1} style={styles.courseCountLabel}>{data["instructor.user.name"]}</Text> 
-            <Text style={styles.courseCountLabel}>{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>  
+            <Text numberOfLines={1} style={styles.courseCountLabel}>{data["instructor.user.name"]}</Text>
+            {
+                data.updatedAt&&
+                <Text style={styles.courseCountLabel}>{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>  
+
+            }
             <View style={styles.star}>
                 <AirbnbRating
                     showRating = {false}

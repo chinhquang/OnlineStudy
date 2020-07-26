@@ -25,7 +25,7 @@ import { ListItem } from 'react-native-elements'
 
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
-import {AuthContext, ColorThemeContext} from '../App'
+import {AuthContext, ColorThemeContext,LoginStatusContext} from '../App'
 import CustomButton from '../components/CustomButton'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
@@ -34,7 +34,8 @@ const widthRatio = width / 375
 
 export default function  SettingScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
+    const isSignout  = React.useContext(LoginStatusContext)
+
     const list = [
         {
             id : 1,
@@ -92,7 +93,17 @@ export default function  SettingScreen({ navigation }){
             ))
         }
         </View>
-        <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton>
+        {
+            !isSignout ? 
+            <>
+                <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign out"onPress={() => doSignOut()}></CustomButton>
+
+            </> : 
+            <>
+                <CustomButton style={{...styles.borderButton, borderWidth : 0}} ></CustomButton>
+
+            </>
+        }
 
         </ScrollView>
     </LinearGradient>

@@ -27,7 +27,6 @@ import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
 import {CourseList} from './HomeScreen'
-import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 

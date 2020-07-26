@@ -21,9 +21,9 @@ import {
   Animated,
   Platform,
   SectionList,
-  TouchableHighlight,TouchableNativeFeedback, TouchableOpacity
+  TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent
 } from 'react-native';
-
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler'
 // import {TouchableOpacity} from 'react-native-gesture-handler'
 const str = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ultrices ante. Duis vulputate lorem non tortor pharetra, aliquet aliquet leo efficitur. Ut sed rutrum nisi. Pellentesque facilisis erat sit amet mi ornare, et dapibus tortor congue. Integer vulputate magna a vehicula accumsan. Cras nec nunc consequat, volutpat felis vitae, pulvinar nibh. Vestibulum lacinia in tortor vel maximus. Suspendisse semper dolor ligula. Praesent pellentesque suscipit enim, at dictum nisl pellentesque non. Phasellus nec consectetur magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed condimentum porttitor elit ut dignissim. Nunc nec libero a orci porttitor accumsan eget sed diam. Cras dignissim, nulla sed laoreet accumsan, mi quam egestas mauris, id posuere purus lorem sagittis purus. Duis sollicitudin neque ac aliquet sollicitudin.
 In eros est, sollicitudin sit amet risus eget, porttitor pulvinar ipsum. Nulla eget quam arcu. Mauris vel odio cursus, hendrerit augue et, ultricies massa. Phasellus pharetra et libero id semper. Sed sollicitudin commodo mi, nec efficitur sem congue vitae. Ut pellentesque augue ut lacus finibus sollicitudin. Donec a auctor augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam vitae convallis nulla. Maecenas venenatis lorem at mi commodo pharetra. Mauris finibus hendrerit magna, sit amet ultrices turpis aliquet nec. Proin et diam suscipit, sollicitudin risus ac, porta nibh.
@@ -116,9 +116,9 @@ function TabScene (props){
 }
 export default function  CourseDetail({ navigation, route}){
     const videoPlayer = useRef(null);
-    const userInfo  = React.useContext(UserInfoContext)
+    
     const  userToken = React.useContext(UserTokenContext)
-
+    console.log("TOKEN dsad",userToken)
     const [animationValue, setAnimationValue] = React.useState(new Animated.Value(width * 0.5));
     const [viewState, setViewState] = React.useState(true);
     const {colors, setColors} = React.useContext(ColorThemeContext);
@@ -139,7 +139,7 @@ export default function  CourseDetail({ navigation, route}){
       {key: 'tab2', title: 'Transcript'},
     ]);
     onBookMark = () =>{
-      setOnBookmarkClickOpacity(!onBookmarkClickOpacity)
+      likeCourse()
     }
     const [state, dispatch] = React.useReducer(
       (prevState, action) => {
@@ -166,9 +166,16 @@ export default function  CourseDetail({ navigation, route}){
               isLoading: false,
               lessonData : action.lessonData
           };
+          case 'CHANGE_LIKE_STATUS':
+            return {
+              ...prevState,
+             
+              isBookMark : action.isBookMark
+          };
         }
       },
       {
+          isBookMark : false,
           lessonData : null,
           isLoading: false,
           detailCourses : null,
@@ -194,11 +201,37 @@ export default function  CourseDetail({ navigation, route}){
           });
           arr.push(0);
           setStickyHeaderIndices(arr);
-      }
+          dispatch({ type: 'FETCH'});
+          var like = await getLikeStatus()
+          console.log("LIKE TOOTOOTO   ", like)
+          dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : like});
+      };
+      
       
       doGetDetailCourses()
       
+      
+      
     },[])
+    getLikeStatus = async () =>{
+        
+      try {
+          let response  = await fetch('https://api.itedu.me/user/get-course-like-status/' + data.id, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Authorization' : 'Bearer ' + userToken
+              
+            },
+          })
+          let responseJson = await response.json();
+          let statusCode = await response.status;
+          console.log("REPPSPSPPS" , responseJson.likeStatus)
+          return responseJson.likeStatus
+        }catch(error) {
+          console.error(error); 
+        }
+    }
     convertDataToUsableArray = (data) =>{
       var array = []
       var index = 0; 
@@ -286,7 +319,7 @@ export default function  CourseDetail({ navigation, route}){
     const onScrollEndDrag = () => {
       syncScrollOffset();
     };
-  
+    const xxx = (state.isBookMark==true) ? 0.4 : 1
     const renderHeader = () => {
       const y = scrollY.interpolate({
         inputRange: [0, HeaderHeight],
@@ -317,12 +350,12 @@ export default function  CourseDetail({ navigation, route}){
             <Text style={styles.lightText}>({data.ratedNumber})</Text>
           </View>
           <View style={{flexDirection:'row', justifyContent:'space-evenly', marginVertical : 10 * widthRatio}}>
-            <TouchableOpacity style={{alignItems : 'center', opacity: onBookmarkClickOpacity ? 1 : 0.4}} onPress={onBookMark}>
+            <TouchableWithoutFeedback style={{alignItems : 'center', opacity: xxx}} onPress={onBookMark}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={35} color={colors.textPrimary}/>
               </View>
               <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Bookmark</Text>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
             <TouchableOpacity style={{alignItems : 'center'}}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="wifi-tethering" size={35} color={colors.textPrimary}/>
@@ -357,6 +390,38 @@ export default function  CourseDetail({ navigation, route}){
         </Animated.View>
       );
     };
+    
+     likeCourse = async() => {
+      console.log("TOKEN  ",userToken)
+      try {
+        let response  = await fetch('https://api.itedu.me/user/like-course', {
+          method: 'POST',
+          headers: {
+            'Authorization' : 'Bearer ' + userToken,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+          
+            courseId: data.id
+          
+          })
+        })
+        
+        let responseJson = await response.json()
+        let statusCode = await response.status;
+        if (statusCode != 200){
+          alert(responseJson.message)
+        }else {
+          console.log( "LIKE     ", responseJson)
+          dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : responseJson.likeStatus});
+        }
+        
+        return responseJson;
+      }catch(error) {
+        console.error(error); 
+      }
+      
+    }
     const renderTab1Item = ({item, index}) => {
       
       onItemPress = (item, index) => {
