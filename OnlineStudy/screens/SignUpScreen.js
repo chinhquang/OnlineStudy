@@ -47,8 +47,26 @@ export default function  SignUpScreen ({ navigation, route }){
     const [phoneValue, onChangePhoneNumber] = React.useState('');
     const { signUp } = React.useContext(AuthContext);
     const { isPublic } = route.params;
+    validateEmail = (text) => {
+        console.log(text);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(text) === false) {
+          console.log("Email is Not Correct");
+          
+          return false;
+        }
+        else {
+          
+          console.log("Email is Correct");
+         
+          return true
+        }
+      }
     doSignIn = async() =>{
-        
+        if (!validateEmail(emailValue)){
+            alert("Invalid Email")
+            return 
+        }
         let statusCode = await signUp({ name : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
         if (statusCode == 200){
             Alert.alert(

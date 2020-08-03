@@ -44,8 +44,25 @@ export default function  SignInScreen ({ navigation, route }){
     const [passwordValue, onChangePassword] = React.useState('');
     const { signIn } = React.useContext(AuthContext);
     const { isPublic } = route.params;
+    validateEmail = (text) => {
+        console.log(text);
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (reg.test(text) === false) {
+          
+          return false;
+        }
+        else {
+          
+          
+          return true
+        }
+      }
     doSignIn = async() =>{
         // signIn({ emailValue, passwordValue })  
+        if (!validateEmail(emailValue)){
+            alert("Invalid Email")
+            return 
+        }
         let statusCode = await signIn({  email: emailValue, password : passwordValue })
         if (statusCode == 200){
             if (!isPublic){
