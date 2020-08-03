@@ -39,7 +39,10 @@ export default function  SearchScreen ({ navigation }){
         
     }
     getCourseData = async (text) =>{
-        
+        if (text.length == 0){
+          setList([])
+          return 
+        }
         try {
             let response  = await fetch('https://api.itedu.me/course/search/', {
               method: 'POST',

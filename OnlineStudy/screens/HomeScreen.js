@@ -83,8 +83,7 @@ export function CourseList_APIBug ({ itemList, navigation },props) {
    
 
     showCourseDetail=(item)=>{
-        console.log(item)
-        navigation.navigate ('CourseDetail', item)
+        alert ('This function is not implemented yet')
     };
     ListEmpty = () => {
         return (
