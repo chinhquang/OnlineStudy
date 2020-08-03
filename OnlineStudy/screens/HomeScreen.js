@@ -23,6 +23,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
+import {CourseRow2} from '../components/CourseRow'
 import {AuthContext, ColorThemeContext, UserInfoContext, UserTokenContext, LoginStatusContext} from '../App'
 import {PathList} from './BrowseScreen'
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -34,7 +35,7 @@ const widthRatio = width / 375
 export function CourseList ({ itemList, navigation },props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
    
-
+    
     showCourseDetail=(item)=>{
         console.log(item)
         navigation.navigate ('CourseDetail', item)
@@ -75,7 +76,53 @@ export function CourseList ({ itemList, navigation },props) {
     </View>
 );
 }
-    
+
+// This function to handle bug from backend
+export function CourseList_APIBug ({ itemList, navigation },props) {
+    const {colors, setColors} = React.useContext(ColorThemeContext);
+   
+
+    showCourseDetail=(item)=>{
+        console.log(item)
+        navigation.navigate ('CourseDetail', item)
+    };
+    ListEmpty = () => {
+        return (
+          //View to show when list is empty
+          <View style={{...styles.bookmarkEmpty, backgroundColor: colors.emptyCellBackgroundColor}}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="bookmark-border" size={70 * widthRatio} color={'#939cab'}/> 
+                <Text style={styles.lightDescription}>No courses on this section</Text>
+          </View>
+        );
+      };
+    return (
+        <View style={styles.bannerList}>
+        <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+            
+                data={itemList}
+                keyExtractor={item => item.key} // 
+                ListEmptyComponent={ListEmpty}
+                renderItem={({ item }) =>{
+                    return (
+                        <TouchableOpacity onPress = {()=> showCourseDetail(item)}>
+                            <CourseRow2
+                            data={item}
+
+                        />
+                        </TouchableOpacity>
+                        
+                    )
+                } 
+                
+            }
+            />
+
+    </View>
+);
+}
+  
 export default function  HomeScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const  userToken = React.useContext(UserTokenContext)
@@ -115,6 +162,7 @@ export default function  HomeScreen({ navigation }){
         doGetProcessCourses = async () => {
             dispatch({ type: 'FETCH'});
             let processCourses =  await getProcessCourseData()
+            console.log("CORSDsdada", processCourses)
             dispatch({ type: 'DONE_FETCH_PROCESS_COURSE', processCourses : processCourses});
             
         }
@@ -130,16 +178,13 @@ export default function  HomeScreen({ navigation }){
     getProcessCourseData = async () =>{
         
         try {
-            let response  = await fetch('https://api.itedu.me/course/top-rate', {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                "limit": 10,
-                "page": 1
-              })
+            let response  = await fetch('https://api.itedu.me/user/get-favorite-courses', {
+                method: 'GET',
+                headers: {
+                  'Accept': 'application/json',
+                  'Authorization': 'Bearer ' + userToken,
+                },
+             
             })
             let responseJson = await response.json();
             let statusCode = await response.status;
@@ -152,16 +197,11 @@ export default function  HomeScreen({ navigation }){
     getBookmarkCourseData = async () =>{
         
         try {
-            let response  = await fetch('https://api.itedu.me/course/top-sell', {
-              method: 'POST',
+            let response  = await fetch('https://api.itedu.me/user/recommend-course/' + userInfo.id +'/10/1', {
+              method: 'GET',
               headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
               },
-              body: JSON.stringify({
-                "limit": 10,
-                "page": 1
-              })
             })
             let responseJson = await response.json();
             let statusCode = await response.status;
@@ -200,18 +240,18 @@ export default function  HomeScreen({ navigation }){
             <View>
             <>
                 <View style={styles.coursePathHeaderContainer}>
-                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top buy</Text>
-                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <Text style={{...styles.headerSection, color: colors.textPrimary}}>My Bookmarks</Text>
+                    {/* <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                         <Text style={styles.seeAllButtonText}>See all {">"}</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
-                <CourseList itemList={state.processCourses} navigation={navigation} ></CourseList>
+                <CourseList_APIBug itemList={state.processCourses} navigation={navigation} ></CourseList_APIBug>
             </>
             </View>
         
             
             <View style={styles.coursePathHeaderContainer}>
-                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top votes</Text>
+                <Text style={{...styles.headerSection, color: colors.textPrimary}}>Recommend courses for you</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
                     <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                 </TouchableOpacity>

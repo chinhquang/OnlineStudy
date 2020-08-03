@@ -116,5 +116,33 @@ const CourseRow= ({ data }) => (
         </View>
     </View>
 );
+export function CourseRow2({ data }) {
+    return (
+    
+        <View style={styles.container}>
+            <View  style={styles.imageContainer}>
+                <Image style={styles.image} source={{uri : data.courseImage}}/>
+            </View >
+            <View style={styles.content}>
+                <Text numberOfLines={1} style={styles.title}>{data.courseTitle}</Text>
+                {/* <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    */}
+                <Text numberOfLines={1} style={styles.courseCountLabel}>{data["instructorName"]}</Text>
+                <Text style={styles.courseCountLabel}>{data.coursePrice}$  -  {data.courseSoldNumber} sold</Text>  
 
+                {/* <View style={styles.star}>
+                    <AirbnbRating
+                        showRating = {false}
+                        count={5}
+                        defaultRating={ Number(data.courseAveragePoint) }
+                        size={15 * widthRatio}
+                        isDisabled = {true}
+                        
+                    />
+                    <Text style={styles.courseCountLabel}>({data.courseAveragePoint})</Text>  
+                </View> */}
+                
+            </View>
+        </View>
+    );
+} 
 export default CourseRow;
