@@ -29,18 +29,25 @@ import {AuthContext, ColorThemeContext,LoginStatusContext} from '../App'
 import CustomButton from '../components/CustomButton'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
-
+import {LanguageContext} from '../LanguageContext'
 
 
 export default function  SettingScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const isSignout  = React.useContext(LoginStatusContext)
+    const {lang, setLang} = React.useContext(LanguageContext);
 
     const list = [
         {
             id : 1,
-            name: 'Theme',
+            name: "Theme",
             value : colors.type == 'dark' ? 'Dark' : 'Light'
+            
+        },
+        {
+            id : 3,
+            name: lang.language,
+            value : lang.type == 'vie' ? "Tiếng Việt" : "English"
             
         },
         {
@@ -60,6 +67,9 @@ export default function  SettingScreen({ navigation }){
     selectItem = (i) => {
         if (i==1){
             navigation.navigate ('ThemeSettingScreen')
+        }
+        if (i==3){
+            navigation.navigate ('LangSettingScreen')
         }
         
     }

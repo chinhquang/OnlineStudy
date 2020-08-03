@@ -21,6 +21,7 @@ import VideoFullScreen  from './screens/CourseDetail'
 import Main from './screens/Main'
 import SupportScreen from './screens/SupportScreen'
 import ForgotPassScreen from "./screens/ForgotPassScreen"
+import {LanguageThemeProvider, LanguageContext} from "./LanguageContext"
 import { DrawerLayoutAndroidBase } from 'react-native';
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
@@ -230,6 +231,15 @@ const App = () => {
             userInfo : null,
             
           };
+        case 'UPDATE_INFO':
+          return {
+            ...prevState,
+            
+            
+            userInfo : action.userInfo,
+            
+          };
+
       }
     },
     {
@@ -238,7 +248,9 @@ const App = () => {
       userToken: null,
     }
   );
-
+  updateUserInfo = (val) => {
+    dispatch({ type: 'UPDATE_INFO', userInfo : val});
+ }
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
@@ -355,10 +367,11 @@ const App = () => {
     
   }
   return (
+    <LanguageThemeProvider>
     <ColorThemeProvider>
       <AuthContext.Provider value={authContext}>
       <LoginStatusContext.Provider value={state.isSignout}>
-      <UserInfoContext.Provider value={state.userInfo}>
+      <UserInfoContext.Provider value={{userInfo : state.userInfo, updateUserInfo : updateUserInfo}}>
       <UserTokenContext.Provider value={state.userToken}>
         <NavigationContainer>
           <mainStack.Navigator mode="modal">
@@ -380,7 +393,7 @@ const App = () => {
       
     </AuthContext.Provider>
     </ColorThemeProvider>
-    
+    </LanguageThemeProvider>
     
   );
 };

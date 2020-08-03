@@ -17,8 +17,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  Alert,
-  AsyncStorage
+  AsyncStorage, Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
@@ -31,76 +30,56 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext} from "../App.js"
-import {ColorThemeContext} from "../App.js"
+import {ColorThemeContext, UserInfoContext, UserTokenContext} from "../App.js"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
-export default function  SignUpScreen ({ navigation, route }){
+export default function  UpdateProfileScreen ({ navigation, route }){
     // const [count, setCount] = React.useState(0);
+    const userInfoContext  = React.useContext(UserInfoContext)
+
+    const userInfo  = userInfoContext.userInfo
+    const [usernameValue, onChangeUsername] = React.useState(userInfo.name);
+    const [phoneValue, onChangePhoneNumber] = React.useState(userInfo.phone);
+    
+    const userToken = React.useContext(UserTokenContext)
+
+    const [avatarValue, onChangeAvatarField] = React.useState(userInfo.avatar);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     settingClick=()=>{
-        alert('This button is not implemented yet')
+        navigation.navigate ('SettingScreen')
     };
-    const [usernameValue, onChangeUsername] = React.useState('');
-    const [phoneValue, onChangePhoneNumber] = React.useState('');
-    const [emailValue, onChangeEmailField] = React.useState('');
-    const [passwordValue, onChangePassword] = React.useState('');
-    
-    const { signUp } = React.useContext(AuthContext);
-    const { isPublic } = route.params;
-    validateEmail = (text) => {
-        console.log(text);
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (reg.test(text) === false) {
-          console.log("Email is Not Correct");
-          
-          return false;
-        }
-        else {
-          
-          console.log("Email is Correct");
-         
-          return true
-        }
-      }
-    doSignIn = async() =>{
-        if (!validateEmail(emailValue)){
-            alert("Invalid Email")
-            return 
-        }
-        let statusCode = await signUp({ name : usernameValue, phone : phoneValue, email: emailValue, password : passwordValue })
-        if (statusCode == 200){
-            Alert.alert(
-                "Sign up successfull",
-                "You have create an account. Please go to your email box to activate your account",
-                [,
-                    {
-                      text: "OK", onPress: () => {
-                      console.log("OK Pressed")
-                      if (!isPublic){
-                        navigation.goBack()
-                        } 
-                    } 
-                }
-                ],
-                { cancelable: false }
-            );
-        }
-        else {
-            Alert.alert(
-                "Sign up failed",
-                "Email or phone had been in used",
-                [,
-                  { 
-                      text: "OK", onPress: () => {
-                      console.log("OK Pressed")
-                       
-                    } 
-                }
-                ],
-                { cancelable: false }
-            );
-        }
+   
+    doUpdate = async() =>{
+        
+        try {
+            let response  = await fetch('https://api.itedu.me/user/update-profile', {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization' : "Bearer " + userToken
+              },
+              body: JSON.stringify({
+                name : usernameValue,
+                phone : phoneValue,
+                avatar: avatarValue
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            if (statusCode == 200){
+                alert("Update profile successfully")
+                userInfoContext.updateUserInfo(responseJson.payload)
+
+            }else {
+                alert("Update profile fail")
+            }
+
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
     }
     
     return (
@@ -116,14 +95,13 @@ export default function  SignUpScreen ({ navigation, route }){
                 onChangeText={text => onChangeUsername(text)}
                 value={usernameValue}
                 autoCapitalize = 'none'
-                
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Email</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>Avatar</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
-                onChangeText={text => onChangeEmailField(text)}
-                value={emailValue}
+                onChangeText={text => onChangeAvatarField(text)}
+                value={avatarValue}
                 autoCapitalize = 'none'
             />
             <Text style={{...styles.label, color: colors.textPrimary}}>Phone</Text>
@@ -135,17 +113,10 @@ export default function  SignUpScreen ({ navigation, route }){
                 onChangeText={text => onChangePhoneNumber(text)}
                 value={phoneValue}
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
-            <TextInput
-                keyboardAppearance={colors.type}
-                style={{...styles.textInput, color : colors.textPrimary}}
-                onChangeText={text => onChangePassword(text)}
-                secureTextEntry={true}
-                autoCapitalize = 'none'
-                value={passwordValue}
-            />
-            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Create Account" onPress={() => doSignIn()}></CustomButton>
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Update" onPress={() => doUpdate()}></CustomButton>
             </View>
+            
+            
         </LinearGradient>
             
         </>
@@ -196,7 +167,7 @@ const styles = StyleSheet.create({
     whiteText : {
         fontFamily: "Helvetica Neue",
         fontStyle: 'normal',
-        fontWeight: 'bold',
+        fontWeight: 'normal',
         fontSize: 18 * widthRatio,
         lineHeight: 21 * widthRatio,
         color: '#ffffff',

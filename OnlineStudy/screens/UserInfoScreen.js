@@ -34,7 +34,7 @@ const widthRatio = width / 375
 
 export default function  UserInfoScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    const userInfo  = React.useContext(UserInfoContext)
+    const userInfo  = React.useContext(UserInfoContext).userInfo
     const list = [
         {
             id : 1,
@@ -52,6 +52,7 @@ export default function  UserInfoScreen({ navigation }){
     const {signOut} = React.useContext(AuthContext);
     
     doEditProfile = () => {
+        navigation.navigate("UpdateProfileScreen")
     }
 
     selectItem = (i) => {

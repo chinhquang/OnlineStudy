@@ -125,7 +125,8 @@ export function CourseList_APIBug ({ itemList, navigation },props) {
 export default function  HomeScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const  userToken = React.useContext(UserTokenContext)
-    const userInfo  = React.useContext(UserInfoContext)
+    const userInfoContext  = React.useContext(UserInfoContext)
+    const userInfo = userInfoContext.userInfo
     var listCourseCategory = ['Processing Courses']
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {

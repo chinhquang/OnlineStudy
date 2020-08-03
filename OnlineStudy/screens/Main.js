@@ -15,7 +15,11 @@ import ThemeSetting from './ThemeSetting'
 import SignUpScreen from './SignUpScreen'
 import ForgotPassScreen from './ForgotPassScreen'
 import UserInfoScreen from "./UserInfoScreen"
+import LangSetting from './LangSetting'
+import UpdateProfileScreen from "./UpdateProfileScreen"
 import {LoginStatusContext, ColorThemeContext,UserInfoContext} from '../App.js'
+import {LanguageContext} from "../LanguageContext.js"
+
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -30,12 +34,13 @@ const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator()
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
+
 function HomeStackScreen() {
 const {colors, setColors} = React.useContext(ColorThemeContext);
+const {lang, setLang} = React.useContext(LanguageContext);
 const isSignout  = React.useContext(LoginStatusContext)
-const userInfo  = React.useContext(UserInfoContext)
-
-console.log("User token " + isSignout)
+const userInfoContext  = React.useContext(UserInfoContext)
+const userInfo = userInfoContext.userInfo
 if (isSignout){
   return (
     <HomeStack.Navigator 
@@ -53,7 +58,7 @@ if (isSignout){
     >   
       
       <HomeStack.Screen options={{
-            title:"Sign In",
+            title: lang.signIn,
             headerLeft: () => (
                 <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
                     <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
@@ -62,9 +67,9 @@ if (isSignout){
             name="SignInScreen" component={SignInScreen} initialParams={{ isPublic : true }}/>     
       <HomeStack.Screen options={{ title:"", }} name="SupportScreen" component={SupportScreen}  />    
       <HomeStack.Screen options={{title:"Forgot your password",}} name="ForgotPassScreen" component={ForgotPassScreen}/> 
-      <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen" component={SettingScreen} /> 
-      <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
-
+      <HomeStack.Screen options={{title: lang.setting}} name="SettingScreen" component={SettingScreen} /> 
+      <HomeStack.Screen options={{title: lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
+      <HomeStack.Screen options={{title: lang.langSetting}} name="LangSettingScreen" component={LangSetting} />
     </HomeStack.Navigator>
    
 )
@@ -83,7 +88,7 @@ if (isSignout){
 
     }}
     >   
-      <HomeStack.Screen options={{title:"Home",
+      <HomeStack.Screen options={{title:lang.home,
           headerLeft: () => (
             <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
 
@@ -97,9 +102,12 @@ if (isSignout){
             </TouchableOpacity>
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
-    <HomeStack.Screen options={{title:"Setting"}} name="SettingScreen2" component={SettingScreen} /> 
-    <HomeStack.Screen options={{title:"ThemeSetting"}} name="ThemeSettingScreen" component={ThemeSetting} /> 
+    <HomeStack.Screen options={{title:lang.setting}} name="SettingScreen2" component={SettingScreen} /> 
+    <HomeStack.Screen options={{title:lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
     <HomeStack.Screen options={{title:""}} name="UserInfoScreen" component={UserInfoScreen} /> 
+    <HomeStack.Screen options={{title:"Update Profile"}} name="UpdateProfileScreen" component={UpdateProfileScreen} /> 
+    <HomeStack.Screen options={{title: lang.langSetting}} name="LangSettingScreen" component={LangSetting} />
+
     </HomeStack.Navigator>
     
   )
@@ -111,7 +119,7 @@ if (isSignout){
 const BrowseStack = createStackNavigator();
 function BrowseStackScreen() {
 const {colors, setColors} = React.useContext(ColorThemeContext);
-
+const {lang, setLang} = React.useContext(LanguageContext);
 return (
     <BrowseStack.Navigator
         screenOptions={{
@@ -124,7 +132,7 @@ return (
         },}}
     >
 
-        <BrowseStack.Screen options={{title:"Browse"}} name="BrowseScreen" component={BrowseScreen} />
+        <BrowseStack.Screen options={{title:lang.browse}} name="BrowseScreen" component={BrowseScreen} />
     
     </BrowseStack.Navigator>
 );
@@ -132,26 +140,28 @@ return (
 
 const DownloadStack = createStackNavigator();
 function DownloadStackScreen() {
-const {colors, setColors} = React.useContext(ColorThemeContext);
-return (
-    <DownloadStack.Navigator
-        screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.navBackgroundColor,
-        },
-        headerTintColor: colors.navTint,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },}}
-    >
-        <DownloadStack.Screen options={{title:"Download"}} name="DownloadScreen" component={DownloadScreen} />          
-    
-    </DownloadStack.Navigator>
-);
+  const {lang, setLang} = React.useContext(LanguageContext);
+  const {colors, setColors} = React.useContext(ColorThemeContext);
+  return (
+      <DownloadStack.Navigator
+          screenOptions={{
+          headerStyle: {
+            backgroundColor: colors.navBackgroundColor,
+          },
+          headerTintColor: colors.navTint,
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },}}
+      >
+          <DownloadStack.Screen options={{title:lang.download}} name="DownloadScreen" component={DownloadScreen} />          
+      
+      </DownloadStack.Navigator>
+  );
 }
 
 const SearchStack = createStackNavigator();
 function SearchStackScreen() {
+  const {lang, setLang} = React.useContext(LanguageContext);
   const {colors, setColors} = React.useContext(ColorThemeContext);
 return (
     <SearchStack.Navigator
@@ -164,13 +174,14 @@ return (
           fontWeight: 'bold',
         },}}
     >
-        <SearchStack.Screen options={{title: "Search"}} name="SearchScreen" component={SearchScreen} />
+        <SearchStack.Screen options={{title: lang.search}} name="SearchScreen" component={SearchScreen} />
     
     </SearchStack.Navigator>
 );
 }
 
 export default function Main({navigation}) {
+  const {lang, setLang} = React.useContext(LanguageContext);
   const isSignout  = React.useContext(LoginStatusContext)
   const {colors, setColors} = React.useContext(ColorThemeContext);
   return (
@@ -211,10 +222,10 @@ export default function Main({navigation}) {
           
         >
         
-        <Tab.Screen name="Home" component={HomeStackScreen}/>
-        <Tab.Screen name="Download" component={DownloadStackScreen} />
-        <Tab.Screen name="Browse" component={BrowseStackScreen} />
-        <Tab.Screen name="Search" component={SearchStackScreen} />
+        <Tab.Screen options={{title: lang.home}} name="Home" component={HomeStackScreen}/>
+        <Tab.Screen options={{title: lang.download}} name="Download" component={DownloadStackScreen} />
+        <Tab.Screen options={{title: lang.browse}} name="Browse" component={BrowseStackScreen} />
+        <Tab.Screen options={{title: lang.search}} name="Search" component={SearchStackScreen} />
         
     </Tab.Navigator>
     
