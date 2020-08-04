@@ -32,6 +32,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext} from "../App.js"
 import {ColorThemeContext} from "../App.js"
+import {LanguageContext} from "../LanguageContext"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -45,7 +46,7 @@ export default function  SignUpScreen ({ navigation, route }){
     const [phoneValue, onChangePhoneNumber] = React.useState('');
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
-    
+    const {lang, setLang} = React.useContext(LanguageContext);
     const { signUp } = React.useContext(AuthContext);
     const { isPublic } = route.params;
     validateEmail = (text) => {
@@ -109,7 +110,7 @@ export default function  SignUpScreen ({ navigation, route }){
         
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             <View style = { styles.itemsFrame }>
-            <Text style={{...styles.label, color: colors.textPrimary}}>Username</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.username}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -126,7 +127,7 @@ export default function  SignUpScreen ({ navigation, route }){
                 value={emailValue}
                 autoCapitalize = 'none'
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Phone</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.phone}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -135,7 +136,7 @@ export default function  SignUpScreen ({ navigation, route }){
                 onChangeText={text => onChangePhoneNumber(text)}
                 value={phoneValue}
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.password}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -144,7 +145,7 @@ export default function  SignUpScreen ({ navigation, route }){
                 autoCapitalize = 'none'
                 value={passwordValue}
             />
-            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Create Account" onPress={() => doSignIn()}></CustomButton>
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text={lang.createAccount} onPress={() => doSignIn()}></CustomButton>
             </View>
         </LinearGradient>
             

@@ -27,7 +27,7 @@ import {CourseRow2} from '../components/CourseRow'
 import {AuthContext, ColorThemeContext, UserInfoContext, UserTokenContext, LoginStatusContext} from '../App'
 import {PathList} from './BrowseScreen'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import {LanguageContext} from '../LanguageContext'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -78,11 +78,11 @@ export function CourseList ({ itemList, navigation },props) {
 }
 
 // This function to handle bug from backend
-export function CourseList_APIBug ({ itemList, navigation },props) {
+export function CourseListAPIBug ({ itemList },props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
    
 
-    showCourseDetail=(item)=>{
+    onItemClick=()=>{
         alert ('This function is not implemented yet')
     };
     ListEmpty = () => {
@@ -105,7 +105,7 @@ export function CourseList_APIBug ({ itemList, navigation },props) {
                 ListEmptyComponent={ListEmpty}
                 renderItem={({ item }) =>{
                     return (
-                        <TouchableOpacity onPress = {()=> showCourseDetail(item)}>
+                        <TouchableOpacity onPress = {()=> this.onItemClick()}>
                             <CourseRow2
                             data={item}
 
@@ -113,8 +113,7 @@ export function CourseList_APIBug ({ itemList, navigation },props) {
                         </TouchableOpacity>
                         
                     )
-                } 
-                
+                }     
             }
             />
 
@@ -123,11 +122,11 @@ export function CourseList_APIBug ({ itemList, navigation },props) {
 }
   
 export default function  HomeScreen({ navigation }){
+    const {lang, setLang} = React.useContext(LanguageContext);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const  userToken = React.useContext(UserTokenContext)
     const userInfoContext  = React.useContext(UserInfoContext)
     const userInfo = userInfoContext.userInfo
-    var listCourseCategory = ['Processing Courses']
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
           switch (action.type) {
@@ -162,7 +161,6 @@ export default function  HomeScreen({ navigation }){
         doGetProcessCourses = async () => {
             dispatch({ type: 'FETCH'});
             let processCourses =  await getProcessCourseData()
-            console.log("CORSDsdada", processCourses)
             dispatch({ type: 'DONE_FETCH_PROCESS_COURSE', processCourses : processCourses});
             
         }
@@ -245,7 +243,7 @@ export default function  HomeScreen({ navigation }){
                         <Text style={styles.seeAllButtonText}>See all {">"}</Text>
                     </TouchableOpacity> */}
                 </View>
-                <CourseList_APIBug itemList={state.processCourses} navigation={navigation} ></CourseList_APIBug>
+                <CourseListAPIBug itemList={state.processCourses} navigation={navigation} ></CourseListAPIBug>
             </>
             </View>
         
@@ -253,7 +251,7 @@ export default function  HomeScreen({ navigation }){
             <View style={styles.coursePathHeaderContainer}>
                 <Text style={{...styles.headerSection, color: colors.textPrimary}}>Recommend courses for you</Text>
                 <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                    <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                    <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                 </TouchableOpacity>
             </View>
             <CourseList itemList={state.bookmarkCourses} navigation={navigation} ></CourseList>

@@ -23,12 +23,15 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {LanguageContext} from '../LanguageContext'
 
 import {AuthContext, ColorThemeContext} from '../App'
 import {PathList} from './BrowseScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  DownloadScreen({ navigation }){
+    const {lang, setLang} = React.useContext(LanguageContext);
+
     const [isEmpty, setEmpty] = React.useState(true);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     return (
@@ -41,8 +44,8 @@ export default function  DownloadScreen({ navigation }){
                 <>
                 <View style={styles.noDataContainer}>
                     <Ionicons style={alignSelf='center'} name="md-cloud-download" size={90 * widthRatio} color={'#939cab'}/> 
-                    <Text style={styles.boldTitle}>No downloads</Text>
-                    <Text style={styles.lightDescription}>Courses you download will appear here</Text>
+                    <Text style={styles.boldTitle}>{lang.noDownload}</Text>
+                    <Text style={styles.lightDescription}>{lang.courseDownloadWillAppearHere}</Text>
                 </View>
                 
 

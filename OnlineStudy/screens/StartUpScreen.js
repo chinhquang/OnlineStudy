@@ -22,12 +22,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import CustomButton from '../components/CustomButton'
 import {ColorThemeContext} from "../App.js"
-
+import {LanguageContext} from "../LanguageContext"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 export default function  StartUpScreen ({navigation}){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
+    const {lang, setLang} = React.useContext(LanguageContext);
+
     goToMain = () => {
         navigation.navigate('MainPublic')
     }
@@ -51,11 +52,11 @@ export default function  StartUpScreen ({navigation}){
         </View>
         <View style={styles.buttonContainer}>
             
-            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign In" onPress={() => this.goToSignIn()}></CustomButton>
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text={lang.signIn} onPress={() => this.goToSignIn()}></CustomButton>
 
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign up"  onPress={()=>this.goToSignUp()}></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.signUp}  onPress={()=>this.goToSignUp()}></CustomButton>
 
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Explore without subcription"onPress={() => this.goToMain()}></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.exploreWithoutSubscription} onPress={() => this.goToMain()}></CustomButton>
         </View>
     </LinearGradient>
         

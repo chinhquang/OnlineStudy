@@ -31,6 +31,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext} from "../App.js"
 import {ColorThemeContext} from "../App.js"
+import {LanguageContext} from "../LanguageContext"
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -40,6 +41,8 @@ export default function  SignInScreen ({ navigation, route }){
     settingClick=()=>{
         navigation.navigate ('SettingScreen')
     };
+    const {lang, setLang} = React.useContext(LanguageContext);
+
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
     const { signIn } = React.useContext(AuthContext);
@@ -93,7 +96,7 @@ export default function  SignInScreen ({ navigation, route }){
         
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             <View style = { styles.itemsFrame }>
-            <Text style={{...styles.label, color: colors.textPrimary}}>Email or username</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.emailOrUsername}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -101,7 +104,7 @@ export default function  SignInScreen ({ navigation, route }){
                 value={emailValue}
                 autoCapitalize = 'none'
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Password</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.password}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -110,10 +113,10 @@ export default function  SignInScreen ({ navigation, route }){
                 value={passwordValue}
                 autoCapitalize = 'none'
             />
-            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text="Sign in" onPress={() => doSignIn()}></CustomButton>
-            <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text="Need help?" onPress={() => navigation.navigate('SupportScreen')} ></CustomButton>
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Use Single Sign-On (SSO)"></CustomButton>
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text="Sign up"></CustomButton>
+            <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text={lang.signIn} onPress={() => doSignIn()}></CustomButton>
+            <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text={lang.needHelp} onPress={() => navigation.navigate('SupportScreen')} ></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.googleSignIn}></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.signUp}></CustomButton>
             </View>
             
             

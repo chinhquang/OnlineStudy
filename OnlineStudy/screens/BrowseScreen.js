@@ -26,6 +26,7 @@ import SubjectBannerRow from '../components/SubjectBannerRow'
 import PathRow  from '../components/PathRow'
 import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
+import {LanguageContext} from '../LanguageContext'
 import {CourseList} from './HomeScreen'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
@@ -73,8 +74,10 @@ export const TopAuthorList = ({ itemList }) => (
     </View>
 );
 export default function  BrowseScreen ({ navigation }){
+    const {lang, setLang} = React.useContext(LanguageContext);
+
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    var listCourseCategory = ['Top Sell', 'Newest Courses', 'Top Rate']
+    var listCourseCategory = [lang.topSell, lang.newestCourses, lang.topRate]
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
           switch (action.type) {
@@ -258,7 +261,7 @@ export default function  BrowseScreen ({ navigation }){
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[0]}</Text>
                     <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                        <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>
                 <CourseList itemList={state.topSellCourses} navigation={navigation} ></CourseList>
@@ -267,7 +270,7 @@ export default function  BrowseScreen ({ navigation }){
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[1]}</Text>
                     <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                        <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>
                 <CourseList itemList={state.topNewCourses} navigation={navigation} ></CourseList>
@@ -276,13 +279,13 @@ export default function  BrowseScreen ({ navigation }){
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[2]}</Text>
                     <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
-                        <Text style={styles.seeAllButtonText}>See all {">"}</Text>
+                        <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>
                 <CourseList itemList={state.topRateCourses} navigation={navigation} ></CourseList>
             </>
             
-            <Text style={{...styles.headerSection, color: colors.textPrimary}}>Top Authors</Text>
+        <Text style={{...styles.headerSection, color: colors.textPrimary}}>{lang.topAuthor}</Text>
             <TopAuthorList itemList={state.authorData}></TopAuthorList>
         </ScrollView>
 

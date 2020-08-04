@@ -61,6 +61,7 @@ const SignInStack = createStackNavigator()
 
 function SignInStackScreen({navigation}) {
 const {colors, setColors} = React.useContext(ColorThemeContext);
+const {lang, setLang} = React.useContext(LanguageContext);
 
 return (
     <SignInStack.Navigator 
@@ -77,11 +78,11 @@ return (
         }}
     > 
         <SignInStack.Screen options={{
-            title:"Sign In",
+            title: lang.signIn,
             headerLeft: () => (
               <Button
               onPress={() => navigation.goBack()}
-              title="Cancel"
+              title={lang.cancel}
               color={colors.navTint}
               />
               ),
@@ -98,7 +99,7 @@ return (
           component={SupportScreen}  />    
 
         <SignInStack.Screen options={{
-            title:"Forgot your password",
+            title: lang.forgetPassword,
             
         }}
          name="ForgotPassScreen"
@@ -113,6 +114,7 @@ const SignUpStack = createStackNavigator()
 
 function SignUpStackScreen({navigation}) {
 const {colors, setColors} = React.useContext(ColorThemeContext);
+const {lang, setLang} = React.useContext(LanguageContext);
 
 return (
     <SignUpStack.Navigator 
@@ -129,11 +131,11 @@ return (
         }}
     > 
         <SignInStack.Screen options={{
-            title:"Sign Up",
+            title:lang.signUp,
             headerLeft: () => (
               <Button
               onPress={() => navigation.goBack()}
-              title="Cancel"
+              title={lang.cancel}
               color={colors.navTint}
               />
               ),

@@ -26,6 +26,7 @@ import { ListItem } from 'react-native-elements'
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
 import {AuthContext, ColorThemeContext} from '../App'
+import {LanguageContext} from "../LanguageContext"
 import CustomButton from '../components/CustomButton'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
@@ -34,17 +35,18 @@ const widthRatio = width / 375
 
 export default function  SupportScreen({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
-    
+    const {lang, setLang} = React.useContext(LanguageContext);
+
     const list = [
         {
             id : 1,
-            name: 'Forgot your password?',
+            name: lang.forgetPassword + "?",
             // value : colors.type == 'dark' ? 'Dark' : 'Light'
             
         },
         {
             id : 2,
-            name: 'Sign up',
+            name: lang.signUp,
             // value :'1.0.1'
           
         },
@@ -58,7 +60,7 @@ export default function  SupportScreen({ navigation }){
 
     selectItem = (i) => {
         if (i==1){
-            console.log("Forgot pass")
+            
             navigation.navigate("ForgotPassScreen")
         }
     }
