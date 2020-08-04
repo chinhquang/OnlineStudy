@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React,{Component, useState, useRef } from 'react';
+import React,{ useState, useRef } from 'react';
 import {
   SafeAreaView,Button,
   StyleSheet,
@@ -21,7 +21,8 @@ import {
   Animated,
   Platform,
   SectionList,
-  TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent
+  TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
+  Share,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler'
 // import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -135,6 +136,26 @@ export default function  CourseDetail({ navigation, route}){
     onBookMark = () =>{
       likeCourse()
     }
+    const onShare = async () => {
+      try {
+        const result = await Share.share({
+          message:
+            'Online Study Application',
+          url : "https://itedu.me/course-detail/" + data.id
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
     const [state, dispatch] = React.useReducer(
       (prevState, action) => {
         switch (action.type) {
@@ -381,18 +402,18 @@ export default function  CourseDetail({ navigation, route}){
               </View>
               <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Bookmark</Text>
             </TouchableWithoutFeedback>
-            <TouchableOpacity style={{alignItems : 'center'}}>
+            <TouchableWithoutFeedback style={{alignItems : 'center'}} onPress={ () =>onShare()}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="wifi-tethering" size={35} color={colors.textPrimary}/>
               </View>
-              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Add to channel</Text>
-            </TouchableOpacity>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Share</Text>
+            </TouchableWithoutFeedback>
 
             <TouchableOpacity style={{alignItems : 'center'}}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="file-download" size={35} color={colors.textPrimary}/>
               </View>
-              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Download</Text>
+      <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>{lang.download}</Text>
             </TouchableOpacity>
           </View>
           
