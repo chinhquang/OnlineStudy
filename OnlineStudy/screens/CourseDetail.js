@@ -45,8 +45,6 @@ const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const TabBarHeight = 48 * widthRatio;
 const HeaderHeight = 405 * widthRatio;
-const tab1ItemSize = (Dimensions.get('window').width - 30) / 2;
-const tab2ItemSize = (Dimensions.get('window').width - 40) / 3;
 function getDateFrom(dateString){
   var date = new Date(dateString);
 
@@ -162,6 +160,13 @@ export default function  CourseDetail({ navigation, route}){
               isLoading: false,
               lessonData : action.lessonData
           };
+          case 'DONE_FETCH_RATING_DATA':
+          return {
+              ...prevState,
+             
+              isLoading: false,
+              ratingList : action.ratingList
+          };
           case 'CHANGE_LIKE_STATUS':
             return {
               ...prevState,
@@ -171,6 +176,7 @@ export default function  CourseDetail({ navigation, route}){
         }
       },
       {
+          ratingList : null,
           isBookMark : false,
           lessonData : null,
           isLoading: false,
@@ -182,24 +188,38 @@ export default function  CourseDetail({ navigation, route}){
       doGetDetailCourses = async () => {
           dispatch({ type: 'FETCH'});
           let detailCourses =  await getCourseData()
-          console.log(detailCourses)
-          dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses});
-          convertDataToUsableArray(detailCourses)
-          let t = convertDataToUsableArray(detailCourses)
-          console.log("dsadsadasdsadadasd-----------", t)
-          dispatch({ type: 'DONE_FETCH_LESSON_DATA', lessonData : t});
-          var arr = [];
           
+          dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses.section});
+          let t = convertDataToUsableArray(detailCourses.section)
+          dispatch({ type: 'DONE_FETCH_LESSON_DATA', lessonData : t});
+          //-------------------------------------------------
+
+          var arr = [];
+
           t.map(obj => {
             if (obj.header == true) {
               arr.push(t.indexOf(obj));
             } 
           });
+
           arr.push(0);
           setStickyHeaderIndices(arr);
+          //-------------------------------------------------
+          let x = convertDataToUsableArray2(detailCourses.ratings.ratingList)
+          dispatch({ type: 'DONE_FETCH_RATING_DATA', ratingList : x});
+          var arr2 = [];
+          
+          x.map(obj => {
+            if (obj.header == true) {
+              arr2.push(x.indexOf(obj));
+            } 
+          });
+
+          arr2.push(0);
+          setStickyHeaderIndices_2(arr2);
+          console.log("CON COO",x)
           dispatch({ type: 'FETCH'});
           var like = await getLikeStatus()
-          console.log("LIKE TOOTOOTO   ", like)
           dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : like});
       };
       
@@ -222,7 +242,6 @@ export default function  CourseDetail({ navigation, route}){
           })
           let responseJson = await response.json();
           let statusCode = await response.status;
-          console.log("REPPSPSPPS" , responseJson.likeStatus)
           return responseJson.likeStatus
         }catch(error) {
           console.error(error); 
@@ -247,6 +266,15 @@ export default function  CourseDetail({ navigation, route}){
       
       return array
     }
+    convertDataToUsableArray2 = (data) =>{
+      var array = [{ data : null, header: true}]
+      var index = 0;  
+      while (index < data.length) { 
+        array.push({ data : data[index], header: false})
+        index++; 
+      }
+      return array
+    }
     getCourseData = async () =>{
         
       try {
@@ -259,7 +287,7 @@ export default function  CourseDetail({ navigation, route}){
           let responseJson = await response.json();
           let statusCode = await response.status;
          
-          return responseJson.payload.section;
+          return responseJson.payload;
         }catch(error) {
           console.error(error); 
         }
@@ -267,9 +295,10 @@ export default function  CourseDetail({ navigation, route}){
 
     const [description, setDescriptionExpand ] = useState(0)
     const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
+    const [stickyHeaderIndices_2, setStickyHeaderIndices_2] = React.useState([])
+
     const [tabIndex, setIndex] = useState(0);
    
-    const [tab2Data] = useState(null);
     const scrollY = useRef(new Animated.Value(0)).current;
     let listRefArr = useRef([]);
     let listOffset = useRef({});
@@ -408,7 +437,6 @@ export default function  CourseDetail({ navigation, route}){
         if (statusCode != 200){
           alert(responseJson.message)
         }else {
-          console.log( "LIKE     ", responseJson)
           dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : responseJson.likeStatus});
         }
         
@@ -466,15 +494,31 @@ export default function  CourseDetail({ navigation, route}){
       return (
         <View
           style={{
-            marginLeft: index % 3 === 0 ? 0 : 10,
-            borderRadius: 16,
-            width: tab2ItemSize,
-            height: tab2ItemSize,
-            backgroundColor: '#aaa',
+            width: 350 * widthRatio,
+            height: item.header ? 140*widthRatio : 60* widthRatio,
+            backgroundColor: item.header ? colors.toolBackgroundColor : 'rgba(248, 248, 248, 0)',
             justifyContent: 'center',
-            alignItems: 'center',
+            borderRadius : 10 * widthRatio
           }}>
-          <Text>{index}</Text>
+          {
+            item.header 
+            ? 
+            <View style={{flexDirection : 'row', justifyContent: 'space-between'}}>
+              
+              <Text style={{width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontWeight:'bold', fontSize : 15*widthRatio, textAlign: 'left'}}>{item.name}</Text> 
+              <TouchableOpacity style={{marginRight : 15 * widthRatio}}>
+              <Icon2 style={alignSelf='center'} type="Entypo" name="dots-three-horizontal" size={30 * widthRatio} color={colors.textPrimary}/> 
+
+              </TouchableOpacity>
+            </View>
+            
+            : 
+            
+            <TouchableOpacity onPress={()=>onItemPress(item, index)} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontWeight:(hightLightItem == index) ? 'bold' : 'normal', color: colors.textPrimary,textAlign: 'left', fontSize : 12*widthRatio, marginLeft : 20 * widthRatio, width : '60%'}}>{item.name}</Text>
+              <Icon2 style={alignSelf='center'} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
+            </TouchableOpacity>
+          }
         </View>
       );
     };
@@ -500,8 +544,9 @@ export default function  CourseDetail({ navigation, route}){
           break;
         case 'tab2':
           numCols = 1;
-          data = tab2Data;
+          data = state.ratingList;
           renderItem = renderTab2Item;
+          stickyHeader = stickyHeaderIndices_2
           break;
         default: return null;
       }
