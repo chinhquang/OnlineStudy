@@ -52,7 +52,9 @@ export const mainLanguage = {
     topRate : "Nhiều bình chọn nhất",
     topAuthor : "Các giảng viên nhiều lượt bình chọn",
     avatar : "Ảnh đại diện",
-    rating : "Đánh giá"
+    rating : "Đánh giá",
+    buy : "Mua khoá học này",
+    share : "Chia sẻ",
 
   },
   eng: {
@@ -88,7 +90,9 @@ export const mainLanguage = {
     topRate : "Top rate",
     topAuthor : "Top lecturer",
     avatar : "Avatar",
-    rating : 'Ratings'
+    rating : 'Ratings',
+    buy :"Buy this course",
+    share : "Share"
   }
 
 }

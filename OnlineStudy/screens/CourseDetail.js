@@ -118,6 +118,7 @@ function TabScene (props){
 export default function  CourseDetail({ navigation, route}){
     const videoPlayer = useRef(null);
     const {lang, setLang} = React.useContext(LanguageContext);
+    const [commentValue, onChangeCommentField] = React.useState('');
 
     const  userToken = React.useContext(UserTokenContext)
     const [animationValue, setAnimationValue] = React.useState(new Animated.Value(width * 0.5));
@@ -135,6 +136,8 @@ export default function  CourseDetail({ navigation, route}){
     const data = route.params
     const [videoURLDisplay, setVideoURLDisplay] = React.useState(data.promoVidUrl)
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+    const [ratingNumber, setRatingNumber] = React.useState(0)
+    const [price, setPrice ] = React.useState(0)
     const [routes] = useState([
       {key: 'tab1', title: lang.content},
       {key: 'tab2', title: lang.comment},
@@ -212,50 +215,47 @@ export default function  CourseDetail({ navigation, route}){
     );
     React.useEffect(() => {
         
-      doGetDetailCourses = async () => {
-          dispatch({ type: 'FETCH'});
-          let detailCourses =  await getCourseData()
-          
-          dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses.section});
-          let t = convertDataToUsableArray(detailCourses.section)
-          dispatch({ type: 'DONE_FETCH_LESSON_DATA', lessonData : t});
-          //-------------------------------------------------
-
-          var arr = [];
-
-          t.map(obj => {
-            if (obj.header == true) {
-              arr.push(t.indexOf(obj));
-            } 
-          });
-
-          arr.push(0);
-          setStickyHeaderIndices(arr);
-          //-------------------------------------------------
-          let x = convertDataToUsableArray2(detailCourses.ratings.ratingList)
-          dispatch({ type: 'DONE_FETCH_RATING_DATA', ratingList : x});
-          var arr2 = [];
-          
-          x.map(obj => {
-            if (obj.header == true) {
-              arr2.push(x.indexOf(obj));
-            } 
-          });
-
-          arr2.push(0);
-          setStickyHeaderIndices_2(arr2);
-          console.log("CON COO",x)
-          dispatch({ type: 'FETCH'});
-          var like = await getLikeStatus()
-          dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : like});
-      };
-      
-      
       doGetDetailCourses()
-      
-      
-      
     },[])
+    
+    
+    doGetDetailCourses = async () => {
+      dispatch({ type: 'FETCH'});
+      let detailCourses =  await getCourseData()
+      setPrice(detailCourses.price)
+      dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses.section});
+      
+      let t = convertDataToUsableArray(detailCourses.section)
+      dispatch({ type: 'DONE_FETCH_LESSON_DATA', lessonData : t});
+      //-------------------------------------------------
+
+      var arr = [];
+
+      t.map(obj => {
+        if (obj.header == true) {
+          arr.push(t.indexOf(obj));
+        } 
+      });
+
+      arr.push(0);
+      setStickyHeaderIndices(arr);
+      //-------------------------------------------------
+      let x = convertDataToUsableArray2(detailCourses.ratings.ratingList)
+      dispatch({ type: 'DONE_FETCH_RATING_DATA', ratingList : x});
+      var arr2 = [];
+      
+      x.map(obj => {
+        if (obj.header == true) {
+          arr2.push(x.indexOf(obj));
+        } 
+      });
+
+      arr2.push(0);
+      setStickyHeaderIndices_2(arr2);
+      dispatch({ type: 'FETCH'});
+      var like = await getLikeStatus()
+      dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : like});
+  };
     getLikeStatus = async () =>{
         
       try {
@@ -313,13 +313,48 @@ export default function  CourseDetail({ navigation, route}){
           })
           let responseJson = await response.json();
           let statusCode = await response.status;
-         
+          
           return responseJson.payload;
         }catch(error) {
           console.error(error); 
         }
   }
-
+  onBuy = async() =>{
+    await buyCourse()
+    doGetDetailCourses()
+  }
+  buyCourse = async () =>{
+        
+    try {
+        let response  = await fetch('https://api.itedu.me/payment/get-free-courses', {
+          method: 'POST',
+          headers: {
+            'Authorization' : 'Bearer ' + userToken,
+            'Content-Type': 'application/json',
+            'accept' : 'application/json'
+          },
+          body: JSON.stringify({
+          
+            courseId: data.id
+          
+          })
+        })
+        let responseJson = await response.json();
+        let statusCode = await response.status;
+        if(statusCode != 200){
+          if (price == 0){
+            alert(responseJson.messsage)
+          }else {
+            alert(responseJson.messsage + " Bạn muốn đến chuyển đến trang thanh toán không?")
+          }
+          
+          
+        }
+        return responseJson;
+      }catch(error) {
+        console.error(error); 
+      }
+    }
     const [description, setDescriptionExpand ] = useState(0)
     const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
     const [stickyHeaderIndices_2, setStickyHeaderIndices_2] = React.useState([])
@@ -408,19 +443,20 @@ export default function  CourseDetail({ navigation, route}){
               </View>
               <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Bookmark</Text>
             </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback style={{alignItems : 'center'}} onPress={ () => onBuy()}>
+              <View style={{...styles.roundedButton}}>   
+                 <Icon style={alignSelf='center'} type="MaterialIcons" name="shopping-cart" size={35} color={colors.textPrimary}/>
+              </View>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>{lang.buy}</Text>
+            </TouchableWithoutFeedback>
+
             <TouchableWithoutFeedback style={{alignItems : 'center'}} onPress={ () =>onShare()}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="share" size={35} color={colors.textPrimary}/>
               </View>
-              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Share</Text>
+              <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>{lang.share}</Text>
             </TouchableWithoutFeedback>
 
-            {/* <TouchableOpacity style={{alignItems : 'center'}}>
-              <View style={{...styles.roundedButton}}>   
-                 <Icon style={alignSelf='center'} type="MaterialIcons" name="file-download" size={35} color={colors.textPrimary}/>
-              </View>
-      <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>{lang.download}</Text>
-            </TouchableOpacity> */}
           </View>
           
           <View style={{height: 1, width: 350 * widthRatio, backgroundColor : '#939cab', marginVertical : 10 * widthRatio, alignSelf : 'center'}}></View>
@@ -526,7 +562,41 @@ export default function  CourseDetail({ navigation, route}){
         </View>
       );
     };
-    
+    updateRating = (ratings)=>{
+      setRatingNumber(ratings)
+    }
+    sendRating = async()=>{
+      
+      
+      try {
+        let response  = await fetch('https://api.itedu.me/course/rating-course', {
+          method: 'POST',
+          headers: {
+            'Authorization' : 'Bearer ' + userToken,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+          
+            courseId: data.id,
+            formalityPoint: ratingNumber,
+            contentPoint: ratingNumber,
+            presentationPoint: ratingNumber,
+            content: commentValue
+          })
+        })
+        let responseJson = await response.json()
+        let statusCode = await response.status;
+        if (statusCode != 200){
+          alert(responseJson.message)
+        } else{
+          
+        }
+        doGetDetailCourses()
+        return responseJson;
+      }catch(error) {
+        console.error(error); 
+      }
+    }
     const renderTab2Item = ({item, index}) => {
       
       
@@ -545,12 +615,12 @@ export default function  CourseDetail({ navigation, route}){
             ? 
             <View style={{flexDirection : 'row', justifyContent: 'space-between'}}>
               
-              <TextInput multiline={true} style={{borderColor : "gray",borderWidth : 1.5,width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontWeight:'bold', fontSize : 15*widthRatio, textAlign: 'left', aspectRatio : 3, borderRadius : 4 * widthRatio}}></TextInput> 
+              <TextInput keyboardAppearance={colors.type} onChangeText={text => onChangeCommentField(text)} value={commentValue} multiline={true} style={{borderColor : "gray",borderWidth : 1.5,width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontSize : 13*widthRatio, textAlign: 'left', aspectRatio : 3, borderRadius : 4 * widthRatio}}/>
 
               <View style={{alignSelf: 'center', flexDirection:'column', width : '30%', alignItems : 'center'}}>
 
                 <TouchableOpacity style={{alignSelf:'center', marginBottom : 10 * widthRatio}}>
-                  <Icon style={alignSelf='center'} type="MaterialIcons" name="send" size={30 * widthRatio} color={colors.textPrimary}/> 
+                  <Icon style={alignSelf='center'} type="MaterialIcons" name="send" size={30 * widthRatio} color={colors.textPrimary} onPress={()=>sendRating()}/> 
 
                 </TouchableOpacity>
                 <AirbnbRating
@@ -559,6 +629,7 @@ export default function  CourseDetail({ navigation, route}){
                   defaultRating={ Number(0)}
                   size={13 * widthRatio}
                   starContainerStyle={{marginHorizontal : 10 * widthRatio}}
+                  onFinishRating={updateRating}
                   isDisabled = {false}
                 />
                 <Text style={{marginLeft: 5 * widthRatio, color: colors.textPrimary, fontSize : 13 * widthRatio}}>({lang.rating})</Text>
