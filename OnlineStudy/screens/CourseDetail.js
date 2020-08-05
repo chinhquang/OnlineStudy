@@ -24,7 +24,7 @@ import {
   TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
   Share,
 } from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler'
+import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
 // import {TouchableOpacity} from 'react-native-gesture-handler'
 import { ListItem } from 'react-native-elements'
 import { TabView, SceneMap, TabBar} from 'react-native-tab-view';
@@ -50,6 +50,12 @@ function getDateFrom(dateString){
   var date = new Date(dateString);
 
   var formattedDate = format(date, "MMM dd");
+  return formattedDate
+}
+function getDateFrom2(dateString){
+  var date = new Date(dateString);
+
+  var formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
   return formattedDate
 }
 function TabScene (props){
@@ -522,11 +528,14 @@ export default function  CourseDetail({ navigation, route}){
     };
     
     const renderTab2Item = ({item, index}) => {
+      
+      
+      let value = item.data
       return (
         <View
           style={{
             width: 350 * widthRatio,
-            height: item.header ? 140*widthRatio : 60* widthRatio,
+            height: item.header ? 140*widthRatio : 100* widthRatio,
             backgroundColor: item.header ? colors.toolBackgroundColor : 'rgba(248, 248, 248, 0)',
             justifyContent: 'center',
             borderRadius : 10 * widthRatio
@@ -536,19 +545,53 @@ export default function  CourseDetail({ navigation, route}){
             ? 
             <View style={{flexDirection : 'row', justifyContent: 'space-between'}}>
               
-              <Text style={{width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontWeight:'bold', fontSize : 15*widthRatio, textAlign: 'left'}}>{item.name}</Text> 
-              <TouchableOpacity style={{marginRight : 15 * widthRatio}}>
-              <Icon2 style={alignSelf='center'} type="Entypo" name="dots-three-horizontal" size={30 * widthRatio} color={colors.textPrimary}/> 
+              <TextInput multiline={true} style={{borderColor : "gray",borderWidth : 1.5,width : '60%',marginLeft : 15 * widthRatio, color: colors.textPrimary, fontWeight:'bold', fontSize : 15*widthRatio, textAlign: 'left', aspectRatio : 3, borderRadius : 4 * widthRatio}}></TextInput> 
 
-              </TouchableOpacity>
+              <View style={{alignSelf: 'center', flexDirection:'column', width : '30%', alignItems : 'center'}}>
+
+                <TouchableOpacity style={{alignSelf:'center', marginBottom : 10 * widthRatio}}>
+                  <Icon style={alignSelf='center'} type="MaterialIcons" name="send" size={30 * widthRatio} color={colors.textPrimary}/> 
+
+                </TouchableOpacity>
+                <AirbnbRating
+                  showRating = {false}
+                  count={5}
+                  defaultRating={ Number(0)}
+                  size={13 * widthRatio}
+                  starContainerStyle={{marginHorizontal : 10 * widthRatio}}
+                  isDisabled = {false}
+                />
+                <Text style={{marginLeft: 5 * widthRatio, color: colors.textPrimary, fontSize : 13 * widthRatio}}>({lang.rating})</Text>
+                {/* <View style={{width : 70, height: 20, backgroundColor: "white", marginTop : 6 * widthRatio}}></View> */}
+              </View>
+              
             </View>
             
             : 
             
-            <TouchableOpacity onPress={()=>onItemPress(item, index)} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontWeight:(hightLightItem == index) ? 'bold' : 'normal', color: colors.textPrimary,textAlign: 'left', fontSize : 12*widthRatio, marginLeft : 20 * widthRatio, width : '60%'}}>{item.name}</Text>
-              <Icon2 style={alignSelf='center'} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
-            </TouchableOpacity>
+            <View style={{flexDirection:"row"}}>
+            <View style={{marginHorizontal : 12.5 * widthRatio, width : '20%'}}>
+              <Image style={{width: 50 * widthRatio, aspectRatio:1, borderRadius: 1000, alignSelf : 'center'}} source={{uri : value.user.avatar}}/>
+              <Text numberOfLines={0} ellipsizeMode='tail' style={{fontSize : 13 * widthRatio, color : colors.textPrimary, alignSelf : 'center', textAlign:'center'}}>{value.user.name}</Text>
+            </View>
+            <View style={{ width : '60%', justifyContent:'flex-start'}}>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize : 10 * widthRatio, color : colors.textPrimary, textAlign:'left'}}>{getDateFrom2(value.user.updatedAt)}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize : 15 * widthRatio, color : colors.textPrimary, textAlign:'left', marginTop : 6 * widthRatio}}>{value.content}</Text>
+                <View style={{width: 100 *widthRatio, marginTop : 10 * widthRatio}}>
+                <AirbnbRating
+                  showRating = {false}
+                  count={5}
+                  defaultRating={ Number(value.averagePoint)}
+                  size={15 * widthRatio}
+                  starContainerStyle={{}}
+                  isDisabled = {true}
+                  
+                />
+                </View>
+                
+
+            </View>
+            </View>
           }
         </View>
       );

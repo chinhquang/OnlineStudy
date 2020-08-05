@@ -253,7 +253,7 @@ const App = () => {
   );
   updateUserInfo = (val) => {
     dispatch({ type: 'UPDATE_INFO', userInfo : val});
- }
+  }
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {

@@ -29,8 +29,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {AuthContext} from "../App.js"
+import {LanguageContext} from "../LanguageContext.js"
 import {ColorThemeContext, UserInfoContext, UserTokenContext} from "../App.js"
+
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -43,6 +44,7 @@ export default function  UpdateProfileScreen ({ navigation, route }){
     const [phoneValue, onChangePhoneNumber] = React.useState(userInfo.phone);
     
     const userToken = React.useContext(UserTokenContext)
+    const {lang, setLang} = React.useContext(LanguageContext);
 
     const [avatarValue, onChangeAvatarField] = React.useState(userInfo.avatar);
     const {colors, setColors} = React.useContext(ColorThemeContext);
@@ -88,7 +90,7 @@ export default function  UpdateProfileScreen ({ navigation, route }){
         
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
             <View style = { styles.itemsFrame }>
-            <Text style={{...styles.label, color: colors.textPrimary}}>Username</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.username}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -96,7 +98,7 @@ export default function  UpdateProfileScreen ({ navigation, route }){
                 value={usernameValue}
                 autoCapitalize = 'none'
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Avatar</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.avatar}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}
@@ -104,7 +106,7 @@ export default function  UpdateProfileScreen ({ navigation, route }){
                 value={avatarValue}
                 autoCapitalize = 'none'
             />
-            <Text style={{...styles.label, color: colors.textPrimary}}>Phone</Text>
+            <Text style={{...styles.label, color: colors.textPrimary}}>{lang.phone}</Text>
             <TextInput
                 keyboardAppearance={colors.type}
                 style={{...styles.textInput, color : colors.textPrimary}}

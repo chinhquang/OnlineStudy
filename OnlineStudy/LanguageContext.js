@@ -51,6 +51,8 @@ export const mainLanguage = {
     newestCourses : "Mới nhất",
     topRate : "Nhiều bình chọn nhất",
     topAuthor : "Các giảng viên nhiều lượt bình chọn",
+    avatar : "Ảnh đại diện",
+    rating : "Đánh giá"
 
   },
   eng: {
@@ -85,6 +87,8 @@ export const mainLanguage = {
     newestCourses : "Newest",
     topRate : "Top rate",
     topAuthor : "Top lecturer",
+    avatar : "Avatar",
+    rating : 'Ratings'
   }
 
 }
