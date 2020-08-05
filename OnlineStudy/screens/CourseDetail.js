@@ -404,17 +404,17 @@ export default function  CourseDetail({ navigation, route}){
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback style={{alignItems : 'center'}} onPress={ () =>onShare()}>
               <View style={{...styles.roundedButton}}>   
-                 <Icon style={alignSelf='center'} type="MaterialIcons" name="wifi-tethering" size={35} color={colors.textPrimary}/>
+                 <Icon style={alignSelf='center'} type="MaterialIcons" name="share" size={35} color={colors.textPrimary}/>
               </View>
               <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>Share</Text>
             </TouchableWithoutFeedback>
 
-            <TouchableOpacity style={{alignItems : 'center'}}>
+            {/* <TouchableOpacity style={{alignItems : 'center'}}>
               <View style={{...styles.roundedButton}}>   
                  <Icon style={alignSelf='center'} type="MaterialIcons" name="file-download" size={35} color={colors.textPrimary}/>
               </View>
       <Text style={{color:colors.textPrimary, fontSize : 13 * widthRatio}}>{lang.download}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           
           <View style={{height: 1, width: 350 * widthRatio, backgroundColor : '#939cab', marginVertical : 10 * widthRatio, alignSelf : 'center'}}></View>
@@ -501,11 +501,21 @@ export default function  CourseDetail({ navigation, route}){
             </View>
             
             : 
+            <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+              <TouchableOpacity onPress={()=>onItemPress(item, index)} >
+                <Text style={{fontWeight:(hightLightItem == index) ? 'bold' : 'normal', color: colors.textPrimary,textAlign: 'left', fontSize : 12*widthRatio, marginLeft : 20 * widthRatio, width : 250 * widthRatio}}>{item.name}</Text>
+
+              </TouchableOpacity>
+              
+              <Icon2 style={{alignSelf:'center', marginLeft : 25 * widthRatio}} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
+              {
+                item.videoUrl && 
+                <Icon style={{alignSelf:'center', marginLeft : 15 * widthRatio}} type="MaterialIcons" name="file-download" size={20 * widthRatio} color={colors.textPrimary}/>
+
+              }
+
+            </View>
             
-            <TouchableOpacity onPress={()=>onItemPress(item, index)} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontWeight:(hightLightItem == index) ? 'bold' : 'normal', color: colors.textPrimary,textAlign: 'left', fontSize : 12*widthRatio, marginLeft : 20 * widthRatio, width : '60%'}}>{item.name}</Text>
-              <Icon2 style={alignSelf='center'} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
-            </TouchableOpacity>
           }
         </View>
       );

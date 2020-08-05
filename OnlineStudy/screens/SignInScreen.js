@@ -36,6 +36,7 @@ const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
 export default function  SignInScreen ({ navigation, route }){
+   
     // const [count, setCount] = React.useState(0);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     settingClick=()=>{
@@ -45,7 +46,7 @@ export default function  SignInScreen ({ navigation, route }){
 
     const [emailValue, onChangeEmailField] = React.useState('');
     const [passwordValue, onChangePassword] = React.useState('');
-    const { signIn } = React.useContext(AuthContext);
+    const { signIn , signInGoogle} = React.useContext(AuthContext);
     const { isPublic } = route.params;
     validateEmail = (text) => {
         console.log(text);
@@ -89,7 +90,15 @@ export default function  SignInScreen ({ navigation, route }){
         }
         
     }
-    
+    doSignInWithGoogle = async() => {
+        let statusCode = await  signInGoogle()
+        if (statusCode == 200){
+            if (!isPublic){
+                navigation.goBack()
+            } 
+        }
+       
+    }
     return (
             <>
         <StatusBar barStyle={colors.statusBar} />
@@ -115,7 +124,7 @@ export default function  SignInScreen ({ navigation, route }){
             />
             <CustomButton style={{...styles.button , backgroundColor:colors.backgroundColorButton}} textStyle={styles.whiteText} text={lang.signIn} onPress={() => doSignIn()}></CustomButton>
             <CustomButton style={styles.noneBorderButton} textStyle={{...styles.smallYellowText, color: colors.buttonColor}} text={lang.needHelp} onPress={() => navigation.navigate('SupportScreen')} ></CustomButton>
-            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.googleSignIn}></CustomButton>
+            <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.googleSignIn} onPress={()=>doSignInWithGoogle()}></CustomButton>
             <CustomButton style={{...styles.borderButton, borderColor : colors.buttonColor}} textStyle={{...styles.yellowText, color: colors.buttonColor}} text={lang.signUp}></CustomButton>
             </View>
             

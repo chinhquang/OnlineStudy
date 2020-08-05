@@ -213,7 +213,7 @@ export default function  HomeScreen({ navigation }){
         return []
     }
     
-    settingClick=()=>{
+    settingClick2=()=>{
         navigation.navigate ('SettingScreen2')
     };
     userInfoClick = () =>{

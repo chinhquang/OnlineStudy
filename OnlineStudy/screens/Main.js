@@ -90,7 +90,7 @@ if (isSignout){
     >   
       <HomeStack.Screen options={{title:lang.home,
           headerLeft: () => (
-            <TouchableOpacity onPress={settingClick} style={{left: 10 * widthRatio}}>
+            <TouchableOpacity onPress={settingClick2} style={{left: 10 * widthRatio}}>
 
                 <Ionicons style={alignSelf='center'} name="ios-settings" size={30 * widthRatio} color={colors.navIconTintColor}/>
             </TouchableOpacity>
@@ -103,10 +103,10 @@ if (isSignout){
           ),
       }} name="HomeScreen" component={HomeScreen} /> 
     <HomeStack.Screen options={{title:lang.setting}} name="SettingScreen2" component={SettingScreen} /> 
-    <HomeStack.Screen options={{title:lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
-    <HomeStack.Screen options={{title:""}} name="UserInfoScreen" component={UserInfoScreen} /> 
-    <HomeStack.Screen options={{title:"Update Profile"}} name="UpdateProfileScreen" component={UpdateProfileScreen} /> 
     <HomeStack.Screen options={{title: lang.langSetting}} name="LangSettingScreen" component={LangSetting} />
+    <HomeStack.Screen options={{title:lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
+    <HomeStack.Screen options={{title:"User Info"}} name="UserInfoScreen" component={UserInfoScreen} /> 
+    <HomeStack.Screen options={{title:"Update Profile"}} name="UpdateProfileScreen" component={UpdateProfileScreen} /> 
 
     </HomeStack.Navigator>
     

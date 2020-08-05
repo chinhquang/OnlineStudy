@@ -22,6 +22,7 @@ import Main from './screens/Main'
 import SupportScreen from './screens/SupportScreen'
 import ForgotPassScreen from "./screens/ForgotPassScreen"
 import {LanguageThemeProvider, LanguageContext} from "./LanguageContext"
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import { DrawerLayoutAndroidBase } from 'react-native';
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
@@ -274,6 +275,20 @@ const App = () => {
         return response.statusCode
         
       },
+      signInGoogle: async data => {
+        let response = await doGoogleSignIn()
+        if (response.statusCode == 200) {
+          console.log('SIGN_IN')
+          let responseJson = response.responseJson
+          console.log(responseJson.token)
+          
+          let userInfo = responseJson.userInfo
+          dispatch({ type: 'SIGN_IN', token: responseJson.token, userInfo : userInfo});
+        }
+        
+        return response.statusCode
+        
+      },
       signOut: async data => {
         await AsyncStorage.removeItem('userToken');
         console.log("//////////// SIGN OUT //////////////////")
@@ -281,24 +296,67 @@ const App = () => {
         
       },
       signUp: async data => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `AsyncStorage`
-        // In the example, we'll use a dummy token
+        
         let statusCode = await doSignUp(data)
         console.log("Doing sign up")
         console.log (statusCode)
         return statusCode
-        // if (statusCode == 200){
-        //   alert ("Sign up successfull")
-        // }
-        // else {
-        //   alert ("Sign up failed")
-        // }
+        
       },
     }),
     []
   );
+  signInWithGoogle = async(data) => {
+    try {
+      console.log(data.user.email)
+      console.log(data.user.id)
+      let response  = await fetch('https://api.itedu.me/user/login-google-mobile', {
+        method: 'POST',
+        headers: {
+          
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user :{
+            email: data.user.email,
+            id : data.user.id
+          } 
+        })
+      })
+      let responseJson = await response.json()
+      let statusCode = await response.status;
+      
+      return {responseJson : responseJson, statusCode : statusCode};
+    } catch (e) {
+        
+    }
+}
+  doGoogleSignIn = async () => {
+    
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo)
+      let signInResponse = await signInWithGoogle(userInfo)
+      console.log('-----Concoo---------', signInResponse)
+      return signInResponse
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
+  React.useEffect(() => {
+    GoogleSignin.configure({
+      iosClientId: '24937570262-3ltsdve7qs7omttdjg4sis9mbn640imi.apps.googleusercontent.com'
+    });
+  })
   async function doSignUp(data) {
     console.log("Data" + data.name)
     try {
