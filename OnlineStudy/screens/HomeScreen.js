@@ -82,8 +82,9 @@ export function CourseListAPIBug ({ itemList },props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
    
 
-    onItemClick=()=>{
-        alert ('This function is not implemented yet')
+    showCourseDetail=(item)=>{
+        console.log(item)
+        navigation.navigate ('CourseDetail', item)
     };
     ListEmpty = () => {
         return (
@@ -105,7 +106,7 @@ export function CourseListAPIBug ({ itemList },props) {
                 ListEmptyComponent={ListEmpty}
                 renderItem={({ item }) =>{
                     return (
-                        <TouchableOpacity onPress = {()=> this.onItemClick()}>
+                        <TouchableOpacity onPress = {()=> showCourseDetail(item)}>
                             <CourseRow2
                             data={item}
 

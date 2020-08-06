@@ -58,6 +58,104 @@ function getDateFrom2(dateString){
   var formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
   return formattedDate
 }
+downloadOpenClick = async (item) => {
+
+  try {
+
+    let platformName = 'ios';
+    if (Platform.OS === 'ios'){
+      platformName = 'ios';
+    }else{
+      platformName = 'android';
+    }
+
+    const selectedFile = item;
+
+    var dirType=null;
+    if(Platform.OS === 'ios'){
+      dirType = RNFS.DocumentDirectoryPath;
+
+    }else{
+      await this.requestStoragePermission();
+      dirType = RNFS.ExternalStorageDirectoryPath+'/AppName';
+    }
+
+      RNFS.mkdir(dirType+`/Folder`).then(files => {
+        RNFS.mkdir(dirType+`/Folder/SubFolder`).then(files => {
+            //console.log(files);
+        }).catch(err => {
+
+            //console.log(err.message, err.code);
+
+        });
+      }).catch(err => {
+
+          //console.log(err.message, err.code);
+
+      });
+
+      var exists = false;
+      RNFS.exists(`${dirType}/Folder/SubFolder/${selectedFile}`).then( (output) => {
+          if (output) {
+              exists = true;
+              const path = `${dirType}/Folder/SubFolder/${selectedFile}`;
+              FileViewer.open(path)
+              .then(() => {
+                  // success
+              })
+              .catch(error => {
+                  // error
+                  console.log('error');
+                  console.log(error);
+              });
+          } else {
+            const selectedFileUrl = selectedFile.replace(/\s/g, '%20');
+
+            RNFS.downloadFile({
+              fromUrl: `https://mywebsite/api/getAttachment?selectedFile=${selectedFileUrl}`,
+              toFile: `${dirType}/Folder/SubFolder/${selectedFile}`,
+              background: true,
+              begin: (res) => {
+                console.log(res);
+                this.setState({ contentLength: res.contentLength});
+              },
+              progress: (res) => {
+                    this.setState({ showSpinner: true });
+                    var prog = res.bytesWritten/res.contentLength
+                    this.setState({ downloaded : prog});
+                    console.log(this.state.downloaded);
+              }
+            }).promise.then((r) => {
+              //console.log(r);
+              this.setState({ showSpinner: false });
+              this.setState({ downloaded : 0});
+              const path = `${dirType}/${tipoDesc}/${oggetto}/${selectedFile}`;
+              FileViewer.open(path)
+              .then(() => {
+                  // success
+              })
+              .catch(error => {
+                  // error
+                  console.log('error');
+                  console.log(error);
+              });
+            }).catch(error => {
+              console.log('error');
+              console.log(error);
+            });;
+           }
+      });
+
+
+
+
+    } catch (error) {
+      console.log('error');
+      console.log(error);
+    }
+};
+
+
 function TabScene (props){
   const {colors, setColors} = React.useContext(ColorThemeContext);
   ListEmpty = () => {
@@ -134,10 +232,18 @@ export default function  CourseDetail({ navigation, route}){
     const [onBookmarkClickOpacity, setOnBookmarkClickOpacity] = React.useState(true)
     const [hightLightItem, setHighlightItem] = React.useState(-1)
     const data = route.params
-    const [videoURLDisplay, setVideoURLDisplay] = React.useState(data.promoVidUrl)
+    const [videoURLDisplay, setVideoURLDisplay] = React.useState(null)
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
     const [ratingNumber, setRatingNumber] = React.useState(0)
     const [price, setPrice ] = React.useState(0)
+    const [updateDate, setUpdateDate ] = React.useState('2020-07-22T12:35:34.287Z')
+    const [totalHours,setTotalHours] = React.useState(0)
+    const [overallRating,setOveralRating] = React.useState(0)
+    const [description,setDescription] = React.useState('')
+    const [title,setTitle] = React.useState('')
+    const [instructorName, setInstructorName] = React.useState("")
+    const [promoVideoURL, setPromoVideoURL] = React.useState('')
+
     const [routes] = useState([
       {key: 'tab1', title: lang.content},
       {key: 'tab2', title: lang.comment},
@@ -183,6 +289,13 @@ export default function  CourseDetail({ navigation, route}){
               isLoading: false,
               detailCourses : action.detailCourses
           };
+          case 'DONE_FETCH_INFO_COURSE':
+          return {
+              ...prevState,
+             
+              isLoading: false,
+              courseInfo : action.courseInfo
+          };
           case 'DONE_FETCH_LESSON_DATA':
           return {
               ...prevState,
@@ -211,6 +324,8 @@ export default function  CourseDetail({ navigation, route}){
           lessonData : null,
           isLoading: false,
           detailCourses : null,
+          courseInfo : null,
+          
       }
     );
     React.useEffect(() => {
@@ -221,8 +336,18 @@ export default function  CourseDetail({ navigation, route}){
     
     doGetDetailCourses = async () => {
       dispatch({ type: 'FETCH'});
+
       let detailCourses =  await getCourseData()
       setPrice(detailCourses.price)
+      setTitle(detailCourses.title)
+      setTotalHours(detailCourses.totalHours)
+      setOveralRating(detailCourses.ratedNumber)
+      setDescription(detailCourses.description)
+      setInstructorName(detailCourses.instructor.name)
+      if (detailCourses.promoVidUrl){
+        setVideoURLDisplay(detailCourses.promoVidUrl)    
+
+      }
       dispatch({ type: 'DONE_FETCH_DETAIL_COURSE', detailCourses : detailCourses.section});
       
       let t = convertDataToUsableArray(detailCourses.section)
@@ -341,8 +466,11 @@ export default function  CourseDetail({ navigation, route}){
         })
         let responseJson = await response.json();
         let statusCode = await response.status;
+        console.log(responseJson)
         if(statusCode != 200){
+
           if (price == 0){
+            
             alert(responseJson.messsage)
           }else {
             alert(responseJson.messsage + " Bạn muốn đến chuyển đến trang thanh toán không?")
@@ -355,7 +483,7 @@ export default function  CourseDetail({ navigation, route}){
         console.error(error); 
       }
     }
-    const [description, setDescriptionExpand ] = useState(0)
+    // const [description, setDescriptionExpand ] = useState(0)
     const [stickyHeaderIndices, setStickyHeaderIndices] = React.useState([])
     const [stickyHeaderIndices_2, setStickyHeaderIndices_2] = React.useState([])
 
@@ -415,26 +543,26 @@ export default function  CourseDetail({ navigation, route}){
       });
       return (
         <Animated.View style={[styles.header, {transform: [{translateY: y}]}]}>
-          <Text style={{...styles.courseName, color : colors.textPrimary, marginRight : 10 * widthRatio}}>{data.title}</Text>
+          <Text style={{...styles.courseName, color : colors.textPrimary, marginRight : 10 * widthRatio}}>{title}</Text>
           <View style={styles.authorCardContainer}>
               <>
                 <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
-                  <Text numberOfLines={1} ellipsizeMode='tail' style={{color : 'white',fontSize : 12 * widthRatio}}>{data["instructor.user.name"]}</Text>
+                  <Text numberOfLines={1} ellipsizeMode='tail' style={{color : 'white',fontSize : 12 * widthRatio}}>{instructorName}</Text>
                 </View>
               </>
           </View>
 
           <View style={styles.star}>
-            <Text style={styles.lightText} >{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>
+            <Text style={styles.lightText} >{price}$  -  {getDateFrom(updateDate)}  -  {totalHours}h</Text>
             <AirbnbRating
                 showRating = {false}
                 count={5}
-                defaultRating={ Number(data.ratedNumber)}
+                defaultRating={ Number(overallRating)}
                 size={9 * widthRatio}
                 starContainerStyle={{marginHorizontal : 10 * widthRatio}}
                 isDisabled = {true}
             />
-            <Text style={styles.lightText}>({data.ratedNumber})</Text>
+            <Text style={styles.lightText}>({overallRating})</Text>
           </View>
           <View style={{flexDirection:'row', justifyContent:'space-evenly', marginVertical : 10 * widthRatio}}>
             <TouchableWithoutFeedback style={{alignItems : 'center', opacity: xxx}} onPress={onBookMark}>
@@ -462,7 +590,7 @@ export default function  CourseDetail({ navigation, route}){
           <View style={{height: 1, width: 350 * widthRatio, backgroundColor : '#939cab', marginVertical : 10 * widthRatio, alignSelf : 'center'}}></View>
           <View style={{justifyContent: 'center',flexDirection: 'row', alignSelf: 'stretch', marginTop : 10 * widthRatio, textAlignVertical :'center', height : 55}}>
             <ScrollView>
-      <Text numberOfLines={description} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{data.description}</Text>
+      <Text numberOfLines={0} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{description}</Text>
             </ScrollView>    
           </View>
           <TouchableOpacity style={styles.bigButton}>

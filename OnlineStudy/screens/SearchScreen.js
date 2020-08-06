@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     },
     borderButton: {
         marginTop : 10 * widthRatio,
-        width : 350 * widthRatio,
+        width : 375 * widthRatio,
         aspectRatio : 350/47,
         
         borderWidth : 1,
