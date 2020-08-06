@@ -220,6 +220,9 @@ export default function  HomeScreen({ navigation }){
     userInfoClick = () =>{
         navigation.navigate ('UserInfoScreen')
     }
+    showAllClick = (data) =>{
+        navigation.navigate ('FullCourseScreen', data)
+    }
     return (
         <>
     <StatusBar barStyle={colors.statusBar} />
@@ -251,7 +254,7 @@ export default function  HomeScreen({ navigation }){
             
             <View style={styles.coursePathHeaderContainer}>
                 <Text style={{...styles.headerSection, color: colors.textPrimary}}>Recommend courses for you</Text>
-                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}} onPress={()=>showAllClick(state.bookmarkCourses)}>
                     <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                 </TouchableOpacity>
             </View>

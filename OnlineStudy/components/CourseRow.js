@@ -156,4 +156,49 @@ export function CourseRow2({ data }) {
     }
     
 } 
+export function  CourseRow3 ({ data }){
+    if (data.title != null && data.price != null && data.imageUrl != null){
+    return (
+    
+        <View style=
+        {{width : 350 * widthRatio,
+            aspectRatio : 3/1,
+            alignItems : 'center',
+            
+            marginVertical : 8 * widthRatio,
+            marginHorizontal: 10 * widthRatio,
+            backgroundColor : "rgba(38, 50, 56, 0.7)", flexDirection: "row"}}>
+            <View  style={styles.imageContainer}>
+                <Image style={{...styles.image, resizeMode : 'center'}} source={{uri : data.imageUrl}}/>
+            </View >
+            <View style={styles.content}>
+                <Text numberOfLines={1} style={styles.title}>{data.title}</Text>
+                {/* <Text style={styles.courseCountLabel}>{ConcatString(data.author)}</Text>    */}
+                <Text numberOfLines={1} style={styles.courseCountLabel}>{data["instructor.user.name"]}</Text>
+                {
+                    data.updatedAt&&
+                    <Text style={styles.courseCountLabel}>{data.price}$  -  {getDateFrom(data.updatedAt)}  -  {data.totalHours}h</Text>  
+    
+                }
+                <View style={styles.star}>
+                    <AirbnbRating
+                        showRating = {false}
+                        count={5}
+                        defaultRating={ Number(data.ratedNumber) }
+                        size={15 * widthRatio}
+                        isDisabled = {true}
+                        
+                    />
+                    <Text style={styles.courseCountLabel}>({data.ratedNumber})</Text>  
+                </View>
+                
+            </View>
+        </View>
+    );
+    } else {
+        return (
+            <></>
+        );
+        }
+} 
 export default CourseRow;

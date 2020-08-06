@@ -240,7 +240,9 @@ export default function  BrowseScreen ({ navigation }){
             console.error(error); 
           }
     }
-
+    showAllClick = (data) =>{
+        navigation.navigate ('FullCourseScreen', data)
+    }
     return (
         <>
         <StatusBar barStyle={colors.statusBar}/>
@@ -260,7 +262,7 @@ export default function  BrowseScreen ({ navigation }){
             <>
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[0]}</Text>
-                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}onPress={()=>showAllClick(state.topSellCourses)}>
                         <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>
@@ -269,7 +271,7 @@ export default function  BrowseScreen ({ navigation }){
             <>
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[1]}</Text>
-                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}} onPress={()=>showAllClick(state.topNewCourses)}>
                         <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>
@@ -278,7 +280,7 @@ export default function  BrowseScreen ({ navigation }){
             <>
                 <View style={styles.coursePathHeaderContainer}>
                     <Text style={{...styles.headerSection, color: colors.textPrimary}}>{listCourseCategory[2]}</Text>
-                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}}>
+                    <TouchableOpacity style={{...styles.seeAllButton, backgroundColor: colors.smallButtonBackgroundColor}} onPress={()=>showAllClick(state.topRateCourses)}>
                         <Text style={styles.seeAllButtonText}>{lang.seeAll}</Text>
                     </TouchableOpacity>
                 </View>

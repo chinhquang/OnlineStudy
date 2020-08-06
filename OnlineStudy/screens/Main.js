@@ -16,6 +16,7 @@ import SignUpScreen from './SignUpScreen'
 import ForgotPassScreen from './ForgotPassScreen'
 import UserInfoScreen from "./UserInfoScreen"
 import LangSetting from './LangSetting'
+import FullCourseScreen from './FullCourseScreen'
 import UpdateProfileScreen from "./UpdateProfileScreen"
 import {LoginStatusContext, ColorThemeContext,UserInfoContext} from '../App.js'
 import {LanguageContext} from "../LanguageContext.js"
@@ -70,6 +71,7 @@ if (isSignout){
       <HomeStack.Screen options={{title: lang.setting}} name="SettingScreen" component={SettingScreen} /> 
       <HomeStack.Screen options={{title: lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
       <HomeStack.Screen options={{title: lang.langSetting}} name="LangSettingScreen" component={LangSetting} />
+      
     </HomeStack.Navigator>
    
 )
@@ -107,7 +109,9 @@ if (isSignout){
     <HomeStack.Screen options={{title:lang.themeSetting}} name="ThemeSettingScreen" component={ThemeSetting} /> 
     <HomeStack.Screen options={{title:"User Info"}} name="UserInfoScreen" component={UserInfoScreen} /> 
     <HomeStack.Screen options={{title:"Update Profile"}} name="UpdateProfileScreen" component={UpdateProfileScreen} /> 
+    <HomeStack.Screen options={{title:""}} name="FullCourseScreen" component={FullCourseScreen} /> 
 
+    
     </HomeStack.Navigator>
     
   )
@@ -133,7 +137,8 @@ return (
     >
 
         <BrowseStack.Screen options={{title:lang.browse}} name="BrowseScreen" component={BrowseScreen} />
-    
+        <BrowseStack.Screen options={{title:""}} name="FullCourseScreen" component={FullCourseScreen} /> 
+
     </BrowseStack.Navigator>
 );
 }
