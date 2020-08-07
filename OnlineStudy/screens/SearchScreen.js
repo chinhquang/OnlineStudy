@@ -67,6 +67,10 @@ export default function  SearchScreen ({ navigation }){
           }
     }
     const [list, setList] = React.useState([])
+    selectItem = (i) => {
+      navigation.navigate ('CourseDetail', i)
+      
+    }
     return (
         <>
            
@@ -86,7 +90,7 @@ export default function  SearchScreen ({ navigation }){
             <ListItem 
                 key={i}
                 underlayColor="#807c7c"
-                onPress={() =>this.selectItem(l.id)} 
+                onPress={() =>this.selectItem(l)} 
                 containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
                 contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}

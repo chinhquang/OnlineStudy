@@ -243,7 +243,7 @@ export default function  CourseDetail({ navigation, route}){
     const [title,setTitle] = React.useState('')
     const [instructorName, setInstructorName] = React.useState("")
     const [promoVideoURL, setPromoVideoURL] = React.useState('')
-
+  
     const [routes] = useState([
       {key: 'tab1', title: lang.content},
       {key: 'tab2', title: lang.comment},
