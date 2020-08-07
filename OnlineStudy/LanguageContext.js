@@ -55,7 +55,7 @@ export const mainLanguage = {
     rating : "Đánh giá",
     buy : "Mua khoá học này",
     share : "Chia sẻ",
-
+    relatedCourses : "Các khoá liên quan",
   },
   eng: {
     signIn : "Sign in",
@@ -92,7 +92,9 @@ export const mainLanguage = {
     avatar : "Avatar",
     rating : 'Ratings',
     buy :"Buy this course",
-    share : "Share"
+    share : "Share",
+    relatedCourses : "Related Courses",
+
   }
 
 }

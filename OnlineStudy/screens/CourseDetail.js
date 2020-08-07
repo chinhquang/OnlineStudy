@@ -22,7 +22,8 @@ import {
   Platform,
   SectionList,
   TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
-  Share,Linking
+  Share,Linking,
+  ActivityIndicator
 } from 'react-native';
 import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
 // import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -243,12 +244,11 @@ export default function  CourseDetail({ navigation, route}){
     const [description,setDescription] = React.useState('')
     const [title,setTitle] = React.useState('')
     const [instructorName, setInstructorName] = React.useState("")
-    const [promoVideoURL, setPromoVideoURL] = React.useState('')
-  
+    const [relatedCourses, setrelatedCourses] = React.useState(null)
     const [routes] = useState([
       {key: 'tab1', title: lang.content},
       {key: 'tab2', title: lang.comment},
-      {key: 'tab3', title: lang.comment},
+      {key: 'tab3', title: lang.relatedCourses},
     ]);
     onBookMark = () =>{
       likeCourse()
@@ -287,29 +287,21 @@ export default function  CourseDetail({ navigation, route}){
           case 'DONE_FETCH_DETAIL_COURSE':
           return {
               ...prevState,
-             
-              isLoading: false,
               detailCourses : action.detailCourses
           };
           case 'DONE_FETCH_INFO_COURSE':
           return {
               ...prevState,
-             
-              isLoading: false,
               courseInfo : action.courseInfo
           };
           case 'DONE_FETCH_LESSON_DATA':
           return {
               ...prevState,
-             
-              isLoading: false,
               lessonData : action.lessonData
           };
           case 'DONE_FETCH_RATING_DATA':
           return {
               ...prevState,
-             
-              isLoading: false,
               ratingList : action.ratingList
           };
           case 'CHANGE_LIKE_STATUS':
@@ -323,6 +315,12 @@ export default function  CourseDetail({ navigation, route}){
               ...prevState,
              
               relatedCourses : action.relatedCourses
+          };
+          case 'STOP_FETCH':
+            return {
+              ...prevState,
+             
+              isLoading : false
           };
         }
       },
@@ -344,6 +342,7 @@ export default function  CourseDetail({ navigation, route}){
     
     
     doGetDetailCourses = async () => {
+      console.log("fetch ")
       dispatch({ type: 'FETCH'});
 
       let detailCourses =  await getCourseData()
@@ -352,6 +351,7 @@ export default function  CourseDetail({ navigation, route}){
       setTotalHours(detailCourses.totalHours)
       setOveralRating(detailCourses.ratedNumber)
       setDescription(detailCourses.description)
+      setrelatedCourses(detailCourses.coursesLikeCategory)
       dispatch ({type : "DONE_FETCH_RELATED_COURSES", relatedCourses : detailCourses.coursesLikeCategory})
       setInstructorName(detailCourses.instructor.name)
       if (detailCourses.promoVidUrl){
@@ -390,6 +390,7 @@ export default function  CourseDetail({ navigation, route}){
       dispatch({ type: 'FETCH'});
       var like = await getLikeStatus()
       dispatch({ type: 'CHANGE_LIKE_STATUS', isBookMark : like});
+      dispatch({type : 'STOP_FETCH'})
   };
     getLikeStatus = async () =>{
         
@@ -489,6 +490,9 @@ export default function  CourseDetail({ navigation, route}){
         let responseJson = await response.json();
         let statusCode = await response.status;
         console.log(responseJson, statusCode)
+        if(statusCode == 200){
+          alert("Mua khoá học thành công")
+        }
         if (statusCode == 401){
           alert(responseJson.message)
         }
@@ -843,14 +847,20 @@ export default function  CourseDetail({ navigation, route}){
     };
     const renderTab3Item = ({item, index}) => {
       
-     
+      changeCourse = async() => {
+        setData(item)
+        await doGetDetailCourses()
+        setData(item)
+        await doGetDetailCourses()
+      }
       return (
-        <View style={{justifyContent: 'center', alignItems:"center"}}>
+
+        <TouchableOpacity style={{justifyContent: 'center', alignItems:"center"}} onPress={() => changeCourse()}>
           <CourseRow3 
             style={{}}
             data={item}
           />
-        </View>
+        </TouchableOpacity>
       );
     };
     const renderLabel = ({route, focused}) => {
@@ -881,7 +891,7 @@ export default function  CourseDetail({ navigation, route}){
           break;
         case 'tab3':
           numCols = 1;
-          data = state.relatedCourses;
+          data = relatedCourses;
           renderItem = renderTab3Item;
           break;
         default: return null;
@@ -1020,6 +1030,15 @@ export default function  CourseDetail({ navigation, route}){
     <StatusBar barStyle={colors.statusBar} />
     <SafeAreaView style={{ flex:0, backgroundColor: colors.navBackgroundColor }} />
     <LinearGradient colors={colors.gradientColor} style = { styles.container }>
+    {   
+      state.isLoading && (
+          <>
+              <ActivityIndicator style={{position:'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex : 2, color:"orange"}} size="large" animating={state.isLoading}/>
+
+          </>
+      )
+                
+    }
     <Animated.View style = {{...styles.videoContainer, height: animationValue, } }>
     <Video
         onEnd={onEnd}
@@ -1120,7 +1139,7 @@ const styles = StyleSheet.create({
     },
     label:{
       
-      
+      textAlign :'center',
       fontWeight: "bold",
       fontSize: 16 * widthRatio,
     },
