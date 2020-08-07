@@ -432,6 +432,11 @@ export default function  CourseDetail({ navigation, route}){
       
       return array
     }
+    dismiss = () =>{
+      console.log("GO back")
+      navigation.goBack()
+        
+    }  
     convertDataToUsableArray2 = (data) =>{
       var array = [{ data : null, header: true}]
       var index = 0;  
@@ -601,7 +606,7 @@ export default function  CourseDetail({ navigation, route}){
             <>
               {
                  videoURLDisplay.includes("youtube") &&
-                <TouchableOpacity onPress={()=>dismiss()} style={{ position:'absolute',top : 15 * widthRatio, right : 10 * widthRatio}}>
+                <TouchableOpacity onPress={()=>dismiss()} style={{ position:'absolute',top : 15 * widthRatio, right : 10 * widthRatio, zIndex : 2}}>
                 <Icon type="MaterialIcons" name="close" size={22 * widthRatio} color={'white'}/> 
     
                 </TouchableOpacity>
@@ -1001,10 +1006,7 @@ export default function  CourseDetail({ navigation, route}){
    
    
 
-    dismiss = () =>{
-      navigation.goBack()
-        
-    }   
+    
     
     const onSeek = seek => {
         videoPlayer?.current.seek(seek);
