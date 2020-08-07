@@ -22,7 +22,7 @@ import {
   Platform,
   SectionList,
   TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
-  Share,
+  Share,Linking
 } from 'react-native';
 import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
 // import {TouchableOpacity} from 'react-native-gesture-handler'
@@ -448,6 +448,18 @@ export default function  CourseDetail({ navigation, route}){
     await buyCourse()
     doGetDetailCourses()
   }
+  openPaymentSite = async() =>{
+    let url = "https://itedu.me/payment/" + data.id
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }
   buyCourse = async () =>{
         
     try {
@@ -466,14 +478,38 @@ export default function  CourseDetail({ navigation, route}){
         })
         let responseJson = await response.json();
         let statusCode = await response.status;
-        console.log(responseJson)
-        if(statusCode != 200){
+        console.log(responseJson, statusCode)
+        if (statusCode == 401){
+          alert(responseJson.message)
+        }
+        else if(statusCode != 200){
 
           if (price == 0){
             
             alert(responseJson.messsage)
           }else {
-            alert(responseJson.messsage + " Bạn muốn đến chuyển đến trang thanh toán không?")
+            
+            Alert.alert(
+              "",
+              responseJson.messsage+ " Bạn muốn đến chuyển đến trang thanh toán không?",
+              
+              [
+                
+                { 
+                  text: "OK", 
+                  onPress: () => {
+                    
+                    openPaymentSite()
+                  } 
+
+                },
+                { 
+                  text: "Cancel",
+
+                }
+              ],
+              { cancelable: false }
+          );
           }
           
           
