@@ -23,9 +23,12 @@ import {
   SectionList,
   TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
   Share,Linking,
-  ActivityIndicator
+  ActivityIndicator,
+  ImageBackground
 } from 'react-native';
 import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
+import { WebView } from 'react-native-webview';
+
 // import {TouchableOpacity} from 'react-native-gesture-handler'
 import { ListItem } from 'react-native-elements'
 import { TabView, SceneMap, TabBar} from 'react-native-tab-view';
@@ -690,6 +693,7 @@ export default function  CourseDetail({ navigation, route}){
     const renderTab1Item = ({item, index}) => {
       
       onItemPress = (item, index) => {
+        console.log("---------------------URL----------------", item.videoUrl)
         if (item.videoUrl){
           setHighlightItem(index)
           setVideoURLDisplay(item.videoUrl)
@@ -1040,49 +1044,75 @@ export default function  CourseDetail({ navigation, route}){
                 
     }
     <Animated.View style = {{...styles.videoContainer, height: animationValue, } }>
-    <Video
-        onEnd={onEnd}
-        onLoad={onLoad} 
-        onLoadStart={onLoadStart}
-        onProgress={onProgress}
-        paused={paused}
-        ref={ref => (videoPlayer.current = ref)}
-        resizeMode="cover"
-        source={{
-          uri:
-            videoURLDisplay,
-        }}
-        repeat
-        style={styles.mediaPlayer}
-        volume={0.0}
-        resizeMode={screenType}
+    {
+      videoURLDisplay ?
+      <>
+      {
 
-      />
-      <MediaControls
-        isFullScreen={isFullScreen}
-        duration={duration}
-        isLoading={isLoading}
-        mainColor="orange"
-        onFullScreen={onFullScreen}
-        onPaused={onPaused}
-        onReplay={onReplay}
-        onSeek={onSeek}
-        onSeeking={onSeeking}
-        playerState={playerState}
-        progress={currentTime}
-        
-      >
-        <MediaControls.Toolbar>
-          <View style={styles.toolbar}>
-            <TouchableOpacity onPress={()=>dismiss()}>
-            <Icon style={alignSelf='center'} type="MaterialIcons" name="close" size={22 * widthRatio} color={'white'}/> 
+        videoURLDisplay.includes("youtube") ?
+        <>
 
-            </TouchableOpacity>
+        </> 
+        :
+        <>
+          <Video
+            onEnd={onEnd}
+            onLoad={onLoad} 
+            onLoadStart={onLoadStart}
+            onProgress={onProgress}
+            paused={paused}
+            ref={ref => (videoPlayer.current = ref)}
+            resizeMode="cover"
+            source={{
+              uri:
+                videoURLDisplay,
+            }}
+            repeat
+            style={styles.mediaPlayer}
+            volume={0.0}
+            resizeMode={screenType}
 
-          </View>
-        </MediaControls.Toolbar>
-      </MediaControls>
-      </Animated.View>
+          />
+          <MediaControls
+            isFullScreen={isFullScreen}
+            duration={duration}
+            isLoading={isLoading}
+            mainColor="orange"
+            onFullScreen={onFullScreen}
+            onPaused={onPaused}
+            onReplay={onReplay}
+            onSeek={onSeek}
+            onSeeking={onSeeking}
+            playerState={playerState}
+            progress={currentTime}
+            
+          >
+            <MediaControls.Toolbar>
+              <View style={styles.toolbar}>
+                <TouchableOpacity onPress={()=>dismiss()}>
+                <Icon style={alignSelf='center'} type="MaterialIcons" name="close" size={22 * widthRatio} color={'white'}/> 
+
+                </TouchableOpacity>
+
+              </View>
+            </MediaControls.Toolbar>
+          </MediaControls>
+        </>
+      }
+      </>
+      :
+      <View style={styles.mediaPlayer}>
+        <TouchableOpacity onPress={()=>dismiss()} style={{marginTop : 15 * widthRatio, marginLeft : 15 * widthRatio}}>
+          <Icon type="MaterialIcons" name="close" size={22 * widthRatio} color={'white'}/> 
+
+        </TouchableOpacity>
+
+      </View>
+      
+    }
+    
+    
+    </Animated.View>
       <View style={{flex: 1}}>
         {renderTabView()}
         {renderHeader()}
