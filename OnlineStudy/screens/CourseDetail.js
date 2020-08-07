@@ -39,13 +39,14 @@ import Video from 'react-native-video';
 import MediaControls, { PLAYER_STATES } from 'react-native-media-controls';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/Entypo';
+import {CourseRow3} from '../components/CourseRow'
 
 import { format } from "date-fns";
 import { color } from 'react-native-reanimated';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 const TabBarHeight = 48 * widthRatio;
-const HeaderHeight = 405 * widthRatio;
+const HeaderHeight = 350 * widthRatio;
 function getDateFrom(dateString){
   var date = new Date(dateString);
 
@@ -231,7 +232,7 @@ export default function  CourseDetail({ navigation, route}){
     const [screenType, setScreenType] = React.useState('content');
     const [onBookmarkClickOpacity, setOnBookmarkClickOpacity] = React.useState(true)
     const [hightLightItem, setHighlightItem] = React.useState(-1)
-    const data = route.params
+    const [data, setData] = React.useState(route.params)
     const [videoURLDisplay, setVideoURLDisplay] = React.useState(null)
     const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
     const [ratingNumber, setRatingNumber] = React.useState(0)
@@ -247,6 +248,7 @@ export default function  CourseDetail({ navigation, route}){
     const [routes] = useState([
       {key: 'tab1', title: lang.content},
       {key: 'tab2', title: lang.comment},
+      {key: 'tab3', title: lang.comment},
     ]);
     onBookMark = () =>{
       likeCourse()
@@ -316,9 +318,16 @@ export default function  CourseDetail({ navigation, route}){
              
               isBookMark : action.isBookMark
           };
+          case 'DONE_FETCH_RELATED_COURSES':
+            return {
+              ...prevState,
+             
+              relatedCourses : action.relatedCourses
+          };
         }
       },
       {
+          relatedCourses : null,
           ratingList : null,
           isBookMark : false,
           lessonData : null,
@@ -343,6 +352,7 @@ export default function  CourseDetail({ navigation, route}){
       setTotalHours(detailCourses.totalHours)
       setOveralRating(detailCourses.ratedNumber)
       setDescription(detailCourses.description)
+      dispatch ({type : "DONE_FETCH_RELATED_COURSES", relatedCourses : detailCourses.coursesLikeCategory})
       setInstructorName(detailCourses.instructor.name)
       if (detailCourses.promoVidUrl){
         setVideoURLDisplay(detailCourses.promoVidUrl)    
@@ -629,11 +639,11 @@ export default function  CourseDetail({ navigation, route}){
       <Text numberOfLines={0} ellipsizeMode='tail' style={{fontSize: 15 * widthRatio,marginStart : 10 * widthRatio,width : 350 * widthRatio, color: colors.textPrimary}}>{description}</Text>
             </ScrollView>    
           </View>
-          <TouchableOpacity style={styles.bigButton}>
+          {/* <TouchableOpacity style={styles.bigButton}>
               <Icon style={alignSelf='center'} type="MaterialIcons" name="format-list-bulleted" size={35} color={colors.textPrimary}/>
               
               <Text style={{marginLeft: 5 * widthRatio, color: colors.textPrimary, fontSize : 13 * widthRatio}}>Related paths and courses</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.bigButton}>
               <Icon style={alignSelf='center'} type="MaterialIcons" name="playlist-add-check" size={35} color={colors.textPrimary}/>
               
@@ -831,6 +841,18 @@ export default function  CourseDetail({ navigation, route}){
         </View>
       );
     };
+    const renderTab3Item = ({item, index}) => {
+      
+     
+      return (
+        <View style={{justifyContent: 'center', alignItems:"center"}}>
+          <CourseRow3 
+            style={{}}
+            data={item}
+          />
+        </View>
+      );
+    };
     const renderLabel = ({route, focused}) => {
       return (
         <Text style={[styles.label, {color : colors.textPrimary}, {opacity: focused ? 1 : 0.8}]}>
@@ -856,6 +878,11 @@ export default function  CourseDetail({ navigation, route}){
           data = state.ratingList;
           renderItem = renderTab2Item;
           stickyHeader = stickyHeaderIndices_2
+          break;
+        case 'tab3':
+          numCols = 1;
+          data = state.relatedCourses;
+          renderItem = renderTab3Item;
           break;
         default: return null;
       }
