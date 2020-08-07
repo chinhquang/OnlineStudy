@@ -83,6 +83,8 @@ target 'OnlineStudy' do
 
   pod 'ReactNativeKeyboardManager', :path => '../node_modules/react-native-keyboard-manager'
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
   target 'OnlineStudyTests' do
     inherit! :complete
     # Pods for testing

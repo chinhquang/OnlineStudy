@@ -596,7 +596,22 @@ export default function  CourseDetail({ navigation, route}){
       });
       return (
         <Animated.View style={[styles.header, {transform: [{translateY: y}]}]}>
+          {
+            videoURLDisplay && 
+            <>
+              {
+                 videoURLDisplay.includes("youtube") &&
+                <TouchableOpacity onPress={()=>dismiss()} style={{ position:'absolute',top : 15 * widthRatio, right : 10 * widthRatio}}>
+                <Icon type="MaterialIcons" name="close" size={22 * widthRatio} color={'white'}/> 
+    
+                </TouchableOpacity>
+              }
+              
+            </>
+          }  
+          
           <Text style={{...styles.courseName, color : colors.textPrimary, marginRight : 10 * widthRatio}}>{title}</Text>
+
           <View style={styles.authorCardContainer}>
               <>
                 <View style={{...styles.authorCard, backgroundColor: colors.subjectBackgroundColor}}>
@@ -606,6 +621,7 @@ export default function  CourseDetail({ navigation, route}){
           </View>
 
           <View style={styles.star}>
+          
             <Text style={styles.lightText} >{price}$  -  {getDateFrom(updateDate)}  -  {totalHours}h</Text>
             <AirbnbRating
                 showRating = {false}
@@ -1051,7 +1067,7 @@ export default function  CourseDetail({ navigation, route}){
 
         videoURLDisplay.includes("youtube") ?
         <>
-
+          <WebView style={{...styles.mediaPlayer}} source={{ uri: videoURLDisplay }} />
         </> 
         :
         <>
