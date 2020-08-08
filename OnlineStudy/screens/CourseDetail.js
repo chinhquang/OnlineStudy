@@ -28,12 +28,10 @@ import {
 } from 'react-native';
 import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
 import { WebView } from 'react-native-webview';
-
-// import {TouchableOpacity} from 'react-native-gesture-handler'
+var RNFS = require('react-native-fs');
 import { ListItem } from 'react-native-elements'
 import { TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import { Rating, AirbnbRating } from 'react-native-ratings';
-
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
 import {AuthContext, ColorThemeContext, mainColors, UserTokenContext,UserInfoContext} from '../App'
@@ -63,8 +61,9 @@ function getDateFrom2(dateString){
   var formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
   return formattedDate
 }
-downloadOpenClick = async (item) => {
 
+downloadOpenClick = async (item, url) => {
+  console.log("URL", url)
   try {
 
     let platformName = 'ios';
@@ -85,65 +84,42 @@ downloadOpenClick = async (item) => {
       dirType = RNFS.ExternalStorageDirectoryPath+'/AppName';
     }
 
-      RNFS.mkdir(dirType+`/Folder`).then(files => {
-        RNFS.mkdir(dirType+`/Folder/SubFolder`).then(files => {
-            //console.log(files);
+      RNFS.mkdir(dirType+`/Download`).then(files => {
+        RNFS.mkdir(dirType+`/Download/MediaFolder`).then(files => {
         }).catch(err => {
+          console.log(err)
 
-            //console.log(err.message, err.code);
 
         });
       }).catch(err => {
-
-          //console.log(err.message, err.code);
+        console.log(err)
 
       });
 
       var exists = false;
-      RNFS.exists(`${dirType}/Folder/SubFolder/${selectedFile}`).then( (output) => {
+      RNFS.exists(`${dirType}//Download/MediaFolder/${selectedFile}`).then( (output) => {
           if (output) {
               exists = true;
-              const path = `${dirType}/Folder/SubFolder/${selectedFile}`;
-              FileViewer.open(path)
-              .then(() => {
-                  // success
-              })
-              .catch(error => {
-                  // error
-                  console.log('error');
-                  console.log(error);
-              });
+              const path = `${dirType}/Download/MediaFolder/${selectedFile}`;
+              console.log(path)
           } else {
-            const selectedFileUrl = selectedFile.replace(/\s/g, '%20');
 
             RNFS.downloadFile({
-              fromUrl: `https://mywebsite/api/getAttachment?selectedFile=${selectedFileUrl}`,
-              toFile: `${dirType}/Folder/SubFolder/${selectedFile}`,
+              fromUrl: `${url}`,
+              toFile: `${dirType}/Download/MediaFolder/${selectedFile}`,
               background: true,
               begin: (res) => {
                 console.log(res);
-                this.setState({ contentLength: res.contentLength});
+
               },
               progress: (res) => {
-                    this.setState({ showSpinner: true });
+                    
                     var prog = res.bytesWritten/res.contentLength
-                    this.setState({ downloaded : prog});
-                    console.log(this.state.downloaded);
+                    console.log(prog);
               }
             }).promise.then((r) => {
-              //console.log(r);
-              this.setState({ showSpinner: false });
-              this.setState({ downloaded : 0});
-              const path = `${dirType}/${tipoDesc}/${oggetto}/${selectedFile}`;
-              FileViewer.open(path)
-              .then(() => {
-                  // success
-              })
-              .catch(error => {
-                  // error
-                  console.log('error');
-                  console.log(error);
-              });
+              const path = `${dirType}/Download/MediaFolder/${selectedFile}`;
+              console.log(path)              
             }).catch(error => {
               console.log('error');
               console.log(error);
@@ -714,16 +690,25 @@ export default function  CourseDetail({ navigation, route}){
     const renderTab1Item = ({item, index}) => {
       
       onItemPress = (item, index) => {
-        console.log("---------------------URL----------------", item.videoUrl)
         if (item.videoUrl){
           setHighlightItem(index)
           setVideoURLDisplay(item.videoUrl)
+          
         } else {
           alert("Bạn chưa đủ quyền để xem bài học này.")
 
         }
       }
-     
+      downloadVideo = async (item, index) =>{
+        console.log("---------------------URL----------------", item.videoUrl)
+
+        if (item.videoUrl){
+          let timeInterval = new Date().getTime()
+          let filename = timeInterval + ".mp4"
+          await downloadOpenClick(filename, item.videoUrl)
+          // await downloadVideo("video.mp4", item.videoUrl)
+        }
+      }
       return (
         <View
           style={{
@@ -755,8 +740,10 @@ export default function  CourseDetail({ navigation, route}){
               <Icon2 style={{alignSelf:'center', marginLeft : 25 * widthRatio}} type="Entypo" name={item.videoUrl ? "eye" : "eye-with-line"} size={13 * widthRatio} color={colors.textPrimary}/>
               {
                 item.videoUrl && 
-                <Icon style={{alignSelf:'center', marginLeft : 15 * widthRatio}} type="MaterialIcons" name="file-download" size={20 * widthRatio} color={colors.textPrimary}/>
+                <TouchableOpacity onPress={()=>downloadVideo(item, index)} >
 
+                  <Icon style={{alignSelf:'center', marginLeft : 15 * widthRatio}} type="MaterialIcons" name="file-download" size={20 * widthRatio} color={colors.textPrimary}/>
+                </TouchableOpacity>
               }
 
             </View>
