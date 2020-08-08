@@ -29,6 +29,8 @@ export function CourseListVertical ({ itemList, navigation },props) {
         console.log(item)
         navigation.navigate ('CourseDetail', item)
     };
+    
+    
     ListEmpty = () => {
         return (
           //View to show when list is empty
@@ -65,10 +67,17 @@ export function CourseListVertical ({ itemList, navigation },props) {
     </View>
 );
 }
+
 export default function  FullCourseScreen({ navigation, route}){
     const {lang, setLang} = React.useContext(LanguageContext);
     const {colors, setColors} = React.useContext(ColorThemeContext);
     const data = route.params
+    React.useEffect(() => { 
+        navigation.setOptions({ 
+            headerTitle: data.headerTitle,
+          }) 
+    }, [])
+    
     console.log(data)
     return (
         <>
@@ -79,7 +88,7 @@ export default function  FullCourseScreen({ navigation, route}){
                 
                 
             </ScrollView> */}
-            <CourseListVertical itemList={data} navigation={navigation} ></CourseListVertical>
+            <CourseListVertical itemList={data.courses} navigation={navigation} ></CourseListVertical>
         </LinearGradient>
         
     </>
@@ -87,7 +96,6 @@ export default function  FullCourseScreen({ navigation, route}){
     
     
 }
-
 const styles = StyleSheet.create({
     container : {
         flex: 1,
