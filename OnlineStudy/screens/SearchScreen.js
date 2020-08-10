@@ -24,6 +24,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {StatusBarHeight} from '../utils/Dimension'
 import { ListItem } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import SegmentedControl from '@react-native-community/segmented-control';
 
 import { SearchBar } from 'react-native-elements'
 import {ColorThemeContext} from '../App'
@@ -84,7 +85,20 @@ export default function  SearchScreen ({ navigation }){
                 placeholder='Type Here...'  
                 onChangeText={text=>textDidChange(text)}          
                 value={searchText}/>
+        
         <LinearGradient colors={colors.gradientColor} style = { styles.container }>
+        <SegmentedControl
+          style={{width : 350 * widthRatio, alignSelf : 'center', marginTop : 10 * widthRatio}}
+          // backgroundColor={"red"}
+          appearance={colors.type}
+          tintColor = {colors.backgroundColorButton}
+          values={['Tất cả', 'Khoá học','Giảng viên']}
+          selectedIndex={0}
+          onChange={(event) => {
+            // this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
+          }}
+          // fontSize = {15 * widthRatio}
+        />
         {
           list.length == 0 ?
           <>

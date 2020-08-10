@@ -78,7 +78,7 @@ export function CourseList ({ itemList, navigation },props) {
 }
 
 // This function to handle bug from backend
-export function CourseListAPIBug ({ itemList },props) {
+export function CourseListAPIBug ({ itemList, navigation},props) {
     const {colors, setColors} = React.useContext(ColorThemeContext);
    
 

@@ -57,7 +57,8 @@ export const mainLanguage = {
     share : "Chia sẻ",
     relatedCourses : "Các khoá liên quan",
     currentSearchHistory : "Lịch sử tìm kiếm gần đây",
-    noHistory  : "Không có lịch sử tìm kiếm"
+    noHistory  : "Không có lịch sử tìm kiếm",
+    categories : "Các danh mục",
   },
   eng: {
     signIn : "Sign in",
@@ -97,7 +98,8 @@ export const mainLanguage = {
     share : "Share",
     relatedCourses : "Related Courses",
     currentSearchHistory : "Current search history",
-    noHistory  : "No search history"
+    noHistory  : "No search history",
+    categories :"Categories",
   }
 
 }

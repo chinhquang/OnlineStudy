@@ -28,6 +28,7 @@ import AuthorRow from '../components/AuthorRow'
 import {ColorThemeContext} from '../App.js'
 import {LanguageContext} from '../LanguageContext'
 import {CourseList} from './HomeScreen'
+import CustomSubjectRow from '../components/CustomSubjectRow';
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
 
@@ -52,7 +53,71 @@ export const PathList = ({ itemList }) => (
 
     </View>
 );
+export const CategoryList = ({ navigation, itemList }) => {
+    showAllClick = async(data , title) =>{
+        navigation.navigate ('FullCourseScreen', {courses : data, headerTitle : title})
+    }
+    showCategoryCourse = async (item)=>{
+        let itemList = await getCourseData(item.id)
+        console.log(itemList)
+        showAllClick(itemList, item.name)
+        // navigation.navigate ('CourseDetail', item)
+    }
+    
+    getCourseData = async (categoryID) =>{
+        var text = categoryID
+        if (text.length == 0){
+         
+          return 
+        }
+        try {
+            let response  = await fetch('https://api.itedu.me/course/search/', {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+          
+                keyword: "",
+                limit  : 100,
+                offset : 1,
+                opt: {
+                    category: [
+                        text
+                    ]
+                  
+                },
+              })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload.rows;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
+    return (
+    <View style={styles.container}>
+        <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                data={itemList}
+                keyExtractor={item => item.id} // 
+                renderItem={({ item }) => 
+                <TouchableOpacity onPress = {()=> showCategoryCourse(item)}>
+                    <CustomSubjectRow title={item.name}/>
+                </TouchableOpacity>
 
+                }
+            />
+
+        </View>
+    );
+}
+    
+    
 export const TopAuthorList = ({ itemList }) => (
     <View style={styles.bannerList}>
         <FlatList
@@ -115,6 +180,12 @@ export default function  BrowseScreen ({ navigation }){
                 isLoading: false,
                 topRateCourses : action.topRateCourses
             };
+            case 'DONE_FETCH_CATEGORIES':
+            return {
+                ...prevState,
+                isLoading: false,
+                categoriesList : action.categoriesList
+            };
           }
         },
         {
@@ -122,7 +193,8 @@ export default function  BrowseScreen ({ navigation }){
             authorData: null,
             topSellCourses : null,
             topNewCourses : null,
-            topRateCourses : null
+            topRateCourses : null,
+            categoriesList : null
         }
     );
    
@@ -152,10 +224,16 @@ export default function  BrowseScreen ({ navigation }){
             dispatch({ type: 'DONE_FETCH_TOP_RATE', topRateCourses : topRateCourses});
             
         }
+        doGetCategoryData = async () =>{
+            dispatch({ type: 'FETCH'});
+            let categoriesList = await getCategoryData()
+            dispatch({ type: 'DONE_FETCH_CATEGORIES', categoriesList : categoriesList});
+        }
         doGetAuthorData()
         doGetTopSellData()
         doGetTopNewData()
         doGetTopRateData()
+        doGetCategoryData()
     },[])
     getTopSellCourseData = async () =>{
         
@@ -214,6 +292,24 @@ export default function  BrowseScreen ({ navigation }){
                 "limit": 10,
                 "page": 1
               })
+            })
+            let responseJson = await response.json();
+            let statusCode = await response.status;
+            
+            return responseJson.payload;
+          }catch(error) {
+            console.error(error); 
+          }
+    }
+    //https://api.itedu.me/category/all
+    getCategoryData = async () =>{
+        try {
+            let response  = await fetch('https://api.itedu.me/category/all', {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                
+              }
             })
             let responseJson = await response.json();
             let statusCode = await response.status;
@@ -286,9 +382,11 @@ export default function  BrowseScreen ({ navigation }){
                 </View>
                 <CourseList itemList={state.topRateCourses} navigation={navigation} ></CourseList>
             </>
-            
+        
+        <Text style={{...styles.headerSection, color: colors.textPrimary}}>{lang.categories}</Text>
+        <CategoryList itemList={state.categoriesList} navigation={navigation}></CategoryList>
         <Text style={{...styles.headerSection, color: colors.textPrimary}}>{lang.topAuthor}</Text>
-            <TopAuthorList itemList={state.authorData}></TopAuthorList>
+        <TopAuthorList itemList={state.authorData} ></TopAuthorList>
         </ScrollView>
 
         </LinearGradient>

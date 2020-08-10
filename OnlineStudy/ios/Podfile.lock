@@ -257,6 +257,8 @@ PODS:
     - React
   - react-native-safe-area-context (1.0.2):
     - React
+  - react-native-segmented-control (2.1.1):
+    - React
   - react-native-video (4.4.5):
     - React
     - react-native-video/Video (= 4.4.5)
@@ -387,6 +389,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-appearance (from `../node_modules/react-native-appearance`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-segmented-control (from `../node_modules/@react-native-community/segmented-control`)"
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -466,6 +469,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-appearance"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-segmented-control:
+    :path: "../node_modules/@react-native-community/segmented-control"
   react-native-video:
     :path: "../node_modules/react-native-video"
   react-native-webview:
@@ -545,6 +550,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-appearance: fc2014516054585d531e07aa0b40ab0de1d2be85
   react-native-safe-area-context: 5292aacb304803e215ff13fd7f01c3577909319f
+  react-native-segmented-control: 9b92c7460c7a56dd2b8460e4e3a46db5017c3fae
   react-native-video: aa527b0acb37f94c4491e70df0274cb26979405d
   react-native-webview: d2ddd1c9a3c04b2c7a034df1d14b7cd80dbb0a05
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c

@@ -80,6 +80,7 @@ export default function  FullCourseScreen({ navigation, route}){
     
     console.log(data)
     return (
+        (data.courses && data.courses.length !=0) ?
         <>
         <StatusBar barStyle={colors.statusBar} />
         
@@ -91,7 +92,17 @@ export default function  FullCourseScreen({ navigation, route}){
             <CourseListVertical itemList={data.courses} navigation={navigation} ></CourseListVertical>
         </LinearGradient>
         
-    </>
+        </>
+        :
+        <>
+        <LinearGradient colors={colors.gradientColor} style = { styles.container }>
+        <View style={styles.noDataContainer}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="search" size={90 * widthRatio} color={'#939cab'}/> 
+              <Text style={styles.boldTitle}>No courses on this section</Text>
+              {/* <Text style={styles.lightDescription}>No courses on this section</Text> */}
+            </View>
+            </LinearGradient>
+        </>
     );
     
     
@@ -120,6 +131,29 @@ const styles = StyleSheet.create({
         width : '70%',
         color: '#939cab',
         textAlign: 'center'
-    }
+    },
+    noDataContainer : {
+        flex : 1,
+        alignItems : 'center',
+        justifyContent : 'center'
+      },
+      boldTitle :{ 
+          
+          
+          fontFamily: "Helvetica Neue",
+          fontStyle: 'normal',
+          fontWeight: 'bold',
+          fontSize: 20 * widthRatio,
+        
+          color: '#939cab',
+      },
+      lightDescription: {
+          fontFamily: "Helvetica Neue",
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: 15 * widthRatio,
+        
+          color: '#939cab',
+      }
 });
 
