@@ -24,8 +24,10 @@ import {
   TouchableHighlight,TouchableNativeFeedback, TouchableOpacity, TouchableHighlightComponent,
   Share,Linking,
   ActivityIndicator,
-  ImageBackground
+  ImageBackground,
+  AsyncStorage
 } from 'react-native';
+import FileViewer from 'react-native-file-viewer';
 import {TouchableWithoutFeedback, TextInput} from 'react-native-gesture-handler'
 import { WebView } from 'react-native-webview';
 var RNFS = require('react-native-fs');
@@ -61,9 +63,25 @@ function getDateFrom2(dateString){
   var formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
   return formattedDate
 }
-
-downloadOpenClick = async (item, url) => {
+openFile = (fileURL) =>{
+  FileViewer.open(fileURL)
+  .then(() => {
+    // success
+  })
+  .catch(error => {
+    // error
+  });
+}
+downloadOpenClick = async (item, url, lessonId, lessonName, showProgress) => {
+  showProgress(true)
+  console.log (lessonId)
+  
   console.log("URL", url)
+  if (url.includes('youtube')){
+    showProgress(false)
+    alert("This app not support downloading youtube.")
+    return 
+  }
   try {
 
     let platformName = 'ios';
@@ -74,7 +92,28 @@ downloadOpenClick = async (item, url) => {
     }
 
     const selectedFile = item;
-
+    
+    // return 
+    var lessons = await AsyncStorage.getItem("Lesson");
+    var lessonJSON = {}
+    if (lessons == null){
+      lessonJSON = {}
+    }
+    else {
+      lessonJSON = JSON.parse(lessons)
+    }
+    console.log ("++++++++++++++++Lesson________________", lessonJSON)
+   
+   
+    
+    var lesson = lessonJSON[`${lessonId}`]
+    console.log("hshshhshshhs", lesson)
+     
+    if (lesson != null) { 
+      showProgress(false)
+      alert ("Bạn đã tải video này.")
+      return 
+    }
     var dirType=null;
     if(Platform.OS === 'ios'){
       dirType = RNFS.DocumentDirectoryPath;
@@ -97,10 +136,11 @@ downloadOpenClick = async (item, url) => {
       });
 
       var exists = false;
-      RNFS.exists(`${dirType}//Download/MediaFolder/${selectedFile}`).then( (output) => {
+      RNFS.exists(`${dirType}/Download/MediaFolder/${selectedFile}`).then( (output) => {
           if (output) {
               exists = true;
               const path = `${dirType}/Download/MediaFolder/${selectedFile}`;
+              openFile(path)
               console.log(path)
           } else {
 
@@ -119,7 +159,14 @@ downloadOpenClick = async (item, url) => {
               }
             }).promise.then((r) => {
               const path = `${dirType}/Download/MediaFolder/${selectedFile}`;
-              console.log(path)              
+              let data = {fileUrl: path, lessonName : `${lessonName}`}
+
+              lessonJSON[`${lessonId}`] = data
+              AsyncStorage.setItem('Lesson', JSON.stringify(lessonJSON));
+              showProgress(false)
+              alert ("Bạn đã tải video thành công.")
+
+              return path        
             }).catch(error => {
               console.log('error');
               console.log(error);
@@ -398,7 +445,7 @@ export default function  CourseDetail({ navigation, route}){
         let lesson = data[index].lesson
         var indexx = 0;
         while (indexx < lesson.length) { 
-          array.push({ name : lesson[indexx].name, header: false, videoUrl : lesson[indexx].videoUrl})
+          array.push({ id : lesson[indexx].id, name : lesson[indexx].name, header: false, videoUrl : lesson[indexx].videoUrl})
           
           indexx++; 
         }
@@ -699,13 +746,22 @@ export default function  CourseDetail({ navigation, route}){
 
         }
       }
+      showProgress =(isLoading) =>{
+        if (isLoading){
+          dispatch({type: "FETCH"})
+        } else {
+          dispatch({type: "STOP_FETCH"})
+        }
+        
+      }
       downloadVideo = async (item, index) =>{
         console.log("---------------------URL----------------", item.videoUrl)
 
         if (item.videoUrl){
           let timeInterval = new Date().getTime()
           let filename = timeInterval + ".mp4"
-          await downloadOpenClick(filename, item.videoUrl)
+          let path = await downloadOpenClick(filename, item.videoUrl, item.id , item.name, showProgress )
+          console.log("Path ", path)
           // await downloadVideo("video.mp4", item.videoUrl)
         }
       }

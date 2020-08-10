@@ -23,14 +23,17 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {StatusBarHeight} from '../utils/Dimension'
 import { ListItem } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { SearchBar } from 'react-native-elements'
 import {ColorThemeContext} from '../App'
 const {width, height} = Dimensions.get('window');
 const widthRatio = width / 375
+import {LanguageContext} from '../LanguageContext'
 
 export default function  SearchScreen ({ navigation }){
     const {colors, setColors} = React.useContext(ColorThemeContext);
+    const {lang, setLang} = React.useContext(LanguageContext);
 
     const [searchText, onChangeSearchText] = React.useState('');
     textDidChange = (text) =>{
@@ -75,41 +78,53 @@ export default function  SearchScreen ({ navigation }){
         <>
            
         <StatusBar barStyle={colors.statusBar} />
-        <LinearGradient colors={colors.gradientColor} style = { styles.container }>
-        
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <SearchBar style={{width : "100%"}}
                 platform='default'
                 lightTheme={colors.type === 'dark' ? false : true}
                 placeholder='Type Here...'  
                 onChangeText={text=>textDidChange(text)}          
                 value={searchText}/>
-        <View >
+        <LinearGradient colors={colors.gradientColor} style = { styles.container }>
         {
-            list.map((l, i) => (
-            <ListItem 
-                key={i}
-                underlayColor="#807c7c"
-                onPress={() =>this.selectItem(l)} 
-                containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
-                contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
-                // leftAvatar={{ source: { uri: l.avatar_url } }}
-                titleStyle={{ color: colors.textPrimary, fontWeight: 'normal' }}
-                title={l.title}
-                // subtitle={l.subtitle}
-                rightSubtitle={l.value}
-                rightSubtitleStyle={{color: colors.textPrimary}}
-                bottomDivider
-                chevron
+          list.length == 0 ?
+          <>
+            <View style={styles.noDataContainer}>
+              <Icon style={alignSelf='center'} type="MaterialIcons" name="search" size={90 * widthRatio} color={'#939cab'}/> 
+              <Text style={styles.boldTitle}>{lang.currentSearchHistory}</Text>
+              <Text style={styles.lightDescription}>{lang.noHistory}</Text>
+            </View>
+          </> 
+          :
+          <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
             
-            />
-            ))
+              <View >
+                {
+                  list.map((l, i) => (
+                  <ListItem 
+                      key={i}
+                      underlayColor="#807c7c"
+                      onPress={() =>this.selectItem(l)} 
+                      containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
+                      contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
+                      // leftAvatar={{ source: { uri: l.avatar_url } }}
+                      titleStyle={{ color: colors.textPrimary, fontWeight: 'normal' }}
+                      title={l.title}
+                      // subtitle={l.subtitle}
+                      rightSubtitle={l.value}
+                      rightSubtitleStyle={{color: colors.textPrimary}}
+                      bottomDivider
+                      chevron
+                  
+                  />
+                  ))
+                }
+              </View>
+              <View style={{...styles.borderButton, borderWidth : 0}} ></View>
+
+
+          </ScrollView>
         }
-        </View>
-        <View style={{...styles.borderButton, borderWidth : 0}} ></View>
-
-
-        </ScrollView>
+        
         </LinearGradient>
         
         
@@ -148,6 +163,29 @@ const styles = StyleSheet.create({
 
     gradient:{
         flex : 1,
+    },
+    noDataContainer : {
+      flex : 1,
+      alignItems : 'center',
+      justifyContent : 'center'
+    },
+    boldTitle :{ 
+        
+        
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        fontSize: 20 * widthRatio,
+      
+        color: '#939cab',
+    },
+    lightDescription: {
+        fontFamily: "Helvetica Neue",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: 15 * widthRatio,
+      
+        color: '#939cab',
     }
 });
 
