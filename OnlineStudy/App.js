@@ -24,6 +24,13 @@ import ForgotPassScreen from "./screens/ForgotPassScreen"
 import {LanguageThemeProvider, LanguageContext} from "./LanguageContext"
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-community/google-signin';
 import { DrawerLayoutAndroidBase } from 'react-native';
+
+import * as Sentry from '@sentry/react-native';
+// Sentry.nativeCrash();
+Sentry.init({ 
+  dsn: 'https://9847d70c38c141818a54da38b017f16e@o432753.ingest.sentry.io/5386022', 
+  enableNative: false
+});
 //------------------------------------------------------------------------------------------------------------------------------------------------------------
 export const AuthContext = React.createContext();
 export const LoginStatusContext = React.createContext();
