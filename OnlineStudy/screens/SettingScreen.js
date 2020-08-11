@@ -87,7 +87,7 @@ export default function  SettingScreen({ navigation }){
             <ListItem 
                 key={i}
                 underlayColor="#807c7c"
-                onPress={() =>this.selectItem(l.id)} 
+                onPress={() => selectItem(l.id)} 
                 containerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
                 contentContainerStyle={{ backgroundColor :'rgba(0,0,0,0)'}}
                 // leftAvatar={{ source: { uri: l.avatar_url } }}

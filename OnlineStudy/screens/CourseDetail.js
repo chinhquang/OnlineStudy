@@ -520,7 +520,6 @@ export default function  CourseDetail({ navigation, route}){
         })
         let responseJson = await response.json();
         let statusCode = await response.status;
-        console.log(responseJson, statusCode)
         if(statusCode == 200){
           alert("Mua khoá học thành công")
         }
@@ -705,7 +704,6 @@ export default function  CourseDetail({ navigation, route}){
     };
     
      likeCourse = async() => {
-      console.log("TOKEN  ",userToken)
       try {
         let response  = await fetch('https://api.itedu.me/user/like-course', {
           method: 'POST',
@@ -755,7 +753,6 @@ export default function  CourseDetail({ navigation, route}){
         
       }
       downloadVideo = async (item, index) =>{
-        console.log("---------------------URL----------------", item.videoUrl)
 
         if (item.videoUrl){
           let timeInterval = new Date().getTime()
@@ -845,7 +842,6 @@ export default function  CourseDetail({ navigation, route}){
     }
     const renderTab2Item = ({item, index}) => {
       
-      
       let value = item.data
       return (
         <View
@@ -888,7 +884,7 @@ export default function  CourseDetail({ navigation, route}){
             
             <View style={{flexDirection:"row"}}>
             <View style={{marginHorizontal : 12.5 * widthRatio, width : '20%'}}>
-              <Image style={{width: 50 * widthRatio, aspectRatio:1, borderRadius: 1000, alignSelf : 'center'}} source={{uri : value.user.avatar}}/>
+              <Image style={{width: 50 * widthRatio, aspectRatio:1, borderRadius: 1000, alignSelf : 'center'}} source={{uri : (value.user.avatar.includes('http'))?value.user.avatar:"https://www.dontshake.org/media/k2/items/cache/71f67488b0857639cee631943a3fc6fa_XL.jpg"}}/>
               <Text numberOfLines={0} ellipsizeMode='tail' style={{fontSize : 13 * widthRatio, color : colors.textPrimary, alignSelf : 'center', textAlign:'center'}}>{value.user.name}</Text>
             </View>
             <View style={{ width : '60%', justifyContent:'flex-start'}}>
