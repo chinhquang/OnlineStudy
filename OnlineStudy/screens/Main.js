@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Text, View,Button, TouchableOpacity, Dimensions, Alert,AsyncStorage, Image} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { TouchableOpacity, Dimensions, Image} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen'
@@ -12,7 +11,6 @@ import BrowseScreen from './BrowseScreen'
 import SearchScreen from './SearchScreen'
 import DownloadScreen from './DownloadScreen'
 import ThemeSetting from './ThemeSetting'
-import SignUpScreen from './SignUpScreen'
 import ForgotPassScreen from './ForgotPassScreen'
 import UserInfoScreen from "./UserInfoScreen"
 import LangSetting from './LangSetting'
@@ -33,12 +31,12 @@ import {LanguageContext} from "../LanguageContext.js"
                 </TouchableOpacity> */}
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator()
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const widthRatio = width / 375
 
 function HomeStackScreen() {
-const {colors, setColors} = React.useContext(ColorThemeContext);
-const {lang, setLang} = React.useContext(LanguageContext);
+const {colors} = React.useContext(ColorThemeContext);
+const {lang} = React.useContext(LanguageContext);
 const isSignout  = React.useContext(LoginStatusContext)
 const userInfoContext  = React.useContext(UserInfoContext)
 const userInfo = userInfoContext.userInfo
@@ -122,8 +120,8 @@ if (isSignout){
 
 const BrowseStack = createStackNavigator();
 function BrowseStackScreen() {
-const {colors, setColors} = React.useContext(ColorThemeContext);
-const {lang, setLang} = React.useContext(LanguageContext);
+const {colors} = React.useContext(ColorThemeContext);
+const {lang} = React.useContext(LanguageContext);
 return (
     <BrowseStack.Navigator
         screenOptions={{
@@ -145,8 +143,8 @@ return (
 
 const DownloadStack = createStackNavigator();
 function DownloadStackScreen() {
-  const {lang, setLang} = React.useContext(LanguageContext);
-  const {colors, setColors} = React.useContext(ColorThemeContext);
+  const {lang} = React.useContext(LanguageContext);
+  const {colors} = React.useContext(ColorThemeContext);
   return (
       <DownloadStack.Navigator
           screenOptions={{
@@ -166,8 +164,8 @@ function DownloadStackScreen() {
 
 const SearchStack = createStackNavigator();
 function SearchStackScreen() {
-  const {lang, setLang} = React.useContext(LanguageContext);
-  const {colors, setColors} = React.useContext(ColorThemeContext);
+  const {lang} = React.useContext(LanguageContext);
+  const {colors} = React.useContext(ColorThemeContext);
 return (
     <SearchStack.Navigator
         screenOptions={{
@@ -185,10 +183,10 @@ return (
 );
 }
 
-export default function Main({navigation}) {
-  const {lang, setLang} = React.useContext(LanguageContext);
+export default function Main() {
+  const {lang} = React.useContext(LanguageContext);
   const isSignout  = React.useContext(LoginStatusContext)
-  const {colors, setColors} = React.useContext(ColorThemeContext);
+  const {colors} = React.useContext(ColorThemeContext);
   return (
       <Tab.Navigator tabBarOptions={{
         activeTintColor: colors.backgroundColorButton,
@@ -200,7 +198,7 @@ export default function Main({navigation}) {
         }}
         
         screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
+            tabBarIcon: ({ color, size }) => {
                 let iconName;
   
                 if (route.name === 'Home') {

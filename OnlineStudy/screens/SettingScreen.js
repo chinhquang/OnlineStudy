@@ -6,36 +6,29 @@
  * @flow strict-local
  */
 
-import React,{Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-  Text,
   StatusBar, 
   Dimensions,
-  Image,
-  FlatList, 
-  Alert,
-  TouchableOpacity,
   
 } from 'react-native';
 import { ListItem } from 'react-native-elements'
 
 import LinearGradient from 'react-native-linear-gradient'
-import CourseRow from '../components/CourseRow'
 import {AuthContext, ColorThemeContext,LoginStatusContext} from '../App'
 import CustomButton from '../components/CustomButton'
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const widthRatio = width / 375
 import {LanguageContext} from '../LanguageContext'
 
 
 export default function  SettingScreen({ navigation }){
-    const {colors, setColors} = React.useContext(ColorThemeContext);
+    const {colors} = React.useContext(ColorThemeContext);
     const isSignout  = React.useContext(LoginStatusContext)
-    const {lang, setLang} = React.useContext(LanguageContext);
+    const {lang} = React.useContext(LanguageContext);
 
     const list = [
         {

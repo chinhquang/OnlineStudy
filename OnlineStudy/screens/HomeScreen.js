@@ -24,8 +24,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import CourseRow from '../components/CourseRow'
 import {CourseRow2} from '../components/CourseRow'
-import {AuthContext, ColorThemeContext, UserInfoContext, UserTokenContext, LoginStatusContext} from '../App'
-import {PathList} from './BrowseScreen'
+import {ColorThemeContext, UserInfoContext, UserTokenContext} from '../App'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {LanguageContext} from '../LanguageContext'
 const {width, height} = Dimensions.get('window');
@@ -37,7 +36,6 @@ export function CourseList ({ itemList, navigation },props) {
    
     
     showCourseDetail=(item)=>{
-        console.log(item)
         navigation.navigate ('CourseDetail', item)
     };
     ListEmpty = () => {
