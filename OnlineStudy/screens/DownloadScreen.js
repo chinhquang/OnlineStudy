@@ -27,7 +27,8 @@ import LinearGradient from 'react-native-linear-gradient'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {LanguageContext} from '../LanguageContext'
 
-  import FileViewer from 'react-native-file-viewer';
+import FileViewer from 'react-native-file-viewer';
+var RNFS = require('react-native-fs');
 
 import {AuthContext, ColorThemeContext} from '../App'
 import {PathList} from './BrowseScreen'
@@ -37,8 +38,16 @@ const widthRatio = width / 375
 
 export default function  DownloadScreen({ navigation }){
     const {lang, setLang} = React.useContext(LanguageContext);
-    openFile = (fileURL) =>{
-        FileViewer.open(fileURL)
+    openFile = async(fileURL) =>{
+        var dirType=null;
+        if(Platform.OS === 'ios'){
+            dirType = RNFS.DocumentDirectoryPath;
+
+        }else{
+            await this.requestStoragePermission();
+            dirType = RNFS.ExternalStorageDirectoryPath+'/AppName';
+        }
+        FileViewer.open(dirType + fileURL)
         .then(() => {
           // success
         })

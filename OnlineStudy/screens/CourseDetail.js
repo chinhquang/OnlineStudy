@@ -63,15 +63,7 @@ function getDateFrom2(dateString){
   var formattedDate = format(date, "yyyy-MM-dd HH:mm:ss");
   return formattedDate
 }
-openFile = (fileURL) =>{
-  FileViewer.open(fileURL)
-  .then(() => {
-    // success
-  })
-  .catch(error => {
-    // error
-  });
-}
+
 downloadOpenClick = async (item, url, lessonId, lessonName, showProgress) => {
   showProgress(true)
   console.log (lessonId)
@@ -158,7 +150,7 @@ downloadOpenClick = async (item, url, lessonId, lessonName, showProgress) => {
                     console.log(prog);
               }
             }).promise.then((r) => {
-              const path = `${dirType}/Download/MediaFolder/${selectedFile}`;
+              const path = `/Download/MediaFolder/${selectedFile}`;
               let data = {fileUrl: path, lessonName : `${lessonName}`}
 
               lessonJSON[`${lessonId}`] = data
